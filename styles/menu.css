@@ -1,0 +1,175 @@
+/* Limpieza básica */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    height: 100vh;
+    background-color: #0f2027; /* Fondo oscuro base */
+    color: white;
+    overflow: hidden; /* Evita scroll en la pantalla principal */
+    position: relative;
+}
+
+/* === DECORACIÓN DE FONDO (ORBES) === */
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: -1; /* Para que queden detrás de todo */
+    animation: flotar 10s infinite alternate ease-in-out;
+}
+
+.orb-1 { width: 400px; height: 400px; background: #203a43; top: -10%; left: -5%; }
+.orb-2 { width: 500px; height: 500px; background: #2c5364; bottom: -20%; right: -10%; animation-delay: -3s; }
+.orb-3 { width: 300px; height: 300px; background: rgba(0, 150, 255, 0.2); top: 40%; left: 40%; animation-delay: -5s; }
+
+@keyframes flotar {
+    0% { transform: translateY(0) scale(1); }
+    100% { transform: translateY(50px) scale(1.1); }
+}
+
+/* === LAYOUT PRINCIPAL === */
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+    padding: 20px;
+    gap: 20px;
+}
+
+/* === ESTILO GLASSMORPHISM REUTILIZABLE === */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+/* === SIDEBAR (MENÚ LATERAL) === */
+.sidebar {
+    width: 260px;
+    display: flex;
+    flex-direction: column;
+    padding: 30px 20px;
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.logo h2 { color: #4facfe; font-size: 26px; }
+.logo span { color: #aaa; font-size: 13px; letter-spacing: 1px; }
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1; /* Empuja el botón de cerrar sesión hacia abajo */
+}
+
+.menu-btn {
+    background: transparent;
+    border: none;
+    color: #ddd;
+    text-align: left;
+    padding: 12px 15px;
+    border-radius: 12px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.menu-btn:hover, .menu-btn.active {
+    background: rgba(0, 150, 255, 0.2);
+    color: #fff;
+    border-left: 4px solid #4facfe;
+    transform: translateX(5px);
+}
+
+.btn-logout {
+    width: 100%;
+    background: rgba(255, 75, 75, 0.2);
+    border: 1px solid rgba(255, 75, 75, 0.4);
+    color: #ff6b6b;
+    padding: 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-logout:hover { background: rgba(255, 75, 75, 0.5); color: white; }
+
+/* === ÁREA PRINCIPAL DERECHA === */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Topbar */
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+    height: 80px;
+}
+
+.saludoUsuario { font-size: 22px; }
+
+.usuario-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.badge-rol {
+    background: rgba(0, 150, 255, 0.2);
+    border: 1px solid rgba(0, 150, 255, 0.5);
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.perfil-nombre { font-weight: bold; }
+
+.avatar-placeholder {
+    width: 40px; height: 40px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+/* Widgets del Dashboard */
+.dashboard-widgets {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.widget {
+    padding: 25px;
+    text-align: center;
+}
+
+.widget h3 {
+    font-size: 14px;
+    color: #aaa;
+    margin-bottom: 15px;
+}
+
+.widget-dato {
+    font-size: 32px;
+    font-weight: bold;
+    color: #4facfe;
+}

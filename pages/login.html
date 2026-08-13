@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LCAW - Iniciar Sesión</title>
+    <link rel="stylesheet" href="../styles/login.css">
+</head>
+<body>
+
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="glass-login">
+        
+        <div id="contenedorFormulario">
+            <h2>Bienvenido</h2>
+            <p>Los Chavales Abarrotes Web</p>
+            
+            <form id="formularioLogin">
+                <input type="text" id="usuario" placeholder="Usuario" required>
+                
+                <div class="password-container">
+                    <input type="password" id="password" placeholder="Contraseña" required>
+                    <button type="button" id="btnVerPassword" class="btn-eye" title="Mostrar/Ocultar">👁️</button>
+                </div>
+                
+                <button type="submit" class="btn-entrar">Entrar</button>
+            </form>
+        </div>
+
+        <div id="pantallaCarga" class="oculto">
+            <div class="spinner"></div>
+            <h3>Cargando recursos...</h3>
+            <p>Preparando tu panel principal</p>
+        </div>
+        
+    </div>
+
+    <script src="../scripts/login.js"></script>
+</body>
+</html>

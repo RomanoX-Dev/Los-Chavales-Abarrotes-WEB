@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LCAW - Inventario</title>
+    <link rel="stylesheet" href="../styles/menu.css">
+    <link rel="stylesheet" href="../styles/productos.css">
+</head>
+<body>
+
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="dashboard-container">
+        
+        <aside class="sidebar glass-panel">
+            <div class="logo">
+                <h2>🛒 LCAW</h2>
+                <span>Los Chavales</span>
+            </div>
+            <nav class="sidebar-menu">
+                <button class="menu-btn" onclick="navegarA('menu.html')">🏠 Inicio</button>
+                <button class="menu-btn" onclick="navegarA('pos.html')">💻 Punto de Venta</button>
+                <button class="menu-btn active" onclick="navegarA('productos.html')">📦 Inventario</button>
+                <button class="menu-btn" onclick="navegarA('clientes.html')">👥 Clientes</button>
+                <button class="menu-btn" onclick="navegarA('ventas.html')">📊 Historial</button>
+                <button class="menu-btn" onclick="navegarA('usuarios.html')">⚙️ Usuarios</button>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="btnCerrarSesion" class="btn-logout">🚪 Cerrar Sesión</button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            
+            <header class="topbar glass-panel">
+                <div class="bienvenida">
+                    <h1>Módulo de Inventario 📦</h1>
+                </div>
+                <div class="usuario-info">
+                    <span id="rolUsuario" class="badge-rol">Cargando...</span>
+                    <span id="nombreUsuario" class="perfil-nombre">Cargando...</span>
+                    <div class="avatar-placeholder">👤</div>
+                </div>
+            </header>
+
+            <section class="toolbar glass-panel">
+                <div class="search-box">
+                    <span>🔍</span>
+                    <input type="text" id="buscadorProductos" placeholder="Buscar por código o nombre...">
+                </div>
+                <button class="btn-primary" id="btnAgregarProducto">+ Agregar Producto</button>
+            </section>
+
+            <section class="table-container glass-panel">
+                <table class="glass-table">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Producto</th>
+                            <th>Categoría</th>
+                            <th>Precio</th>
+                            <th>Stock</th>
+                            <th>Estatus</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpoTablaProductos">
+                        <tr>
+                            <td colspan="7" style="text-align: center; padding: 20px;">Cargando inventario... ⏳</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+        </main>
+    </div>
+    
+   <div id="modalProducto" class="modal-overlay oculto">
+        <div class="glass-modal">
+            <div class="modal-header">
+                <h2 id="tituloModal">Nuevo Producto 📦</h2>
+                <button class="btn-cerrar" id="btnCerrarModal">✖</button>
+            </div>
+            
+            <form id="formularioProducto">
+                <input type="hidden" id="productoId"> 
+                
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>Código de Barras</label>
+                        <input type="text" id="codigoBarras" placeholder="Ej. 75010...">
+                    </div>
+                    <div class="input-group">
+                        <label>Nombre del Producto *</label>
+                        <input type="text" id="nombreProducto" required placeholder="Ej. Coca-Cola 600ml">
+                    </div>
+                    <div class="input-group">
+                        <label>Precio Venta ($) *</label>
+                        <input type="number" id="precio" step="0.01" required placeholder="Ej. 18.50">
+                    </div>
+                    <div class="input-group">
+                        <label>Stock Disponible *</label>
+                        <input type="number" id="stock" required placeholder="Ej. 50">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Categoría *</label>
+                        <select id="idCategoria" required>
+                            <option value="1">Bebidas</option>
+                            <option value="2">Botanas</option>
+                            <option value="3">Lácteos</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Marca</label>
+                        <select id="idMarca">
+                            <option value="1">Coca-Cola</option>
+                            <option value="2">Sabritas</option>
+                            <option value="3">Lala</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn-secundario" id="btnCancelarModal">Cancelar</button>
+                    <button type="submit" class="btn-primario">Guardar Producto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../scripts/menu.js"></script>
+    <script src="../scripts/productos.js"></script>
+</body>
+</html>

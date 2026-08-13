@@ -1,0 +1,153 @@
+/* Limpiamos márgenes por defecto */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #0f2027; /* Fondo oscuro base */
+    color: white;
+    overflow: hidden;
+    position: relative;
+}
+
+/* === DECORACIÓN DE FONDO (ORBES IGUAL AL MENÚ) === */
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: -1;
+    animation: flotar 10s infinite alternate ease-in-out;
+}
+
+.orb-1 { width: 400px; height: 400px; background: #203a43; top: -10%; left: -5%; }
+.orb-2 { width: 500px; height: 500px; background: #2c5364; bottom: -20%; right: -10%; animation-delay: -3s; }
+.orb-3 { width: 300px; height: 300px; background: rgba(0, 150, 255, 0.2); top: 40%; left: 40%; animation-delay: -5s; }
+
+@keyframes flotar {
+    0% { transform: translateY(0) scale(1); }
+    100% { transform: translateY(50px) scale(1.1); }
+}
+
+/* === EL EFECTO GLASSMORPHISM === */
+.glass-login {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    padding: 40px;
+    width: 350px;
+    text-align: center;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.glass-login h2 { margin-bottom: 5px; color: #4facfe; }
+.glass-login p { font-size: 14px; margin-bottom: 25px; color: #cccccc; }
+
+/* === INPUTS Y CONTENEDOR DE CONTRASEÑA === */
+input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    outline: none;
+}
+input::placeholder { color: #dddddd; }
+
+/* Contenedor relativo para posicionar el ojito */
+.password-container {
+    position: relative;
+    width: 100%;
+}
+
+/* Quitamos el margen inferior al input de contraseña para dárselo al contenedor */
+.password-container input {
+    margin-bottom: 0; 
+    padding-right: 40px; /* Espacio para que el texto no pise el ojito */
+}
+
+.password-container {
+    margin-bottom: 15px;
+}
+
+/* Botón del Ojito */
+.btn-eye {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 5px;
+    width: auto;
+    transition: 0.2s;
+    opacity: 0.7;
+}
+
+.btn-eye:hover {
+    background: transparent;
+    opacity: 1;
+}
+
+/* Botón Principal */
+.btn-entrar {
+    width: 100%;
+    padding: 12px;
+    background: rgba(0, 150, 255, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.btn-entrar:hover {
+    background: rgba(0, 150, 255, 1);
+    box-shadow: 0 0 15px rgba(0, 150, 255, 0.4);
+}
+
+/* === PANTALLA DE CARGA ANIMADA === */
+.oculto { 
+    display: none !important; 
+}
+
+#pantallaCarga {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0;
+}
+
+.spinner {
+    width: 45px;
+    height: 45px;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    border-top: 4px solid #4facfe;
+    border-radius: 50%;
+    animation: girar 1s linear infinite;
+    margin-bottom: 15px;
+}
+
+@keyframes girar {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#pantallaCarga h3 { font-size: 18px; color: #4facfe; margin-bottom: 5px; }
+#pantallaCarga p { font-size: 13px; color: #ccc; margin-bottom: 0; }

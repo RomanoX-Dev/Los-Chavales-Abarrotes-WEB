@@ -1,0 +1,215 @@
+/* === LAYOUT PRINCIPAL DEL PUNTO DE VENTA === */
+.pos-layout {
+    display: grid;
+    grid-template-columns: 350px 1fr; /* Izquierda 350px, Derecha el resto */
+    gap: 20px;
+    height: calc(100vh - 40px);
+}
+
+/* === PANEL IZQUIERDO: TICKET / CARRITO === */
+.panel-carrito {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+.carrito-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 15px;
+}
+
+.carrito-header h2 {
+    color: #4facfe;
+    font-size: 20px;
+}
+
+.carrito-items {
+    flex: 1; /* Toma todo el espacio disponible en medio */
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.mensaje-vacio {
+    text-align: center;
+    color: #aaa;
+    font-size: 14px;
+    margin-top: 50px;
+}
+
+/* Items dentro del carrito */
+.item-carrito {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.item-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.item-info strong {
+    color: white;
+    font-size: 14px;
+}
+
+.item-precio {
+    color: #4facfe;
+    font-weight: bold;
+}
+
+.item-controles {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.control-cantidad {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 2px 5px;
+}
+
+.btn-cant {
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    width: 25px;
+    height: 25px;
+    border-radius: 5px;
+    transition: 0.2s;
+}
+
+.btn-cant:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.item-subtotal {
+    color: #28a745; /* Verde */
+    font-weight: bold;
+}
+
+/* Pie del carrito (Totales) */
+.carrito-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 15px;
+    margin-top: 15px;
+}
+
+.fila-total {
+    display: flex;
+    justify-content: space-between;
+    color: #ccc;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.gran-total {
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    margin-top: 10px;
+    border-top: 1px dashed rgba(255, 255, 255, 0.2);
+    padding-top: 10px;
+}
+
+.btn-cobrar {
+    width: 100%;
+    background: #00b09b;  /* Verde cobro */
+    background: linear-gradient(to right, #00b09b, #96c93d);
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 4px 15px rgba(0, 176, 155, 0.4);
+}
+
+.btn-cobrar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 176, 155, 0.6);
+}
+
+/* === PANEL DERECHO: BÚSQUEDA Y PRODUCTOS === */
+.panel-productos {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.pos-topbar {
+    margin-bottom: 20px;
+    padding: 15px !important;
+}
+
+.pos-search {
+    width: 100% !important; /* El buscador toma todo el ancho */
+}
+
+.grid-productos {
+    flex: 1;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 15px;
+    padding-right: 5px;
+}
+
+/* Tarjeta de Producto */
+.card-producto {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card-producto:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-5px);
+    border-color: #4facfe;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.card-producto h4 {
+    color: white;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.card-precio {
+    color: #4facfe;
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.card-stock {
+    font-size: 12px;
+    color: #aaa;
+}

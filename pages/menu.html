@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LCAW - Dashboard</title>
+    <link rel="stylesheet" href="../styles/menu.css">
+</head>
+<body>
+
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="dashboard-container">
+        
+        <aside class="sidebar glass-panel">
+            <div class="logo">
+                <h2>🛒 LCAW</h2>
+                <span>Los Chavales</span>
+            </div>
+
+            <nav class="sidebar-menu">
+                <button class="menu-btn active" onclick="navegarA('menu.html')">🏠 Inicio</button>
+                <button class="menu-btn" onclick="navegarA('pos.html')">💻 Punto de Venta</button>
+                <button class="menu-btn" onclick="navegarA('productos.html')">📦 Inventario</button>
+                <button class="menu-btn" onclick="navegarA('clientes.html')">👥 Clientes</button>
+                <button class="menu-btn" onclick="navegarA('ventas.html')">📊 Historial</button>
+                <button class="menu-btn" onclick="navegarA('usuarios.html')">⚙️ Usuarios</button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button id="btnCerrarSesion" class="btn-logout">🚪 Cerrar Sesión</button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            
+            <header class="topbar glass-panel">
+                <div class="bienvenida">
+                    <h1 id="saludoUsuario">¡Bienvenido! 👋</h1>
+                </div>
+                <div class="usuario-info">
+                    <span id="rolUsuario" class="badge-rol">Rol</span>
+                    <span id="nombreUsuario" class="perfil-nombre">Cargando...</span>
+                    <div class="avatar-placeholder">👤</div>
+                </div>
+            </header>
+
+            <section class="dashboard-widgets">
+                <div class="widget glass-panel">
+                    <h3>Ventas de Hoy</h3>
+                    <p class="widget-dato">$0.00</p>
+                </div>
+                <div class="widget glass-panel">
+                    <h3>Productos Bajos en Stock</h3>
+                    <p class="widget-dato">0</p>
+                </div>
+                <div class="widget glass-panel">
+                    <h3>Clientes Activos</h3>
+                    <p class="widget-dato">0</p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="../scripts/menu.js"></script>
+</body>
+</html>

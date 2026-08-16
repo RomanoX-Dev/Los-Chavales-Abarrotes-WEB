@@ -173,3 +173,43 @@ body {
     font-weight: bold;
     color: #4facfe;
 }
+
+/* Agrupa las acciones y el perfil a la derecha */
+.topbar-derecha {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Contenedor de los iconos de campana y luna */
+.topbar-acciones {
+    display: flex;
+    gap: 10px;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+    padding-right: 15px;
+}
+
+/* Estilo para los botones transparentes */
+.btn-icono {
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.btn-icono:hover {
+    transform: scale(1.1);
+}
+
+/* Botón secundario para la música */
+.btn-secundario {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    width: 100%;
+}

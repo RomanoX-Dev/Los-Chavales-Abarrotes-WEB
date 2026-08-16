@@ -80,7 +80,28 @@
         </main>
     </div>
 
-    <script src="../scripts/menu.js"></script>
-    <script src="../scripts/pos.js"></script>
+    <!-- MODAL DE MÉTODO DE PAGO -->
+    <div id="modalPago" class="modal-overlay oculto">
+        <div class="glass-modal" style="width: 400px; text-align: center;">
+            <div class="modal-header">
+                <h3>Método de Pago 💳</h3>
+                <button class="btn-cerrar" id="btnCerrarModalPago">✖</button>
+            </div>
+            
+            <h2 id="totalAPagarModal" style="color: #4facfe; margin-bottom: 20px;">$0.00</h2>
+            
+            <div class="opciones-pago" style="display: flex; gap: 15px; justify-content: center;">
+                <button class="btn-primario btn-pago" data-metodo="1" style="flex: 1; padding: 20px; font-size: 1.2rem;">
+                    💵 Efectivo
+                </button>
+                <button class="btn-primario btn-pago" data-metodo="2" style="flex: 1; padding: 20px; font-size: 1.2rem; background: #8e44ad;">
+                    💳 Tarjeta
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="../scripts/menu.js"></script>
+    <script type="module" src="../scripts/pos.js"></script>
 </body>
 </html>

@@ -1,0 +1,159 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #0f172a;
+    color: #ffffff;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Orbes sutiles de fondo con los tonos exactos del POS */
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.3;
+    z-index: 1;
+    animation: float 12s infinite alternate ease-in-out;
+}
+
+.orb-1 {
+    width: 300px;
+    height: 300px;
+    background: #4facfe;
+    top: 10%;
+    left: 15%;
+}
+
+.orb-2 {
+    width: 280px;
+    height: 280px;
+    background: #00b09b;
+    bottom: 10%;
+    right: 15%;
+    animation-delay: -4s;
+}
+
+.orb-3 {
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    top: 40%;
+    right: 40%;
+    animation-delay: -8s;
+}
+
+@keyframes float {
+    0% { transform: translateY(0) scale(1); }
+    100% { transform: translateY(-20px) scale(1.05); }
+}
+
+/* Tarjeta contenedora estilo .glass-panel / .card-producto */
+.splash-container {
+    z-index: 10;
+    width: 90%;
+    max-width: 380px;
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 35px 25px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Tipografía y Encabezados */
+.icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 5px;
+}
+
+h1 {
+    font-size: 2.2rem;
+    color: #4facfe;
+    font-weight: bold;
+}
+
+.subtitle {
+    color: #aaa;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* Sección de Carga */
+.loader-box {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.status-text {
+    font-size: 13px;
+    color: #ccc;
+}
+
+.progress-bar-container {
+    width: 100%;
+    height: 6px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(to right, #00b09b, #96c93d);
+    border-radius: 8px;
+    animation: cargar 5s linear forwards;
+}
+
+@keyframes cargar {
+    0% { width: 0%; }
+    100% { width: 100%; }
+}
+
+.counter-text {
+    font-size: 12px;
+    color: #aaa;
+}
+
+.counter-text strong {
+    color: #4facfe;
+    font-weight: bold;
+}
+
+/* Enlace/Botón para Omitir */
+.btn-saltar {
+    color: #aaa;
+    text-decoration: none;
+    font-size: 13px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: 0.2s;
+}
+
+.btn-saltar:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+}

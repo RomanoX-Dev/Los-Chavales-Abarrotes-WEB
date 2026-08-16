@@ -1,34 +1,39 @@
-// ==========================================
-// VARIABLES GLOBALES
-// ==========================================
-let productosGlobales = []; // Aquí guardaremos el catálogo del backend
-let carrito = []; // Aquí guardaremos los productos que se van a cobrar
+import { obtenerProductosPOS, registrarVentaDB } from '../api/posAPI.js';
+import { mostrarAlerta } from '../utils/alertas.js'; 
+
+let productosGlobales = []; 
+let carrito = []; 
 
 document.addEventListener('DOMContentLoaded', () => {
-    cargarProductos();
+    cargarCatalogo();
 
-    // Evento para el buscador
-    document.getElementById('buscadorPos').addEventListener('input', (e) => {
-        filtrarProductos(e.target.value.toLowerCase());
+    // Eventos de la vista
+    document.getElementById('buscadorPos').addEventListener('input', (e) => filtrarProductos(e.target.value.toLowerCase()));
+    document.getElementById('btnVaciarCarrito').addEventListener('click', vaciarCarrito);
+
+    // Abrir/Cerrar Modal de Pago
+    document.getElementById('btnCobrar').addEventListener('click', () => {
+        if (carrito.length === 0) return mostrarAlerta('El ticket está vacío. 🛒');
+        document.getElementById('totalAPagarModal').textContent = document.getElementById('txtTotal').textContent;
+        document.getElementById('modalPago').classList.remove('oculto');
     });
 
-    // Eventos de los botones principales del carrito
-    document.getElementById('btnVaciarCarrito').addEventListener('click', vaciarCarrito);
-    document.getElementById('btnCobrar').addEventListener('click', cobrar);
+    document.getElementById('btnCerrarModalPago').addEventListener('click', () => {
+        document.getElementById('modalPago').classList.add('oculto');
+    });
+
+    // Eventos para elegir método de pago (Efectivo o Tarjeta)
+    document.querySelectorAll('.btn-pago').forEach(btn => {
+        btn.addEventListener('click', (e) => procesarCobroFinal(parseInt(e.target.dataset.metodo)));
+    });
 });
 
 // ==========================================
-// 1. CARGAR Y MOSTRAR PRODUCTOS (DERECHA)
+// CATALOGO Y RENDERIZADO
 // ==========================================
-async function cargarProductos() {
-    const contenedor = document.getElementById('contenedorProductosPos');
-    try {
-        const respuesta = await fetch('https://lcaw-server.onrender.com/api/productos');
-        productosGlobales = await respuesta.json();
-        renderizarProductos(productosGlobales);
-    } catch (error) {
-        contenedor.innerHTML = '<h3 style="color: #ff6b6b; text-align: center; width: 100%;">Error al conectar con el servidor.</h3>';
-    }
+async function cargarCatalogo() {
+    productosGlobales = await obtenerProductosPOS();
+    renderizarProductos(productosGlobales);
 }
 
 function renderizarProductos(lista) {
@@ -41,18 +46,16 @@ function renderizarProductos(lista) {
     }
 
     lista.forEach(prod => {
-        // No mostramos productos inactivos o sin stock
-        if (prod.Estatus === 'Inactivo' || prod.Stock <= 0) return;
+        if (prod.Estatus === 'Inactivo' || parseFloat(prod.Stock) <= 0) return;
 
         const div = document.createElement('div');
         div.className = 'card-producto';
-        // Al hacer clic en la tarjeta, lo agregamos al carrito
-        div.onclick = () => agregarAlCarrito(prod);
+        div.addEventListener('click', () => agregarAlCarrito(prod));
 
         div.innerHTML = `
             <h4>${prod.Nombre}</h4>
-            <div class="card-precio">${formatearMoneda(prod.Precio)}</div>
-            <div class="card-stock">📦 Disponibles: ${prod.Stock}</div>
+            <div class="card-precio">$${parseFloat(prod.Precio).toFixed(2)}</div>
+            <div class="card-stock">📦 Disp: ${prod.Stock}</div>
         `;
         contenedor.appendChild(div);
     });
@@ -67,139 +70,129 @@ function filtrarProductos(texto) {
 }
 
 // ==========================================
-// 2. LÓGICA DEL CARRITO (IZQUIERDA)
+// CARRITO DE COMPRAS
 // ==========================================
-function agregarAlCarrito(productoBase) {
-    // Revisamos si el producto ya está en el ticket
-    const itemExistente = carrito.find(item => item.IdProducto === productoBase.IdProducto);
+function agregarAlCarrito(producto) {
+    const existe = carrito.find(p => p.IdProducto === producto.IdProducto);
 
-    if (itemExistente) {
-        // Si ya existe, verificamos que haya stock suficiente para aumentarle 1
-        if (itemExistente.cantidad < productoBase.Stock) {
-            itemExistente.cantidad++;
+    if (existe) {
+        if (existe.Cantidad < producto.Stock) {
+            existe.Cantidad++;
         } else {
-            alert('¡No hay más stock disponible de este producto!');
+            mostrarAlerta('Stock máximo alcanzado 🛑');
         }
     } else {
-        // Si no existe, lo agregamos al arreglo del carrito
         carrito.push({
-            IdProducto: productoBase.IdProducto,
-            Nombre: productoBase.Nombre,
-            Precio: parseFloat(productoBase.Precio),
-            Stock: productoBase.Stock,
-            cantidad: 1
+            IdProducto: producto.IdProducto,
+            Nombre: producto.Nombre,
+            Precio: parseFloat(producto.Precio),
+            Stock: producto.Stock,
+            Cantidad: 1
         });
     }
-    
     renderizarCarrito();
 }
 
 function renderizarCarrito() {
-    const listaCarrito = document.getElementById('listaCarrito');
-    listaCarrito.innerHTML = '';
+    const lista = document.getElementById('listaCarrito');
+    lista.innerHTML = '';
 
     if (carrito.length === 0) {
-        listaCarrito.innerHTML = '<div class="mensaje-vacio">El carrito está vacío. Agrega productos para comenzar.</div>';
+        lista.innerHTML = '<div class="mensaje-vacio">El carrito está vacío.</div>';
         actualizarTotales();
         return;
     }
 
     carrito.forEach(item => {
-        const subtotalItem = item.Precio * item.cantidad;
-
+        const subtotal = item.Precio * item.Cantidad;
         const div = document.createElement('div');
         div.className = 'item-carrito';
         div.innerHTML = `
             <div class="item-info">
                 <strong>${item.Nombre}</strong>
-                <span class="item-precio">${formatearMoneda(item.Precio)}</span>
+                <span class="item-precio">$${item.Precio.toFixed(2)}</span>
             </div>
             <div class="item-controles">
                 <div class="control-cantidad">
-                    <button class="btn-cant" onclick="cambiarCantidad(${item.IdProducto}, -1)">-</button>
-                    <span>${item.cantidad}</span>
-                    <button class="btn-cant" onclick="cambiarCantidad(${item.IdProducto}, 1)">+</button>
+                    <button class="btn-cant btn-restar" data-id="${item.IdProducto}">-</button>
+                    <span>${item.Cantidad}</span>
+                    <button class="btn-cant btn-sumar" data-id="${item.IdProducto}">+</button>
                 </div>
-                <span class="item-subtotal">${formatearMoneda(subtotalItem)}</span>
-                <button class="btn-cant" style="color: #ff6b6b;" onclick="eliminarDelCarrito(${item.IdProducto})">✖</button>
+                <span class="item-subtotal">$${subtotal.toFixed(2)}</span>
+                <button class="btn-cant btn-eliminar" style="color: #ff6b6b;" data-id="${item.IdProducto}">✖</button>
             </div>
         `;
-        listaCarrito.appendChild(div);
+        lista.appendChild(div);
     });
+
+    // listeners dinámicos
+    document.querySelectorAll('.btn-restar').forEach(b => b.addEventListener('click', (e) => cambiarCantidad(parseInt(e.target.dataset.id), -1)));
+    document.querySelectorAll('.btn-sumar').forEach(b => b.addEventListener('click', (e) => cambiarCantidad(parseInt(e.target.dataset.id), 1)));
+    document.querySelectorAll('.btn-eliminar').forEach(b => b.addEventListener('click', (e) => eliminarItem(parseInt(e.target.dataset.id))));
 
     actualizarTotales();
 }
 
-// ==========================================
-// 3. CONTROLES Y TOTALES
-// ==========================================
 function cambiarCantidad(id, cambio) {
     const item = carrito.find(p => p.IdProducto === id);
     if (!item) return;
 
-    const nuevaCantidad = item.cantidad + cambio;
+    const nuevaCant = item.Cantidad + cambio;
+    if (nuevaCant <= 0) return eliminarItem(id);
+    if (nuevaCant > item.Stock) return mostrarAlerta('Stock máximo alcanzado 🛑');
 
-    // Validaciones
-    if (nuevaCantidad <= 0) {
-        eliminarDelCarrito(id);
-        return;
-    }
-    if (nuevaCantidad > item.Stock) {
-        alert('¡Stock máximo alcanzado!');
-        return;
-    }
-
-    item.cantidad = nuevaCantidad;
+    item.Cantidad = nuevaCant;
     renderizarCarrito();
 }
 
-function eliminarDelCarrito(id) {
-    carrito = carrito.filter(item => item.IdProducto !== id);
+function eliminarItem(id) {
+    carrito = carrito.filter(p => p.IdProducto !== id);
     renderizarCarrito();
 }
 
 function vaciarCarrito() {
-    if (carrito.length > 0 && confirm('¿Estás seguro de vaciar el ticket?')) {
+    if (carrito.length > 0 && confirm('¿Vaciar el ticket?')) {
         carrito = [];
         renderizarCarrito();
     }
 }
 
 function actualizarTotales() {
-    // Sumamos el total de (precio * cantidad) de todos los items
-    let total = 0;
-    carrito.forEach(item => {
-        total += item.Precio * item.cantidad;
-    });
-
-    // En México, normalmente los precios de abarrotes ya incluyen IVA o son tasa 0%.
-    // Desglosaremos el IVA asumiendo que el precio final lo incluye (Total / 1.16).
+    let total = carrito.reduce((acc, item) => acc + (item.Precio * item.Cantidad), 0);
     const subtotal = total / 1.16;
     const iva = total - subtotal;
 
-    document.getElementById('txtSubtotal').textContent = formatearMoneda(subtotal);
-    document.getElementById('txtIva').textContent = formatearMoneda(iva);
-    document.getElementById('txtTotal').textContent = formatearMoneda(total);
+    document.getElementById('txtSubtotal').textContent = `$${subtotal.toFixed(2)}`;
+    document.getElementById('txtIva').textContent = `$${iva.toFixed(2)}`;
+    document.getElementById('txtTotal').textContent = `$${total.toFixed(2)}`;
 }
 
-function cobrar() {
-    if (carrito.length === 0) {
-        alert('No hay productos en el ticket para cobrar.');
-        return;
-    }
+// ==========================================
+// ENVÍO DE LA VENTA AL BACKEND
+// ==========================================
+async function procesarCobroFinal(idMetodoPago) {
+    const empleadoSesion = JSON.parse(localStorage.getItem('usuarioLCAW'));
     
-    // Por ahora solo mostraremos un mensaje. Luego lo conectaremos a tu tabla 'ventas' en la BD
-    alert(`¡Venta realizada con éxito!\nTotal cobrado: ${document.getElementById('txtTotal').textContent}`);
-    carrito = [];
-    renderizarCarrito();
-}
+    // PAYLOAD LIMPIO: La BD calcula precios e IVA
+    const datosVenta = {
+        idEmpleado: empleadoSesion ? empleadoSesion.idEmpleado : 1,
+        idMetodoPago: idMetodoPago,
+        carrito: carrito.map(item => ({
+            idProducto: item.IdProducto,
+            cantidad: item.Cantidad
+        }))
+    };
 
-// ==========================================
-// UTILERÍAS
-// ==========================================
-function formatearMoneda(cantidad) {
-    return cantidad.toLocaleString('es-MX', {
-        style: 'currency',
-        currency: 'MXN'
-    });
+    document.getElementById('modalPago').classList.add('oculto');
+
+    const respuesta = await registrarVentaDB(datosVenta);
+
+    if (respuesta.exito) {
+        mostrarAlerta('¡Venta realizada con éxito! 🚀');
+        carrito = [];
+        renderizarCarrito();
+        cargarCatalogo(); // Refresca el stock disponible
+    } else {
+        mostrarAlerta(`Error: ${respuesta.mensaje}`);
+    }
 }

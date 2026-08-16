@@ -26,10 +26,15 @@
                 <button class="menu-btn" onclick="navegarA('productos.html')">📦 Inventario</button>
                 <button class="menu-btn" onclick="navegarA('clientes.html')">👥 Clientes</button>
                 <button class="menu-btn" onclick="navegarA('ventas.html')">📊 Historial</button>
-                <button class="menu-btn" onclick="navegarA('usuarios.html')">⚙️ Usuarios</button>
+                <button class="menu-btn" onclick="navegarA('usuarios.html')">👥 Usuarios</button>
+                
+                <!-- NUEVO: Botón de Ajustes -->
+                <button class="menu-btn" onclick="navegarA('ajustes.html')">⚙️ Ajustes</button>
             </nav>
 
             <div class="sidebar-footer">
+                <!-- NUEVO: Preparativo para tu música -->
+                <button id="btnMusica" class="btn-secundario" title="Música ambiental">🎵 Lofi Vibes</button>
                 <button id="btnCerrarSesion" class="btn-logout">🚪 Cerrar Sesión</button>
             </div>
         </aside>
@@ -40,13 +45,23 @@
                 <div class="bienvenida">
                     <h1 id="saludoUsuario">¡Bienvenido! 👋</h1>
                 </div>
-                <div class="usuario-info">
-                    <span id="rolUsuario" class="badge-rol">Rol</span>
-                    <span id="nombreUsuario" class="perfil-nombre">Cargando...</span>
-                    <div class="avatar-placeholder">👤</div>
+                
+                <!-- NUEVO: Controles rápidos y Perfil agrupados -->
+                <div class="topbar-derecha">
+                    
+                    <div class="topbar-acciones">
+                        <button id="btnNotificaciones" class="btn-icono" title="Notificaciones">🔔</button>
+                        <button id="btnTema" class="btn-icono" title="Cambiar Tema">🌙</button>
+                    </div>
+
+                    <div class="usuario-info">
+                        <span id="rolUsuario" class="badge-rol">Rol</span>
+                        <span id="nombreUsuario" class="perfil-nombre">Cargando...</span>
+                        <div class="avatar-placeholder">👤</div>
+                    </div>
                 </div>
             </header>
-
+            
             <section class="dashboard-widgets">
                 <div class="widget glass-panel">
                     <h3>Ventas de Hoy</h3>
@@ -65,6 +80,6 @@
         </main>
     </div>
 
-    <script src="../scripts/menu.js"></script>
+    <script type="module" src="../scripts/menu.js"></script>
 </body>
 </html>

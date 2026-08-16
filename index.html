@@ -3,25 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirigiendo...</title>
-    <meta http-equiv="refresh" content="0; url=pages/login.html">
-    
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f4f4f4;
-        }
-    </style>
+    <title>LCAW - Bienvenido</title>
+    <link rel="stylesheet" href="styles/index.css">
 </head>
 <body>
-    <p>Redirigiendo al inicio de sesión...</p>
-    
+
+    <!-- Fondos animados de cristal -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <main class="splash-container">
+        <div class="glass-card">
+            <div class="logo-container">
+                <span class="icon">🛒</span>
+                <h1>LCAW</h1>
+                <p class="subtitle">Los Chavales - Punto de Venta</p>
+            </div>
+
+            <div class="loader-box">
+                <p class="status-text">Cargando sistema...</p>
+                <div class="progress-bar-container">
+                    <div class="progress-bar"></div>
+                </div>
+                <span class="counter-text">Redirigiendo en <strong id="contador">5</strong> segundos</span>
+            </div>
+
+            <a href="pages/login.html" class="btn-saltar">Ingresar ahora ➔</a>
+        </div>
+    </main>
+
     <script>
-        window.location.href = "pages/login.html";
+        let segundos = 5;
+        const elemContador = document.getElementById('contador');
+
+        const intervalo = setInterval(() => {
+            segundos--;
+            if (elemContador) elemContador.textContent = segundos;
+
+            if (segundos <= 0) {
+                clearInterval(intervalo);
+                window.location.href = 'pages/login.html';
+            }
+        }, 1000);
     </script>
 </body>
 </html>

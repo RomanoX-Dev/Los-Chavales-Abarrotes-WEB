@@ -151,3 +151,29 @@ input::placeholder { color: #dddddd; }
 
 #pantallaCarga h3 { font-size: 18px; color: #4facfe; margin-bottom: 5px; }
 #pantallaCarga p { font-size: 13px; color: #ccc; margin-bottom: 0; }
+
+/* Estilos de la alerta profesional */
+#alertaCustom {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #ff4d4f; /* Color rojo de error */
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    font-weight: bold;
+    z-index: 1000;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.alerta-oculta {
+    opacity: 0;
+    transform: translateY(-20px);
+    pointer-events: none;
+}
+
+.alerta-visible {
+    opacity: 1;
+    transform: translateY(0);
+}

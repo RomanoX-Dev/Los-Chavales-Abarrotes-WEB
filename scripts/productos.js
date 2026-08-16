@@ -1,36 +1,42 @@
+// Importamos nuestras herramientas
+import { obtenerProductos, crearProducto, actualizarProducto, borrarProducto } from '../api/productosAPI.js';
+import { mostrarAlerta } from '../utils/alertas.js';
+
 let productosGlobales = [];
-let modoEdicion = false; // Bandera para saber si guardamos o actualizamos
+let modoEdicion = false; 
 
 document.addEventListener('DOMContentLoaded', () => {
-    cargarProductos();
+    cargarTabla();
 
-    // 1. Buscador
+    // 1. Buscador Optimizado
     document.getElementById('buscadorProductos').addEventListener('input', (e) => {
-        filtrarProductos(e.target.value.toLowerCase());
+        const texto = e.target.value.toLowerCase();
+        const filtrados = productosGlobales.filter(p => 
+            p.Nombre.toLowerCase().includes(texto) || 
+            (p.CodigoBarras && p.CodigoBarras.toLowerCase().includes(texto))
+        );
+        renderizarTabla(filtrados);
     });
 
     // 2. Controladores del Modal
     const modal = document.getElementById('modalProducto');
     const form = document.getElementById('formularioProducto');
 
-    // Botón Agregar (Abre Modal Vacío)
     document.getElementById('btnAgregarProducto').addEventListener('click', () => {
         modoEdicion = false;
         document.getElementById('tituloModal').textContent = 'Nuevo Producto 📦';
-        form.reset(); // Limpia el formulario
+        form.reset(); 
         document.getElementById('productoId').value = '';
         modal.classList.remove('oculto');
     });
 
-    // Botones Cancelar/Cerrar (Ocultan Modal)
     document.getElementById('btnCerrarModal').addEventListener('click', () => modal.classList.add('oculto'));
     document.getElementById('btnCancelarModal').addEventListener('click', () => modal.classList.add('oculto'));
 
-    // 3. ENVIAR FORMULARIO (Guardar / Actualizar)
+    // 3. Guardar / Actualizar
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        // Armamos el objeto con exactamente los nombres de tu Base de Datos
         const datosProducto = {
             CodigoBarras: document.getElementById('codigoBarras').value || null,
             ProductoN: document.getElementById('nombreProducto').value,
@@ -38,118 +44,102 @@ document.addEventListener('DOMContentLoaded', () => {
             Stock: parseInt(document.getElementById('stock').value),
             idCategoria: parseInt(document.getElementById('idCategoria').value),
             idMarca: parseInt(document.getElementById('idMarca').value),
-            idUnidad: 1, // Por defecto Pieza
+            idUnidad: 1, 
             StockMinimo: 5,
             PrecioProveedor: 0,
             idProveedor: 1
         };
 
-        try {
-            const url = modoEdicion 
-                ? `https://lcaw-server.onrender.com/api/productos/${document.getElementById('productoId').value}` 
-                : 'https://lcaw-server.onrender.com/api/productos';
-            
-            const metodo = modoEdicion ? 'PUT' : 'POST';
+        const idActual = document.getElementById('productoId').value;
+        
+        // Llamadas limpias a la API
+        const respuesta = modoEdicion 
+            ? await actualizarProducto(idActual, datosProducto)
+            : await crearProducto(datosProducto);
 
-            const respuesta = await fetch(url, {
-                method: metodo,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(datosProducto)
-            });
-
-            if (respuesta.ok) {
-                modal.classList.add('oculto');
-                cargarProductos(); // Recargamos la tabla
-                alert(modoEdicion ? 'Producto actualizado!' : 'Producto guardado!');
-            } else {
-                const errorData = await respuesta.json();
-                alert('Error: ' + errorData.mensaje);
-            }
-        } catch (error) {
-            console.error('Error al guardar:', error);
+        if (respuesta.exito) {
+            modal.classList.add('oculto');
+            cargarTabla(); 
+            mostrarAlerta(modoEdicion ? '¡Producto actualizado! ✨' : '¡Producto guardado! 📦');
+        } else {
+            mostrarAlerta('Error: ' + respuesta.mensaje);
         }
     });
 });
 
-// ================= FUNCIONES DE TABLA =================
+// ================= FUNCIONES =================
 
-async function cargarProductos() {
-    const tbody = document.getElementById('cuerpoTablaProductos');
-    try {
-        const respuesta = await fetch('https://lcaw-server.onrender.com/api/productos');
-        productosGlobales = await respuesta.json();
-        renderizarTabla(productosGlobales);
-    } catch (error) {
-        tbody.innerHTML = `<tr><td colspan="7">Error al cargar.</td></tr>`;
-    }
+async function cargarTabla() {
+    productosGlobales = await obtenerProductos();
+    renderizarTabla(productosGlobales);
 }
 
 function renderizarTabla(lista) {
     const tbody = document.getElementById('cuerpoTablaProductos');
     tbody.innerHTML = '';
     
+    if (lista.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">No hay productos disponibles.</td></tr>`;
+        return;
+    }
+
     lista.forEach(prod => {
-        // Ignoramos los dados de baja en la tabla normal
         if (prod.Estatus === 'Inactivo') return; 
 
-        let claseStock = parseFloat(prod.Stock) <= 5 ? 'badge-stock bajo' : 'badge-stock';
+        const claseStock = parseFloat(prod.Stock) <= 5 ? 'badge-stock bajo' : 'badge-stock';
         
-        tbody.innerHTML += `
-            <tr>
-                <td>${prod.CodigoBarras || 'N/A'}</td>
-                <td><strong>${prod.Nombre}</strong></td>
-                <td>${prod.NombreCategoria || 'Sin categoría'}</td>
-                <td style="color: #4facfe;">$${parseFloat(prod.Precio).toFixed(2)}</td>
-                <td><span class="${claseStock}">${prod.Stock}</span></td>
-                <td>${prod.Estatus}</td>
-                <td>
-                    <button class="btn-icon" onclick="editarProducto(${prod.IdProducto})">✏️</button>
-                    <button class="btn-icon" onclick="eliminarProducto(${prod.IdProducto})">🗑️</button>
-                </td>
-            </tr>
+        // Creamos la fila
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${prod.CodigoBarras || 'N/A'}</td>
+            <td><strong>${prod.Nombre}</strong></td>
+            <td>${prod.NombreCategoria || 'Sin categoría'}</td>
+            <td style="color: #4facfe;">$${parseFloat(prod.Precio).toFixed(2)}</td>
+            <td><span class="${claseStock}">${prod.Stock}</span></td>
+            <td>${prod.Estatus}</td>
+            <td>
+                <button class="btn-icon btn-editar" data-id="${prod.IdProducto}">✏️</button>
+                <button class="btn-icon btn-borrar" data-id="${prod.IdProducto}">🗑️</button>
+            </td>
         `;
+        tbody.appendChild(tr);
+    });
+
+    // Asignar eventos a los botones generados dinámicamente
+    document.querySelectorAll('.btn-editar').forEach(btn => {
+        btn.addEventListener('click', (e) => editarProducto(parseInt(e.target.dataset.id)));
+    });
+
+    document.querySelectorAll('.btn-borrar').forEach(btn => {
+        btn.addEventListener('click', (e) => eliminarProducto(parseInt(e.target.dataset.id)));
     });
 }
 
-function filtrarProductos(texto) {
-    const filtrados = productosGlobales.filter(p => 
-        p.Nombre.toLowerCase().includes(texto) || 
-        (p.CodigoBarras && p.CodigoBarras.toLowerCase().includes(texto))
-    );
-    renderizarTabla(filtrados);
-}
-
-// ================= ACCIONES (EDITAR / BORRAR) =================
-
 function editarProducto(id) {
-    // Buscamos el producto en nuestro arreglo global
     const prod = productosGlobales.find(p => p.IdProducto === id);
     if (!prod) return;
 
     modoEdicion = true;
     document.getElementById('tituloModal').textContent = 'Editar Producto ✏️';
     
-    // Llenamos el formulario
     document.getElementById('productoId').value = prod.IdProducto;
     document.getElementById('codigoBarras').value = prod.CodigoBarras || '';
     document.getElementById('nombreProducto').value = prod.Nombre;
     document.getElementById('precio').value = prod.Precio;
     document.getElementById('stock').value = prod.Stock;
+    // OJO: Aquí deberías llenar también idCategoria e idMarca si los tienes en la tabla
     
     document.getElementById('modalProducto').classList.remove('oculto');
 }
 
 async function eliminarProducto(id) {
     if (confirm('¿Dar de baja este producto? (Ya no aparecerá en ventas)')) {
-        try {
-            const respuesta = await fetch(`https://lcaw-server.onrender.com/api/productos/${id}/baja`, { method: 'PUT' });
-            if (respuesta.ok) {
-                cargarProductos(); // Refresca la tabla
-            } else {
-                alert('No se pudo borrar el producto.');
-            }
-        } catch (error) {
-            console.error(error);
+        const respuesta = await borrarProducto(id);
+        if (respuesta.exito) {
+            mostrarAlerta('Producto eliminado correctamente 🗑️');
+            cargarTabla(); 
+        } else {
+            mostrarAlerta('No se pudo borrar el producto.');
         }
     }
 }

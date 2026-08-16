@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
 async function cargarProductos() {
     const contenedor = document.getElementById('contenedorProductosPos');
     try {
-        const respuesta = await fetch('http://localhost:3000/api/productos');
+        const respuesta = await fetch('https://lcaw-server.onrender.com/api/productos');
         productosGlobales = await respuesta.json();
         renderizarProductos(productosGlobales);
     } catch (error) {

@@ -46,8 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const url = modoEdicion 
-                ? `http://localhost:3000/api/productos/${document.getElementById('productoId').value}` 
-                : 'http://localhost:3000/api/productos';
+                ? `https://lcaw-server.onrender.com/${document.getElementById('productoId').value}` 
+                : 'https://lcaw-server.onrender.com';
             
             const metodo = modoEdicion ? 'PUT' : 'POST';
 
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
 async function cargarProductos() {
     const tbody = document.getElementById('cuerpoTablaProductos');
     try {
-        const respuesta = await fetch('http://localhost:3000/api/productos');
+        const respuesta = await fetch('https://lcaw-server.onrender.com/api/productos');
         productosGlobales = await respuesta.json();
         renderizarTabla(productosGlobales);
     } catch (error) {
@@ -142,7 +142,7 @@ function editarProducto(id) {
 async function eliminarProducto(id) {
     if (confirm('¿Dar de baja este producto? (Ya no aparecerá en ventas)')) {
         try {
-            const respuesta = await fetch(`http://localhost:3000/api/productos/${id}/baja`, { method: 'PUT' });
+            const respuesta = await fetch(`https://lcaw-server.onrender.com/api/productos/${id}/baja`, { method: 'PUT' });
             if (respuesta.ok) {
                 cargarProductos(); // Refresca la tabla
             } else {

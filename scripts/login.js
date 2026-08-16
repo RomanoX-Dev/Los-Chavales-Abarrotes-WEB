@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const passwordValor = inputPassword.value;
 
         try {
-            const respuesta = await fetch('http://localhost:3000/api/usuarios/login', {
+            const respuesta = await fetch('https://lcaw-server.onrender.com/api/usuarios/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ usuario: usuarioInput, password: passwordValor })

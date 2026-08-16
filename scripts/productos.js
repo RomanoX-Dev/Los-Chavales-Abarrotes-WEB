@@ -46,8 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const url = modoEdicion 
-                ? `https://lcaw-server.onrender.com/${document.getElementById('productoId').value}` 
-                : 'https://lcaw-server.onrender.com';
+                ? `https://lcaw-server.onrender.com/api/productos/${document.getElementById('productoId').value}` 
+                : 'https://lcaw-server.onrender.com/api/productos';
             
             const metodo = modoEdicion ? 'PUT' : 'POST';
 

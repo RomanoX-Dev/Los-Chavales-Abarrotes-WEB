@@ -15,8 +15,7 @@ export async function obtenerProductosPOS() {
 // 2. Registrar la Venta en la Base de Datos
 export async function registrarVentaDB(datosVenta) {
     try {
-        // Esta ruta (POST /ventas) la tendrás que crear en tu backend en el futuro
-        const respuesta = await fetch(`${BASE_URL}/ventas`, {
+        const respuesta = await fetch(`${BASE_URL}/ventas/cobrar`, { 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(datosVenta)

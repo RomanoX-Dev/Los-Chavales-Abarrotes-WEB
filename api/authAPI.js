@@ -1,5 +1,3 @@
-// Guardamos la URL base en una variable. 
-// ¡Si algún día cambias de Render a otra plataforma, solo modificas esta línea!
 const BASE_URL = 'https://lcaw-server.onrender.com/api';
 
 export async function iniciarSesion(usuario, password) {

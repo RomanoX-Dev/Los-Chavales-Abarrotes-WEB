@@ -1,18 +1,28 @@
-const BASE_URL = 'https://lcaw-server.onrender.com/api/productos';
+const HOST = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:3000/api'
+    : 'https://lcaw-server.onrender.com/api';
 
-// 1. Obtener todos los productos
-export async function obtenerProductos() {
+const BASE_URL = `${HOST}/productos`;
+
+async function procesarRespuesta(respuesta) {
     try {
-        const respuesta = await fetch(BASE_URL);
-        if (!respuesta.ok) throw new Error('Error al cargar la tabla');
         return await respuesta.json();
-    } catch (error) {
-        console.error(error);
-        return []; // Retorna un arreglo vacío si falla
+    } catch {
+        return { mensaje: 'Error en el servidor o respuesta no válida.' };
     }
 }
 
-// 2. Guardar un producto nuevo (POST)
+export async function obtenerProductos() {
+    try {
+        const respuesta = await fetch(BASE_URL);
+        if (!respuesta.ok) throw new Error('Error al cargar productos');
+        return await respuesta.json();
+    } catch (error) {
+        console.error('Error en obtenerProductos:', error);
+        return []; 
+    }
+}
+
 export async function crearProducto(datos) {
     try {
         const respuesta = await fetch(BASE_URL, {
@@ -20,34 +30,65 @@ export async function crearProducto(datos) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(datos)
         });
-        const data = await respuesta.json();
-        return { exito: respuesta.ok, mensaje: data.mensaje || 'Producto creado' };
+        const data = await procesarRespuesta(respuesta);
+        return { 
+            exito: respuesta.ok, 
+            mensaje: data.mensaje || (respuesta.ok ? 'Producto creado correctamente.' : 'Error al crear producto.') 
+        };
     } catch (error) {
-        return { exito: false, mensaje: 'Error de conexión al servidor' };
+        console.error('Error en crearProducto:', error);
+        return { exito: false, mensaje: 'Error de conexión con el servidor.' };
     }
 }
 
-// 3. Actualizar un producto (PUT)
 export async function actualizarProducto(id, datos) {
     try {
         const respuesta = await fetch(`${BASE_URL}/${id}`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json' }, 
             body: JSON.stringify(datos)
         });
-        const data = await respuesta.json();
-        return { exito: respuesta.ok, mensaje: data.mensaje || 'Producto actualizado' };
+        const data = await procesarRespuesta(respuesta);
+        return { 
+            exito: respuesta.ok, 
+            mensaje: data.mensaje || (respuesta.ok ? 'Producto actualizado correctamente.' : 'Error al actualizar producto.') 
+        };
     } catch (error) {
-        return { exito: false, mensaje: 'Error de conexión al servidor' };
+        console.error('Error en actualizarProducto:', error);
+        return { exito: false, mensaje: 'Error de conexión con el servidor.' };
     }
 }
 
-// 4. Dar de baja un producto (PUT)
 export async function borrarProducto(id) {
     try {
-        const respuesta = await fetch(`${BASE_URL}/${id}/baja`, { method: 'PUT' });
-        return { exito: respuesta.ok };
+        const respuesta = await fetch(`${BASE_URL}/${id}/baja`, { 
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await procesarRespuesta(respuesta);
+        return { 
+            exito: respuesta.ok, 
+            mensaje: data.mensaje || (respuesta.ok ? 'Producto dado de baja exitosamente.' : 'No se pudo dar de baja el producto.') 
+        };
     } catch (error) {
-        return { exito: false };
+        console.error('Error en borrarProducto:', error);
+        return { exito: false, mensaje: 'Error de conexión con el servidor.' };
+    }
+}
+
+export async function eliminarProductoDefinitivoAPI(id) {
+    try {
+        const respuesta = await fetch(`${BASE_URL}/${id}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await procesarRespuesta(respuesta);
+        return { 
+            exito: respuesta.ok, 
+            mensaje: data.mensaje || (respuesta.ok ? 'Producto eliminado definitivamente.' : 'Error al eliminar.') 
+        };
+    } catch (error) {
+        console.error('Error en eliminarProductoDefinitivoAPI:', error);
+        return { exito: false, mensaje: 'Error de conexión con el servidor.' };
     }
 }

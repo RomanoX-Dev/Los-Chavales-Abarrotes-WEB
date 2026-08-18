@@ -3,18 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LCAW - Inventario</title>
+    <title>LCAW - Módulo de Inventario</title>
     <link rel="stylesheet" href="../styles/menu.css">
     <link rel="stylesheet" href="../styles/productos.css">
 </head>
 <body>
 
+    <!-- Fondos dinámicos / Orbes -->
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
     <div class="orb orb-3"></div>
 
     <div class="dashboard-container">
         
+        <!-- BARRA LATERAL -->
         <aside class="sidebar glass-panel">
             <div class="logo">
                 <h2>🛒 LCAW</h2>
@@ -33,6 +35,7 @@
             </div>
         </aside>
 
+        <!-- CONTENIDO PRINCIPAL -->
         <main class="main-content">
             
             <header class="topbar glass-panel">
@@ -49,27 +52,29 @@
             <section class="toolbar glass-panel">
                 <div class="search-box">
                     <span>🔍</span>
-                    <input type="text" id="buscadorProductos" placeholder="Buscar por código o nombre...">
+                    <input type="text" id="buscadorProductos" placeholder="Buscar por código, nombre o categoría...">
                 </div>
-                <button class="btn-primary" id="btnAgregarProducto">+ Agregar Producto</button>
+                <button class="btn-primario" id="btnAgregarProducto">+ Agregar Producto</button>
             </section>
 
+            <!-- TABLA -->
             <section class="table-container glass-panel">
                 <table class="glass-table">
                     <thead>
                         <tr>
+                            <th>Imagen</th> 
                             <th>Código</th>
                             <th>Producto</th>
                             <th>Categoría</th>
-                            <th>Precio</th>
+                            <th>P. Venta</th>
                             <th>Stock</th>
                             <th>Estatus</th>
-                            <th>Acciones</th>
+                            <th style="text-align: center;">Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="cuerpoTablaProductos">
                         <tr>
-                            <td colspan="7" style="text-align: center; padding: 20px;">Cargando inventario... ⏳</td>
+                            <td colspan="8" style="text-align: center; padding: 25px;">Cargando inventario... ⏳</td>
                         </tr>
                     </tbody>
                 </table>
@@ -78,8 +83,11 @@
         </main>
     </div>
     
-   <div id="modalProducto" class="modal-overlay oculto">
-        <div class="glass-modal">
+    <!-- ==========================================
+         MODAL 1: REGISTRO / EDICIÓN (HORIZONTAL WIDE)
+         ========================================== -->
+    <div id="modalProducto" class="modal-overlay oculto">
+        <div class="glass-modal modal-wide">
             <div class="modal-header">
                 <h2 id="tituloModal">Nuevo Producto 📦</h2>
                 <button class="btn-cerrar" id="btnCerrarModal">✖</button>
@@ -88,47 +96,169 @@
             <form id="formularioProducto">
                 <input type="hidden" id="productoId"> 
                 
-                <div class="form-grid">
-                    <div class="input-group">
-                        <label>Código de Barras</label>
-                        <input type="text" id="codigoBarras" placeholder="Ej. 75010...">
-                    </div>
-                    <div class="input-group">
-                        <label>Nombre del Producto *</label>
-                        <input type="text" id="nombreProducto" required placeholder="Ej. Coca-Cola 600ml">
-                    </div>
-                    <div class="input-group">
-                        <label>Precio Venta ($) *</label>
-                        <input type="number" id="precio" step="0.01" required placeholder="Ej. 18.50">
-                    </div>
-                    <div class="input-group">
-                        <label>Stock Disponible *</label>
-                        <input type="number" id="stock" required placeholder="Ej. 50">
-                    </div>
+                <div class="form-layout-horizontal">
                     
-                    <div class="input-group">
-                        <label>Categoría *</label>
-                        <select id="idCategoria" required>
-                            <option value="1">Bebidas</option>
-                            <option value="2">Botanas</option>
-                            <option value="3">Lácteos</option>
-                        </select>
+                    <!-- COLUMNA IZQUIERDA: Imagen y Datos Principales -->
+                    <div class="form-col">
+                        <div class="input-group text-center">
+                            <label>Fotografía del Producto</label>
+                            <div class="preview-container">
+                                <img id="previewImagen" alt="Vista Previa" class="img-preview" referrerpolicy="no-referrer">
+                            </div>
+                            <input type="file" id="imagenProductoFile" accept="image/*" style="display: none;">
+                            <div class="btn-img-group">
+                                <label for="imagenProductoFile" class="btn-secundario inline-btn">
+                                    📁 Cambiar / Subir Foto
+                                </label>
+                                <button type="button" id="btnQuitarFoto" class="btn-danger-icon" title="Quitar fotografía">🗑️</button>
+                            </div>
+                            <p id="nombreArchivoText" class="file-info-text">Sin cambios en la imagen</p>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Código de Barras</label>
+                            <input type="text" id="codigoBarras" placeholder="Ej. 750100112345">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label>Nombre del Producto *</label>
+                            <input type="text" id="nombreProducto" required placeholder="Ej. Coca-Cola 600ml">
+                        </div>
+
+                        <div class="input-group">
+                            <label>Descripción</label>
+                            <textarea id="descripcionProducto" rows="3" placeholder="Detalles adicionados, presentación, peso, observaciones..."></textarea>
+                        </div>
                     </div>
-                    <div class="input-group">
-                        <label>Marca</label>
-                        <select id="idMarca">
-                            <option value="1">Coca-Cola</option>
-                            <option value="2">Sabritas</option>
-                            <option value="3">Lala</option>
-                        </select>
+
+                    <!-- COLUMNA DERECHA: Precios, Inventarios y Relaciones -->
+                    <div class="form-col">
+                        
+                        <div class="grid-2-col">
+                            <div class="input-group">
+                                <label>Precio Proveedor ($)</label>
+                                <input type="number" id="precioProveedor" step="0.01" min="0" placeholder="0.00">
+                            </div>
+
+                            <div class="input-group">
+                                <label>Precio Venta ($) *</label>
+                                <input type="number" id="precio" step="0.01" min="0" required placeholder="0.00">
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Stock Actual *</label>
+                            <input type="number" id="stock" required min="0" placeholder="0">
+                        </div>
+
+                        <div class="input-group">
+                          <label for="stockMinimo">Stock Mínimo ⚠️</label>
+                          <input type="number" id="stockMinimo" name="stockMinimo" min="0" placeholder="Ej. 5">
+                        </div>
+                        
+                        <div class="grid-2-col">
+                            <div class="input-group">
+                                <label>Categoría *</label>
+                                <select id="idCategoria" required>
+                                    <option value="">Seleccione categoría...</option>
+                                </select>
+                            </div>
+
+                            <div class="input-group">
+                                <label>Marca</label>
+                                <select id="idMarca">
+                                    <option value="">Seleccione marca...</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Proveedor *</label>
+                            <select id="idProveedor" required>
+                                <option value="">Seleccione proveedor...</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Estatus *</label>
+                            <select id="estatusProducto" required>
+                                <option value="Activo">Activo</option>
+                                <option value="Inactivo">Inactivo</option>
+                            </select>
+                        </div>
+
                     </div>
+
                 </div>
-                
+
                 <div class="modal-footer">
-                    <button type="button" class="btn-secundario" id="btnCancelarModal">Cancelar</button>
+                    <button type="button" id="btnCerrarModalInferior" class="btn-secundario">Cancelar</button>
                     <button type="submit" class="btn-primario">Guardar Producto</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         MODAL 2: DETALLES RÁPIDOS (WIDE)
+         ========================================== -->
+    <div id="modalDetallesProducto" class="modal-overlay oculto">
+        <div class="glass-modal modal-wide">
+            <div class="modal-header">
+                <h2>Detalles del Producto 🔍</h2>
+                <button class="btn-cerrar" id="btnCerrarModalDetalles">✖</button>
+            </div>
+
+            <div class="detalles-grid-horizontal">
+                <div class="detalles-media">
+                    <img id="detalleImagen" class="img-preview-large" alt="Producto" referrerpolicy="no-referrer">
+                    <span id="detalleEstatusBadge" class="badge-estatus">Cargando...</span>
+                </div>
+
+                <div class="detalles-info">
+                    <h2 id="detalleNombre" class="detalle-titulo">Nombre del Producto</h2>
+                    <p id="detalleDescripcion" class="text-muted custom-scrollbar-text">Sin descripción disponible.</p>
+                    
+                    <div class="info-cards-grid">
+                        <div class="info-card">
+                            <span class="info-label">Código</span>
+                            <strong id="detalleCodigo">N/A</strong>
+                        </div>
+                        <div class="info-card">
+                            <span class="info-label">Categoría</span>
+                            <strong id="detalleCategoria">N/A</strong>
+                        </div>
+                        <div class="info-card">
+                            <span class="info-label">Marca</span>
+                            <strong id="detalleMarca">N/A</strong>
+                        </div>
+                        <div class="info-card">
+                            <span class="info-label">Proveedor</span>
+                            <strong id="detalleProveedor">N/A</strong>
+                        </div>
+                        <div class="info-card highlight">
+                            <span class="info-label">Precio Venta</span>
+                            <strong id="detallePrecio" class="precio">$0.00</strong>
+                        </div>
+                        <div class="info-card">
+                            <span class="info-label">Precio Proveedor</span>
+                            <strong id="detallePrecioProv">$0.00</strong>
+                        </div>
+                        <div class="info-card">
+                            <span class="info-label">Stock Actual</span>
+                            <strong id="detalleStock">0</strong>
+                        </div>
+                        <div class="info-card">
+                            <span class="info-label">Stock Mínimo</span>
+                            <strong id="detalleStockMin">0</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="btnCerrarDetallesInferior" class="btn-secundario">Cerrar</button>
+            </div>
         </div>
     </div>
 

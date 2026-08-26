@@ -1,12 +1,15 @@
-// 1. Agregamos el nuevo import de nuestra API
-import { iniciarSesion } from '../api/authAPI.js';
-import { mostrarAlerta } from '../utils/alertas.js';
+// 1. Agregamos los imports actualizados de nuestra API y helpers
+import { usuariosAPI } from '../api/usuariosAPI.js';
+import { mostrarError, mostrarExito } from '../utils/alertas.js';
+import { guardarSesion } from '../utils/helpers.js';
 import { esUsuarioValido, esPasswordValida } from '../utils/validaciones.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 
     const btnVerPassword = document.getElementById('btnVerPassword');
     const inputPassword = document.getElementById('password');
+    const inputUsuario = document.getElementById('usuario');
+    const formularioLogin = document.getElementById('formularioLogin');
 
     btnVerPassword.addEventListener('click', () => {
         if (inputPassword.type === 'password') {
@@ -18,40 +21,42 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    const formularioLogin = document.getElementById('formularioLogin');
-
     formularioLogin.addEventListener('submit', async (evento) => {
         evento.preventDefault();
 
-        const usuarioInput = document.getElementById('usuario').value.trim();
-        const passwordValor = inputPassword.value;
+        // Alineamos las variables a nombreUsuario y contrasena como en la BD
+        const nombreUsuario = inputUsuario.value.trim();
+        const contrasena = inputPassword.value;
 
         // Validaciones locales
-        const checkUsuario = esUsuarioValido(usuarioInput);
-        if (!checkUsuario.valido) return mostrarAlerta(checkUsuario.mensaje);
+        const checkUsuario = esUsuarioValido(nombreUsuario);
+        if (!checkUsuario.valido) return mostrarError(checkUsuario.mensaje);
 
-        const checkPassword = esPasswordValida(passwordValor);
-        if (!checkPassword.valido) return mostrarAlerta(checkPassword.mensaje);
+        const checkPassword = esPasswordValida(contrasena);
+        if (!checkPassword.valido) return mostrarError(checkPassword.mensaje);
 
         // ==========================================
-        // NUEVA LLAMADA A LA API (¡Súper limpio!)
+        // LLAMADA A LA API (Con los nombres exactos)
         // ==========================================
-        const respuestaApi = await iniciarSesion(usuarioInput, passwordValor);
+        const respuestaApi = await usuariosAPI.login(nombreUsuario, contrasena);
 
         if (respuestaApi.exito) {
-            // Todo salió bien, guardamos datos y entramos
-            localStorage.setItem('usuarioLCAW', JSON.stringify(respuestaApi.datos.usuario));
-            localStorage.setItem('rolLCAW', respuestaApi.datos.rol);
+            // Guardamos el token y los datos usando nuestra función centralizada
+            guardarSesion(respuestaApi.token, respuestaApi.usuario);
 
+            // Transición visual
             document.getElementById('contenedorFormulario').classList.add('oculto');
             document.getElementById('pantallaCarga').classList.remove('oculto');
+            
+            // (Opcional) Podemos mostrar un mensaje de éxito rápido
+            mostrarExito(respuestaApi.mensaje || "¡Bienvenido!");
 
             setTimeout(() => {
                 window.location.href = './menu.html'; 
             }, 2000);
         } else {
-            // Hubo un error (contraseña incorrecta, servidor caído, etc.)
-            mostrarAlerta(respuestaApi.datos.mensaje);
+            // Hubo un error devuelto por el backend
+            mostrarError(respuestaApi.mensaje);
         }
     });
 });

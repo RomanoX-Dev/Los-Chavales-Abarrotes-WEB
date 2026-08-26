@@ -35,7 +35,7 @@ body {
     100% { transform: translateY(50px) scale(1.1); }
 }
 
-/* === EL EFECTO GLASSMORPHISM === */
+/* === EL EFECTO GLASSMORPHISM (MÁS GRANDE Y RESPONSIVO) === */
 .glass-login {
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(20px);
@@ -43,7 +43,8 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 20px;
     padding: 40px;
-    width: 350px;
+    width: 420px; /* Lo hicimos un poco más grande (antes 350px) */
+    max-width: 90%; /* Evita que se desborde en celulares pequeños */
     text-align: center;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
     position: relative;
@@ -152,28 +153,82 @@ input::placeholder { color: #dddddd; }
 #pantallaCarga h3 { font-size: 18px; color: #4facfe; margin-bottom: 5px; }
 #pantallaCarga p { font-size: 13px; color: #ccc; margin-bottom: 0; }
 
-/* Estilos de la alerta profesional */
+/* === NUEVOS ENLACES EXTRA === */
+.enlaces-extra {
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.link-olvido, .link-crear {
+    color: #4facfe;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.link-olvido:hover, .link-crear:hover {
+    color: #ffffff;
+    text-shadow: 0 0 8px rgba(79, 172, 254, 0.8);
+}
+
+.separador-linea {
+    width: 60%;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 5px 0;
+}
+
+.texto-nuevo {
+    font-size: 14px;
+    color: #cccccc;
+}
+
+/* === ALERTA PROFESIONAL (CENTRADA PARA MÓVIL Y PC) === */
 #alertaCustom {
     position: fixed;
     top: 20px;
-    right: 20px;
-    background-color: #ff4d4f; /* Color rojo de error */
-    color: white;
-    padding: 15px 25px;
+    left: 50%; /* Lo centramos en la pantalla */
+    width: 90%;
+    max-width: 400px; /* No será gigantesco en PC */
+    padding: 15px 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
     font-weight: bold;
+    text-align: center;
     z-index: 1000;
-    transition: transform 0.3s ease, opacity 0.3s ease;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
 }
 
+/* Clases para manejar oculto/visible con el centrado */
 .alerta-oculta {
     opacity: 0;
-    transform: translateY(-20px);
+    transform: translate(-50%, -40px); /* Sube y se centra */
     pointer-events: none;
 }
 
 .alerta-visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate(-50%, 0); /* Baja y se centra */
+}
+
+/* Colores dinámicos para éxito o error */
+.alerta-error {
+    background-color: #ff4d4f;
+    color: white;
+    border: 1px solid #ff7875;
+}
+
+.alerta-advertencia {
+    background-color: #ffc107; /* Amarillo/Naranja */
+    color: #333; /* Texto oscuro para contrastar */
+    border: 1px solid #ffb300;
+}
+
+.alerta-exito {
+    background-color: #28a745;
+    color: white;
+    border: 1px solid #34ce57;
 }

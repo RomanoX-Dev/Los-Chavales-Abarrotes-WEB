@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LCAW - Iniciar Sesión</title>
+    <!-- Tus rutas originales intactas -->
     <link rel="stylesheet" href="../styles/login.css">
 </head>
 <body>
 
+    <!-- Orbes de fondo -->
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
     <div class="orb orb-3"></div>
@@ -28,6 +30,14 @@
                 
                 <button type="submit" class="btn-entrar">Entrar</button>
             </form>
+
+            <!-- === NUEVOS ENLACES AÑADIDOS AQUÍ === -->
+            <div class="enlaces-extra">
+                <a href="#" class="link-olvido">¿Olvidaste tu contraseña?</a>
+                <div class="separador-linea"></div>
+                <p class="texto-nuevo">¿Eres nuevo? <a href="#" class="link-crear">Crear cuenta</a></p>
+            </div>
+            <!-- ==================================== -->
         </div>
 
         <div id="pantallaCarga" class="oculto">
@@ -40,9 +50,11 @@
     
     <!-- Contenedor para alertas personalizadas -->
     <div id="alertaCustom" class="alerta-oculta">
-    <span id="alertaMensaje"></span>
+        <!-- Respetamos tu span para el mensaje -->
+        <span id="alertaMensaje"></span>
     </div>
 
+   <!-- Tus rutas originales intactas -->
    <script type="module" src="../scripts/login.js"></script>
 </body>
 </html>

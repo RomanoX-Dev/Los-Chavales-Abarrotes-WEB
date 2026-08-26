@@ -1,5 +1,3 @@
-// utils/validaciones.js
-
 // Validamos el usuario (Longitud y sin caracteres especiales salvo guion bajo)
 export function esUsuarioValido(usuario) {
     if (!usuario || typeof usuario !== 'string') {
@@ -11,7 +9,7 @@ export function esUsuarioValido(usuario) {
         return { valido: false, mensaje: "El usuario debe tener al menos 4 caracteres." };
     }
     if (!regexUsuarioSeguro.test(usuario)) {
-        return { valido: false, mensaje: "El usuario no puede contener espacios ni símbolos." };
+        return { valido: false, mensaje: "El usuario no puede contener espacios ni símbolos especiales." };
     }
     
     return { valido: true, mensaje: "Usuario válido." };
@@ -27,9 +25,9 @@ export function esPasswordValida(password) {
     if (password.length < 6) {
         return { valido: false, mensaje: "La contraseña debe ser mayor a 6 caracteres." };
     }
-    if (!regexMayuscula.test(password)) {
-        return { valido: false, mensaje: "La contraseña debe incluir al menos una letra mayúscula." };
-    }
+    //if (!regexMayuscula.test(password)) {
+   //     return { valido: false, mensaje: "La contraseña debe incluir al menos una letra mayúscula." };
+    //}
     
     return { valido: true, mensaje: "Contraseña válida." };
 }

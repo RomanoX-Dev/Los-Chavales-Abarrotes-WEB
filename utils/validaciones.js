@@ -1,4 +1,4 @@
-// Validamos el usuario (Longitud y sin caracteres especiales salvo guion bajo)
+// Validamos el usuario (Longitud mínima de 4 y sin caracteres especiales salvo guion bajo)
 export function esUsuarioValido(usuario) {
     if (!usuario || typeof usuario !== 'string') {
         return { valido: false, mensaje: "El usuario no es válido." };
@@ -15,19 +15,15 @@ export function esUsuarioValido(usuario) {
     return { valido: true, mensaje: "Usuario válido." };
 }
 
-// Validamos la contraseña (Longitud mínima y al menos una letra mayúscula)
+// Validamos la contraseña (Longitud mínima de 6 caracteres)
 export function esPasswordValida(password) {
     if (!password || typeof password !== 'string') {
         return { valido: false, mensaje: "La contraseña no es válida." };
     }
 
-    const regexMayuscula = /[A-Z]/;
     if (password.length < 6) {
-        return { valido: false, mensaje: "La contraseña debe ser mayor a 6 caracteres." };
+        return { valido: false, mensaje: "La contraseña debe tener al menos 6 caracteres." };
     }
-    //if (!regexMayuscula.test(password)) {
-   //     return { valido: false, mensaje: "La contraseña debe incluir al menos una letra mayúscula." };
-    //}
     
     return { valido: true, mensaje: "Contraseña válida." };
 }

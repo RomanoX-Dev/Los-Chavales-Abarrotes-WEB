@@ -1,16 +1,13 @@
 import { API_URL, fetchConAuth } from '../utils/helpers.js';
 
 export const usuariosAPI = {
-    // POST: /api/usuarios/login
+    
     login: async (nombreUsuario, contrasena) => {
         try {
             const respuesta = await fetch(`${API_URL}/api/usuarios/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    usuario: nombreUsuario, 
-                    password: contrasena
-                })
+                body: JSON.stringify({ nombreUsuario, contrasena })
             });
             return await respuesta.json();
         } catch (error) {

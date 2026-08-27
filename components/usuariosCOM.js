@@ -13,7 +13,7 @@ export const usuariosCOM = {
             guardarSesion(resultado.token, resultado.usuario);
             mostrarExito(resultado.mensaje);
             // Redirigir al panel principal
-            window.location.href = '../pages/dashboard.html'; 
+            window.location.href = '../pages/menu.html'; 
         } else {
             mostrarError(resultado.mensaje);
         }

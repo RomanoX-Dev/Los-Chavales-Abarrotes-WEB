@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LCAW - Módulo de Inventario</title>
     <link rel="stylesheet" href="../styles/menu.css">
-    <link rel="stylesheet" href="../styles/productos.css">
+    <link rel="stylesheet" href="../styles/inventario.css">
 </head>
 <body>
 
-    <!-- Fondos dinámicos / Orbes -->
+    <!-- Orbes de fondo -->
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
     <div class="orb orb-3"></div>
 
     <div class="dashboard-container">
         
-        <!-- BARRA LATERAL -->
+        <!-- BARRA LATERAL (Estilos heredados de menu.css) -->
         <aside class="sidebar glass-panel">
             <div class="logo">
                 <h2>🛒 LCAW</h2>
@@ -25,7 +25,7 @@
             <nav class="sidebar-menu">
                 <button class="menu-btn" onclick="navegarA('menu.html')">🏠 Inicio</button>
                 <button class="menu-btn" onclick="navegarA('pos.html')">💻 Punto de Venta</button>
-                <button class="menu-btn active" onclick="navegarA('productos.html')">📦 Inventario</button>
+                <button class="menu-btn active" onclick="navegarA('inventario.html')">📦 Inventario</button>
                 <button class="menu-btn" onclick="navegarA('clientes.html')">👥 Clientes</button>
                 <button class="menu-btn" onclick="navegarA('ventas.html')">📊 Historial</button>
                 <button class="menu-btn" onclick="navegarA('usuarios.html')">⚙️ Usuarios</button>
@@ -49,15 +49,16 @@
                 </div>
             </header>
 
+            <!-- BARRA DE HERRAMIENTAS -->
             <section class="toolbar glass-panel">
                 <div class="search-box">
                     <span>🔍</span>
-                    <input type="text" id="buscadorProductos" placeholder="Buscar por código, nombre o categoría...">
+                    <input type="text" id="buscadorProductos" placeholder="Buscar por código o nombre...">
                 </div>
                 <button class="btn-primario" id="btnAgregarProducto">+ Agregar Producto</button>
             </section>
 
-            <!-- TABLA -->
+            <!-- TABLA DE INVENTARIO -->
             <section class="table-container glass-panel">
                 <table class="glass-table">
                     <thead>
@@ -83,9 +84,7 @@
         </main>
     </div>
     
-    <!-- ==========================================
-         MODAL 1: REGISTRO / EDICIÓN (HORIZONTAL WIDE)
-         ========================================== -->
+    <!-- MODAL ÚNICO: REGISTRO Y EDICIÓN -->
     <div id="modalProducto" class="modal-overlay oculto">
         <div class="glass-modal modal-wide">
             <div class="modal-header">
@@ -98,7 +97,7 @@
                 
                 <div class="form-layout-horizontal">
                     
-                    <!-- COLUMNA IZQUIERDA: Imagen y Datos Principales -->
+                    <!-- Columna Izquierda: Fotografía e Identificación -->
                     <div class="form-col">
                         <div class="input-group text-center">
                             <label>Fotografía del Producto</label>
@@ -107,86 +106,70 @@
                             </div>
                             <input type="file" id="imagenProductoFile" accept="image/*" style="display: none;">
                             <div class="btn-img-group">
-                                <label for="imagenProductoFile" class="btn-secundario inline-btn">
-                                    📁 Cambiar / Subir Foto
-                                </label>
+                                <label for="imagenProductoFile" class="btn-secundario inline-btn">📁 Subir Foto</label>
                                 <button type="button" id="btnQuitarFoto" class="btn-danger-icon" title="Quitar fotografía">🗑️</button>
                             </div>
                             <p id="nombreArchivoText" class="file-info-text">Sin cambios en la imagen</p>
                         </div>
 
                         <div class="input-group">
-                            <label>Código de Barras</label>
+                            <label for="codigoBarras">Código de Barras</label>
                             <input type="text" id="codigoBarras" placeholder="Ej. 750100112345">
                         </div>
                         
                         <div class="input-group">
-                            <label>Nombre del Producto *</label>
+                            <label for="nombreProducto">Nombre del Producto *</label>
                             <input type="text" id="nombreProducto" required placeholder="Ej. Coca-Cola 600ml">
                         </div>
 
                         <div class="input-group">
-                            <label>Descripción</label>
-                            <textarea id="descripcionProducto" rows="3" placeholder="Detalles adicionados, presentación, peso, observaciones..."></textarea>
+                            <label for="descripcionProducto">Descripción</label>
+                            <textarea id="descripcionProducto" rows="3" placeholder="Detalles adicionados, peso, presentación..."></textarea>
                         </div>
                     </div>
 
-                    <!-- COLUMNA DERECHA: Precios, Inventarios y Relaciones -->
+                    <!-- Columna Derecha: Precios, Stock y Clasificación -->
                     <div class="form-col">
-                        
                         <div class="grid-2-col">
                             <div class="input-group">
-                                <label>Precio Proveedor ($)</label>
-                                <input type="number" id="precioProveedor" step="0.01" min="0" placeholder="0.00">
-                            </div>
-
-                            <div class="input-group">
-                                <label>Precio Venta ($) *</label>
+                                <label for="precio">Precio Venta ($) *</label>
                                 <input type="number" id="precio" step="0.01" min="0" required placeholder="0.00">
                             </div>
+
+                            <div class="input-group">
+                                <label for="stock">Stock Actual *</label>
+                                <input type="number" id="stock" required min="0" placeholder="0">
+                            </div>
                         </div>
 
                         <div class="input-group">
-                            <label>Stock Actual *</label>
-                            <input type="number" id="stock" required min="0" placeholder="0">
-                        </div>
-
-                        <div class="input-group">
-                          <label for="stockMinimo">Stock Mínimo ⚠️</label>
-                          <input type="number" id="stockMinimo" name="stockMinimo" min="0" placeholder="Ej. 5">
+                            <label for="stockMinimo">Stock Mínimo ⚠️</label>
+                            <input type="number" id="stockMinimo" min="0" placeholder="Ej. 5">
                         </div>
                         
                         <div class="grid-2-col">
                             <div class="input-group">
-                                <label>Categoría *</label>
+                                <label for="idCategoria">Categoría *</label>
                                 <select id="idCategoria" required>
                                     <option value="">Seleccione categoría...</option>
                                 </select>
                             </div>
 
                             <div class="input-group">
-                                <label>Marca</label>
-                                <select id="idMarca">
+                                <label for="idMarca">Marca *</label>
+                                <select id="idMarca" required>
                                     <option value="">Seleccione marca...</option>
                                 </select>
                             </div>
                         </div>
 
                         <div class="input-group">
-                            <label>Proveedor *</label>
-                            <select id="idProveedor" required>
-                                <option value="">Seleccione proveedor...</option>
-                            </select>
-                        </div>
-
-                        <div class="input-group">
-                            <label>Estatus *</label>
+                            <label for="estatusProducto">Estatus *</label>
                             <select id="estatusProducto" required>
                                 <option value="Activo">Activo</option>
                                 <option value="Inactivo">Inactivo</option>
                             </select>
                         </div>
-
                     </div>
 
                 </div>
@@ -199,70 +182,8 @@
         </div>
     </div>
 
-    <!-- ==========================================
-         MODAL 2: DETALLES RÁPIDOS (WIDE)
-         ========================================== -->
-    <div id="modalDetallesProducto" class="modal-overlay oculto">
-        <div class="glass-modal modal-wide">
-            <div class="modal-header">
-                <h2>Detalles del Producto 🔍</h2>
-                <button class="btn-cerrar" id="btnCerrarModalDetalles">✖</button>
-            </div>
-
-            <div class="detalles-grid-horizontal">
-                <div class="detalles-media">
-                    <img id="detalleImagen" class="img-preview-large" alt="Producto" referrerpolicy="no-referrer">
-                    <span id="detalleEstatusBadge" class="badge-estatus">Cargando...</span>
-                </div>
-
-                <div class="detalles-info">
-                    <h2 id="detalleNombre" class="detalle-titulo">Nombre del Producto</h2>
-                    <p id="detalleDescripcion" class="text-muted custom-scrollbar-text">Sin descripción disponible.</p>
-                    
-                    <div class="info-cards-grid">
-                        <div class="info-card">
-                            <span class="info-label">Código</span>
-                            <strong id="detalleCodigo">N/A</strong>
-                        </div>
-                        <div class="info-card">
-                            <span class="info-label">Categoría</span>
-                            <strong id="detalleCategoria">N/A</strong>
-                        </div>
-                        <div class="info-card">
-                            <span class="info-label">Marca</span>
-                            <strong id="detalleMarca">N/A</strong>
-                        </div>
-                        <div class="info-card">
-                            <span class="info-label">Proveedor</span>
-                            <strong id="detalleProveedor">N/A</strong>
-                        </div>
-                        <div class="info-card highlight">
-                            <span class="info-label">Precio Venta</span>
-                            <strong id="detallePrecio" class="precio">$0.00</strong>
-                        </div>
-                        <div class="info-card">
-                            <span class="info-label">Precio Proveedor</span>
-                            <strong id="detallePrecioProv">$0.00</strong>
-                        </div>
-                        <div class="info-card">
-                            <span class="info-label">Stock Actual</span>
-                            <strong id="detalleStock">0</strong>
-                        </div>
-                        <div class="info-card">
-                            <span class="info-label">Stock Mínimo</span>
-                            <strong id="detalleStockMin">0</strong>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" id="btnCerrarDetallesInferior" class="btn-secundario">Cerrar</button>
-            </div>
-        </div>
-    </div>
-
+    <script type="module" src="../utils/cargador.js"></script>
     <script type="module" src="../scripts/menu.js"></script>
-    <script type="module" src="../scripts/productos.js"></script>
+    <script type="module" src="../scripts/inventario.js"></script>
 </body>
 </html>

@@ -21,23 +21,35 @@
             <p>Los Chavales Abarrotes Web</p>
             
             <form id="formularioLogin">
-                <input type="text" id="usuario" placeholder="Usuario" required>
+                <input 
+                    type="text" 
+                    id="usuario" 
+                    placeholder="Usuario" 
+                    maxlength="30" 
+                    autocomplete="username" 
+                    required
+                >
                 
                 <div class="password-container">
-                    <input type="password" id="password" placeholder="Contraseña" required>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        placeholder="Contraseña" 
+                        maxlength="40" 
+                        autocomplete="current-password" 
+                        required
+                    >
                     <button type="button" id="btnVerPassword" class="btn-eye" title="Mostrar/Ocultar">👁️</button>
                 </div>
                 
                 <button type="submit" class="btn-entrar">Entrar</button>
             </form>
 
-            <!-- === NUEVOS ENLACES AÑADIDOS AQUÍ === -->
             <div class="enlaces-extra">
                 <a href="#" class="link-olvido">¿Olvidaste tu contraseña?</a>
                 <div class="separador-linea"></div>
                 <p class="texto-nuevo">¿Eres nuevo? <a href="#" class="link-crear">Crear cuenta</a></p>
             </div>
-            <!-- ==================================== -->
         </div>
 
         <div id="pantallaCarga" class="oculto">
@@ -50,7 +62,6 @@
     
     <!-- Contenedor para alertas personalizadas -->
     <div id="alertaCustom" class="alerta-oculta">
-        <!-- Respetamos tu span para el mensaje -->
         <span id="alertaMensaje"></span>
     </div>
 

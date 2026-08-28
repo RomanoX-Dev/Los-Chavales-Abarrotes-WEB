@@ -1,26 +1,16 @@
-// Ruta: components/productosT.js
-import { IMAGEN_DEFAULT, resolverUrlImagen } from '../utils/helpers.js';
+import { resolverUrlImagen } from '../utils/helpers.js';
 
-// Función helper fuera del bucle para no recrearla en cada renderizado
 function obtenerClaseEstado(stockNum, minNum) {
     const stock = Number(stockNum) || 0;
-    const min = Number(minNum) || 5; // Respaldo si no tiene mínimo asignado
+    const min = Number(minNum) || 5;
 
-    if (stock <= min) {
-        return 'stock-rojo';     // ¡Alerta! Alcanzó o superó el mínimo
-    } else if (stock <= min * 1.5) {
-        return 'stock-amarillo'; // Próximo a llegar al mínimo
-    }
-    return 'stock-verde';        // Inventario suficiente
+    if (stock <= min) return 'stock-rojo';
+    if (stock <= min * 1.5) return 'stock-amarillo';
+    return 'stock-verde';
 }
 
-/**
- * Genera y renderiza las filas de la tabla de productos.
- * @param {Array} lista - Lista de productos a renderizar.
- * @param {HTMLElement} tbody - Elemento <tbody> de la tabla.
- * @param {Object} acciones - Callback (onEditar, onBorrarDefinitivo).
- */
-export function renderizarTablaProductos(lista, tbody, acciones) {
+// ¡CORREGIDO! El nombre ahora coincide exactamente con lo que pide inventario.js
+export function renderizarTablaInventario(lista, tbody, acciones) {
     if (!tbody) return;
     tbody.innerHTML = '';
 
@@ -30,31 +20,28 @@ export function renderizarTablaProductos(lista, tbody, acciones) {
     }
 
     lista.forEach(prod => {
-        const estatus = prod.Estatus || prod.estatus || (prod.Activo === false || prod.activo === 0 ? 'Inactivo' : 'Activo');
+        const idProd = prod.idProducto || prod.IdProducto;
+        const nombre = prod.nombre || prod.nombreProducto || prod.ProductoN;
+        const estatus = prod.estatus || prod.Estatus || 'Activo';
         const esActivo = estatus === 'Activo';
 
-        // 1. Extraer los valores numéricos de la base de datos
-        const stockNum = prod.Stock ?? prod.stock ?? 0;
-        const minNum = prod.StockMinimo ?? prod.stockMinimo ?? 5;
-
-        // 2. Obtener la clase CSS según las reglas
+        const stockNum = prod.stock ?? prod.Stock ?? 0;
+        const minNum = prod.stockMinimo ?? prod.StockMinimo ?? 5;
         const claseStock = obtenerClaseEstado(stockNum, minNum);
 
-        const imagenBD = prod.Imagen || prod.imagen || prod.urlImagen;
-        const urlImagen = resolverUrlImagen(imagenBD);
-        const idProd = prod.IdProducto || prod.idProducto || prod.id;
+        const urlImagen = resolverUrlImagen(prod.imagen || prod.Imagen);
 
         const tr = document.createElement('tr');
         if (!esActivo) tr.classList.add('fila-inactiva');
 
         tr.innerHTML = `
             <td>
-                <img src="${urlImagen}" alt="Producto" class="img-tabla" referrerpolicy="no-referrer">
+                <img src="${urlImagen}" alt="${nombre}" class="img-tabla" referrerpolicy="no-referrer">
             </td>
-            <td>${prod.CodigoBarras || prod.codigo || 'N/A'}</td>
-            <td><strong>${prod.ProductoN || prod.Nombre || prod.nombre || ''}</strong></td>
-            <td>${prod.NombreCategoria || prod.categoria || 'Sin categoría'}</td>
-            <td style="color: #4facfe;">$${parseFloat(prod.Precio || prod.precio || 0).toFixed(2)}</td>
+            <td>${prod.codigoBarras || prod.CodigoBarras || 'N/A'}</td>
+            <td><strong>${nombre}</strong></td>
+            <td>${prod.nombreCategoria || prod.NombreCategoria || 'Sin categoría'}</td>
+            <td style="color: #4facfe;">$${Number(prod.precio || prod.Precio || 0).toFixed(2)}</td>
             <td><span class="${claseStock}">${stockNum}</span></td>
             <td>
                 <span class="badge-estatus ${esActivo ? 'activo' : 'inactivo'}">
@@ -67,7 +54,6 @@ export function renderizarTablaProductos(lista, tbody, acciones) {
             </td>
         `;
 
-        // Eventos delegados por botón
         tr.querySelector('.btn-editar')?.addEventListener('click', () => acciones.onEditar(idProd));
         tr.querySelector('.btn-borrar-definitivo')?.addEventListener('click', () => acciones.onBorrarDefinitivo(idProd));
 

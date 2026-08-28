@@ -1,3 +1,6 @@
+import { mostrarCargador, ocultarCargador } from './cargador.js';
+
+//'http://localhost:3000'
 export const API_URL = 'https://lcaw-server.onrender.com';
 export const IMGBB_API_KEY = 'c42145a4b70213cc343bc5bf54e8035c';
 export const IMAGEN_DEFAULT = '../assets/Prodefault.png';
@@ -38,8 +41,10 @@ export const cerrarSesion = () => {
     window.location.href = '../index.html'; 
 };
 
-// Peticiones al servidor con JWT
+// Peticiones al servidor con JWT y cargador global automático
 export const fetchConAuth = async (endpoint, opciones = {}) => {
+    mostrarCargador();
+
     const token = obtenerToken();
     
     const headers = {
@@ -62,5 +67,7 @@ export const fetchConAuth = async (endpoint, opciones = {}) => {
     } catch (error) {
         console.error("Error en fetchConAuth:", error);
         return { exito: false, mensaje: "Error de conexión con el servidor. Intenta más tarde." };
+    } finally {
+        ocultarCargador();
     }
 };

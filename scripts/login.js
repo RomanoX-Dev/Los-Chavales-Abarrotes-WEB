@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputUsuario = document.getElementById('usuario');
     const formularioLogin = document.getElementById('formularioLogin');
 
-    // Alternar visibilidad de la contraseña
     if (btnVerPassword && inputPassword) {
         btnVerPassword.addEventListener('click', () => {
             const esPassword = inputPassword.type === 'password';
@@ -18,7 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Manejo del formulario de inicio de sesión
     if (formularioLogin) {
         formularioLogin.addEventListener('submit', async (evento) => {
             evento.preventDefault();
@@ -26,34 +24,23 @@ document.addEventListener('DOMContentLoaded', () => {
             const nombreUsuario = inputUsuario.value.trim();
             const contrasena = inputPassword.value;
 
-            // Validaciones locales de formato
             const checkUsuario = esUsuarioValido(nombreUsuario);
             if (!checkUsuario.valido) return mostrarError(checkUsuario.mensaje);
 
             const checkPassword = esPasswordValida(contrasena);
             if (!checkPassword.valido) return mostrarError(checkPassword.mensaje);
 
-            // Envío de credenciales a la API
+            // fetchConAuth dentro de usuariosAPI.login activa el cargador automáticamente
             const respuestaApi = await usuariosAPI.login(nombreUsuario, contrasena);
-
-            console.log('Respuesta recibida del backend:', respuestaApi);
 
             if (respuestaApi.exito) {
                 guardarSesion(respuestaApi.token, respuestaApi.usuario);
-
-                const contenedorFormulario = document.getElementById('contenedorFormulario');
-                const pantallaCarga = document.getElementById('pantallaCarga');
-
-                if (contenedorFormulario) contenedorFormulario.classList.add('oculto');
-                if (pantallaCarga) pantallaCarga.classList.remove('oculto');
-
                 mostrarExito(respuestaApi.mensaje || "¡Bienvenido!");
 
                 setTimeout(() => {
                     window.location.href = './menu.html';
-                }, 1500);
+                }, 1000);
             } else {
-                console.error('Error en autenticación:', respuestaApi.mensaje);
                 mostrarError(respuestaApi.mensaje || "Credenciales inválidas.");
             }
         });

@@ -3,77 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LCAW - Dashboard</title>
+    <title>LCAW - Catálogo y Panel</title>
     <link rel="stylesheet" href="../styles/menu.css">
 </head>
 <body>
 
+    <!-- Fondo dinámico con orbes fijos -->
     <div class="orb orb-1"></div>
     <div class="orb orb-2"></div>
     <div class="orb orb-3"></div>
 
     <div class="dashboard-container">
         
+        <!-- MENÚ LATERAL -->
         <aside class="sidebar glass-panel">
             <div class="logo">
                 <h2>🛒 LCAW</h2>
-                <span>Los Chavales</span>
+                <span>Los Chavales Abarrotes</span>
             </div>
 
             <nav class="sidebar-menu">
-                <button class="menu-btn active" onclick="navegarA('menu.html')">🏠 Inicio</button>
+                <button class="menu-btn active" onclick="navegarA('menu.html')">🏠 Inicio / Catálogo</button>
                 <button class="menu-btn" onclick="navegarA('pos.html')">💻 Punto de Venta</button>
-                <button class="menu-btn" onclick="navegarA('productos.html')">📦 Inventario</button>
+                <button class="menu-btn" onclick="navegarA('inventario.html')">📦 Inventario</button>
                 <button class="menu-btn" onclick="navegarA('clientes.html')">👥 Clientes</button>
                 <button class="menu-btn" onclick="navegarA('ventas.html')">📊 Historial</button>
-                <button class="menu-btn" onclick="navegarA('usuarios.html')">👥 Usuarios</button>
-                
-                <!-- NUEVO: Botón de Ajustes -->
-                <button class="menu-btn" onclick="navegarA('ajustes.html')">⚙️ Ajustes</button>
+                <button class="menu-btn" onclick="navegarA('usuarios.html')">⚙️ Usuarios</button>
             </nav>
 
             <div class="sidebar-footer">
-                <!-- NUEVO: Preparativo para tu música -->
-                <button id="btnMusica" class="btn-secundario" title="Música ambiental">🎵 Lofi Vibes</button>
                 <button id="btnCerrarSesion" class="btn-logout">🚪 Cerrar Sesión</button>
             </div>
         </aside>
 
+        <!-- ÁREA PRINCIPAL -->
         <main class="main-content">
             
+            <!-- BARRA SUPERIOR -->
             <header class="topbar glass-panel">
                 <div class="bienvenida">
-                    <h1 id="saludoUsuario">¡Bienvenido! 👋</h1>
+                    <h1 id="saludoUsuario">Cargando bienvenida...</h1>
+                    <p class="subtitulo-header">Catálogo de productos destacados y novedades</p>
                 </div>
                 
-                <!-- NUEVO: Controles rápidos y Perfil agrupados -->
                 <div class="topbar-derecha">
-                    
-                    <div class="topbar-acciones">
-                        <button id="btnNotificaciones" class="btn-icono" title="Notificaciones">🔔</button>
-                        <button id="btnTema" class="btn-icono" title="Cambiar Tema">🌙</button>
-                    </div>
-
                     <div class="usuario-info">
+                        <div class="detalles-texto">
+                            <span id="nombreUsuario" class="perfil-nombre">Cargando...</span>
+                            <span id="nomUsuario" class="perfil-nick">@usuario</span>
+                        </div>
                         <span id="rolUsuario" class="badge-rol">Rol</span>
-                        <span id="nombreUsuario" class="perfil-nombre">Cargando...</span>
-                        <div class="avatar-placeholder">👤</div>
+
+                        <!-- AVATAR: Estructura lista para sustituir src por la foto del backend -->
+                        <div class="avatar-container">
+                            <img id="imgPerfilUsuario" src="../assets/default-avatar.png" alt="Foto de perfil" class="avatar-img oculto">
+                            <span id="avatarPlaceholder" class="avatar-placeholder">👤</span>
+                        </div>
                     </div>
                 </div>
             </header>
             
-            <section class="dashboard-widgets">
-                <div class="widget glass-panel">
-                    <h3>Ventas de Hoy</h3>
-                    <p class="widget-dato">$0.00</p>
+            <!-- CONTENIDO PRINCIPAL: CATÁLOGO DE ANUNCIOS Y PRODUCTOS -->
+            <section class="catalogo-seccion">
+                <div class="seccion-header">
+                    <h2>📢 Anuncios & Productos Destacados</h2>
+                    <span class="badge-estado">Vista previa</span>
                 </div>
-                <div class="widget glass-panel">
-                    <h3>Productos Bajos en Stock</h3>
-                    <p class="widget-dato">0</p>
-                </div>
-                <div class="widget glass-panel">
-                    <h3>Clientes Activos</h3>
-                    <p class="widget-dato">0</p>
+
+                <!-- GRID DE TARJETAS (Futura conexión a Inventario) -->
+                <div id="contenedorCatalogo" class="catalogo-grid">
+
+                    <!-- Tarjeta de Ejemplo 1 -->
+                    <article class="tarjeta-producto glass-panel">
+                        <div class="badge-promocion">Nuevo</div>
+                        <div class="imagen-producto-placeholder">📦</div>
+                        <div class="info-producto">
+                            <h3>Producto de Muestra A</h3>
+                            <p class="descripcion-corta">Descripción breve del producto o promoción destacada del día.</p>
+                            <div class="meta-producto">
+                                <span class="precio">$0.00</span>
+                                <span class="stock-tag">Stock: --</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Tarjeta de Ejemplo 2 -->
+                    <article class="tarjeta-producto glass-panel">
+                        <div class="badge-promocion oferta">Oferta</div>
+                        <div class="imagen-producto-placeholder">🏷️</div>
+                        <div class="info-producto">
+                            <h3>Producto de Muestra B</h3>
+                            <p class="descripcion-corta">Anuncio especial de temporada o descuento activo.</p>
+                            <div class="meta-producto">
+                                <span class="precio">$0.00</span>
+                                <span class="stock-tag">Stock: --</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Tarjeta de Ejemplo 3 -->
+                    <article class="tarjeta-producto glass-panel">
+                        <div class="imagen-producto-placeholder">🥤</div>
+                        <div class="info-producto">
+                            <h3>Producto de Muestra C</h3>
+                            <p class="descripcion-corta">Artículo disponible en el inventario general de la tienda.</p>
+                            <div class="meta-producto">
+                                <span class="precio">$0.00</span>
+                                <span class="stock-tag">Stock: --</span>
+                            </div>
+                        </div>
+                    </article>
+
                 </div>
             </section>
 

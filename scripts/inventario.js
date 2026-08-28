@@ -1,26 +1,22 @@
-// 1. IMPORTACIONES
 import { 
     obtenerProductos, 
     crearProducto, 
     actualizarProducto, 
     eliminarProductoDefinitivoAPI 
-} from '../api/productosAPI.js';
+} from '../api/inventarioAPI.js';
 import { obtenerCategoriasAPI } from '../api/categoriasAPI.js';
 import { obtenerMarcasAPI } from '../api/marcasAPI.js';
 import { obtenerProveedoresAPI } from '../api/proveedoresAPI.js';
-import { mostrarAlerta } from '../utils/alertas.js';
-import { renderizarTablaProductos } from '../components/productosT.js';
+import { mostrarExito, mostrarError, mostrarAdvertencia } from '../utils/alertas.js';
+import { renderizarTablaInventario } from '../components/inventarioCOM.js';
 import { IMGBB_API_KEY, IMAGEN_DEFAULT, resolverUrlImagen } from '../utils/helpers.js';
 
-// 2. ESTADO GLOBAL Y AUXILIARES DOM
 let productosGlobales = [];
 
 const getElem = (id) => document.getElementById(id);
 const getVal = (id) => getElem(id)?.value?.trim() || '';
 
-// 3. INICIALIZACIÓN
 document.addEventListener('DOMContentLoaded', async () => {
-    // Carga inicial de datos de la tabla y desplegables
     await Promise.all([cargarTabla(), cargarCombos()]);
 
     const modal = getElem('modalProducto');
@@ -30,31 +26,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     const nombreArchivoText = getElem('nombreArchivoText');
     const btnQuitarFoto = getElem('btnQuitarFoto');
 
-    // -----------------------------------------------------------
-    // BUSCADOR EN TIEMPO REAL
-    // -----------------------------------------------------------
+    // Buscador en tiempo real
     getElem('buscadorProductos')?.addEventListener('input', (e) => {
         const texto = e.target.value.toLowerCase().trim();
         const filtrados = productosGlobales.filter(p => {
-            const nombre = (p.ProductoN || p.Nombre || p.nombre || '').toLowerCase();
-            const codigo = (p.CodigoBarras || p.codigo || '').toLowerCase();
+            const nombre = (p.nombreProducto || '').toLowerCase();
+            const codigo = (p.codigoBarras || '').toLowerCase();
             return nombre.includes(texto) || codigo.includes(texto);
         });
         actualizarUI(filtrados);
     });
 
-    // -----------------------------------------------------------
-    // ABRIR MODAL PARA CREAR
-    // -----------------------------------------------------------
+    // Abrir modal para crear
     getElem('btnAgregarProducto')?.addEventListener('click', () => {
         if (getElem('tituloModal')) getElem('tituloModal').textContent = 'Nuevo Producto 📦';
         if (form) form.reset(); 
         
-        if (getElem('productoId')) getElem('productoId').value = '';
+        setInputValue('productoId', '');
         if (inputArchivo) inputArchivo.value = '';
-        
-        const selectEstatus = getElem('estatusProducto');
-        if (selectEstatus) selectEstatus.value = 'Activo';
+        setSelectValue('estatusProducto', 'Activo');
 
         if (previewImagen) previewImagen.src = IMAGEN_DEFAULT;
         if (nombreArchivoText) nombreArchivoText.textContent = 'Ningún archivo seleccionado';
@@ -63,9 +53,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         modal?.classList.remove('oculto');
     });
 
-    // -----------------------------------------------------------
-    // CERRAR MODAL
-    // -----------------------------------------------------------
+    // Cerrar modal
     const cerrarModal = () => {
         modal?.classList.add('oculto');
         if (form) form.reset();
@@ -78,9 +66,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     getElem('btnCerrarModal')?.addEventListener('click', cerrarModal);
     getElem('btnCerrarModalInferior')?.addEventListener('click', cerrarModal);
 
-    // -----------------------------------------------------------
-    // REMOVER FOTO
-    // -----------------------------------------------------------
+    // Remover foto
     btnQuitarFoto?.addEventListener('click', () => {
         if (inputArchivo) {
             inputArchivo.value = '';
@@ -88,12 +74,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         if (previewImagen) previewImagen.src = IMAGEN_DEFAULT;
         if (nombreArchivoText) nombreArchivoText.textContent = 'Foto removida';
-        mostrarAlerta('Foto marcada para eliminación al guardar 🗑️');
+        mostrarAdvertencia('Foto marcada para eliminación al guardar 🗑️');
     });
 
-    // -----------------------------------------------------------
-    // PREVISUALIZAR IMAGEN
-    // -----------------------------------------------------------
+    // Previsualizar imagen
     inputArchivo?.addEventListener('change', (e) => {
         const file = e.target.files?.[0];
         if (inputArchivo) inputArchivo.dataset.eliminarFoto = 'false';
@@ -114,9 +98,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // -----------------------------------------------------------
-    // GUARDAR (CREAR O EDITAR)
-    // -----------------------------------------------------------
+    // Guardar (Crear / Editar)
     form?.addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -128,24 +110,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Validar duplicados
         const duplicado = productosGlobales.find(p => {
-            const idProd = String(p.IdProducto || p.idProducto || p.id || '');
+            const idProd = String(p.idProducto || '');
             if (esEdicion && idProd === String(idActual)) return false;
 
-            const pCodigo = (p.CodigoBarras || p.codigo || '').trim();
-            const pNombre = (p.ProductoN || p.Nombre || p.nombre || '').trim().toLowerCase();
+            const pCodigo = (p.codigoBarras || '').trim();
+            const pNombre = (p.nombreProducto || '').trim().toLowerCase();
 
-            const coincideCodigo = codigoIngresado && pCodigo && pCodigo === codigoIngresado;
-            const coincideNombre = nombreIngresado && pNombre && pNombre === nombreIngresado;
-
-            return coincideCodigo || coincideNombre;
+            return (codigoIngresado && pCodigo === codigoIngresado) || 
+                   (nombreIngresado && pNombre === nombreIngresado);
         });
 
         if (duplicado) {
-            mostrarAlerta('⚠️ Ya existe otro producto con este Nombre o Código de Barras.');
+            mostrarAdvertencia('⚠️ Ya existe otro producto con este Nombre o Código de Barras.');
             return;
         }
 
-        mostrarAlerta('Procesando datos e imagen... ⏳');
+        mostrarAdvertencia('Procesando datos e imagen... ⏳');
 
         let urlImagenFinal = inputArchivo?.dataset.urlActual || null;
         let deleteHashFinal = inputArchivo?.dataset.deleteHashActual || null;
@@ -153,14 +133,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const seQuitoFoto = inputArchivo?.dataset.eliminarFoto === 'true';
         const hayNuevaFoto = inputArchivo?.files && inputArchivo.files[0];
-
-        if ((seQuitoFoto || hayNuevaFoto) && deleteUrlFinal) {
-            try {
-                await fetch(deleteUrlFinal, { method: 'GET', mode: 'no-cors' });
-            } catch (err) {
-                console.warn('No se eliminó la imagen antigua en ImgBB:', err);
-            }
-        }
 
         if (seQuitoFoto) {
             urlImagenFinal = null;
@@ -184,56 +156,29 @@ document.addEventListener('DOMContentLoaded', async () => {
                     deleteHashFinal = dataUpload.data.deletehash || null;
                     deleteUrlFinal = dataUpload.data.delete_url || null;
                 } else {
-                    mostrarAlerta('Error al subir la imagen.');
+                    mostrarError('Error al subir la imagen.');
                     return;
                 }
             } catch (err) {
-                mostrarAlerta('Error de red al subir la imagen.');
+                mostrarError('Error de red al subir la imagen.');
                 return;
             }
         }
 
-        const estatusSeleccionado = getVal('estatusProducto') || 'Activo';
-        const precioNum = parseFloat(getVal('precio')) || 0;
-        const stockNum = parseInt(getVal('stock'), 10) || 0;
-        const catId = parseInt(getVal('idCategoria'), 10) || null;
-        const marcaId = parseInt(getVal('idMarca'), 10) || null;
-        const provId = parseInt(getVal('idProveedor'), 10) || 1;
-        const descrip = getVal('descripcionProducto') || null;
-        const precioProvNum = parseFloat(getVal('precioProveedor')) || 0;
-        const stockMinNum = parseInt(getVal('stockMinimo'), 10) || 0;
-
-        // Estructura de datos unificada
+        // Estructura limpia enviada al inventarioCON
         const datosProducto = {
-            // PascalCase
-            CodigoBarras: codigoIngresado || null,
-            ProductoN: getVal('nombreProducto'),
-            Nombre: getVal('nombreProducto'),
-            Descripcion: descrip,
-            Precio: precioNum,
-            PrecioProveedor: precioProvNum,
-            Stock: stockNum,
-            StockMinimo: stockMinNum,
-            idCategoria: catId,
-            idMarca: marcaId,
-            idProveedor: provId,
-            Estatus: estatusSeleccionado,
-            Activo: estatusSeleccionado === 'Activo',
-            Imagen: urlImagenFinal,
-            DeleteHash: deleteHashFinal,
-            DeleteUrl: deleteUrlFinal,
+            nombreProducto: getVal('nombreProducto'),
+            codigoBarras: codigoIngresado || null,
+            descripcion: getVal('descripcionProducto') || null,
+            precio: parseFloat(getVal('precio')) || 0,
+            precioProveedor: parseFloat(getVal('precioProveedor')) || 0,
+            stock: parseFloat(getVal('stock')) || 0,
+            stockMinimo: parseFloat(getVal('stockMinimo')) || 0,
+            idCategoria: parseInt(getVal('idCategoria'), 10) || null,
+            idMarca: parseInt(getVal('idMarca'), 10) || null,
+            idProveedor: parseInt(getVal('idProveedor'), 10) || null,
             idUnidad: 1,
-
-            // camelCase
-            codigo: codigoIngresado || null,
-            nombre: getVal('nombreProducto'),
-            descripcion: descrip,
-            precio: precioNum,
-            precioProveedor: precioProvNum,
-            stock: stockNum,
-            stockMinimo: stockMinNum,
-            estatus: estatusSeleccionado,
-            activo: estatusSeleccionado === 'Activo' ? 1 : 0,
+            estatus: getVal('estatusProducto') || 'Activo',
             imagen: urlImagenFinal,
             deleteHash: deleteHashFinal,
             deleteUrl: deleteUrlFinal
@@ -246,14 +191,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (respuesta.exito) {
             cerrarModal();
             await cargarTabla();
-            mostrarAlerta(respuesta.mensaje || (esEdicion ? '¡Producto actualizado! ✨' : '¡Producto guardado! 📦'));
+            mostrarExito(respuesta.mensaje || (esEdicion ? '¡Producto actualizado! ✨' : '¡Producto guardado! 📦'));
         } else {
-            mostrarAlerta('Error: ' + respuesta.mensaje);
+            mostrarError('Error: ' + respuesta.mensaje);
         }
     });
 });
 
-// 4. FUNCIONES DE CARGA Y RENDERIZADO DE DATOS
 async function cargarTabla() {
     productosGlobales = await obtenerProductos();
     actualizarUI(productosGlobales);
@@ -267,9 +211,9 @@ async function cargarCombos() {
             obtenerProveedoresAPI()
         ]);
 
-        poblarSelect('idCategoria', categorias, 'Seleccione categoría...', 'idCategoria', 'NombreCategoria');
-        poblarSelect('idMarca', marcas, 'Seleccione marca...', 'idMarca', 'NombreMarca');
-       poblarSelect('idProveedor', proveedores, 'Seleccione proveedor...', 'idProveedor', 'NombreEmpresa');
+        poblarSelect('idCategoria', categorias, 'Seleccione categoría...', 'idCategoria', 'nombreCategoria');
+        poblarSelect('idMarca', marcas, 'Seleccione marca...', 'idMarca', 'nombreMarca');
+        poblarSelect('idProveedor', proveedores, 'Seleccione proveedor...', 'idProveedor', 'nombreEmpresa');
     } catch (error) {
         console.error('Error al cargar los combos:', error);
     }
@@ -281,9 +225,8 @@ function poblarSelect(selectId, elementos, textoDefecto, campoId, campoNombre) {
 
     select.innerHTML = `<option value="">${textoDefecto}</option>`;
     elementos.forEach(item => {
-        const id = item[campoId] || item[campoId.toLowerCase()] || item.Id || item.id;
-        const nombre = item[campoNombre] || item[campoNombre.toLowerCase()] || item.Nombre || item.nombre || item.RazonSocial || item.razonSocial;
-        
+        const id = item[campoId];
+        const nombre = item[campoNombre];
         if (id && nombre) {
             select.innerHTML += `<option value="${id}">${nombre}</option>`;
         }
@@ -292,42 +235,33 @@ function poblarSelect(selectId, elementos, textoDefecto, campoId, campoNombre) {
 
 function actualizarUI(lista) {
     const tbody = getElem('cuerpoTablaProductos');
-    renderizarTablaProductos(lista, tbody, {
+    renderizarTablaInventario(lista, tbody, {
         onEditar: editarProducto,
         onBorrarDefinitivo: borrarFisicoDefinitivo
     });
 }
 
-// 5. EDICIÓN Y ELIMINACIÓN
 function editarProducto(id) {
-    const prod = productosGlobales.find(p => String(p.IdProducto || p.idProducto || p.id) === String(id));
+    const prod = productosGlobales.find(p => String(p.idProducto) === String(id));
     if (!prod) return;
 
     if (getElem('tituloModal')) getElem('tituloModal').textContent = 'Editar Producto ✏️';
 
-    setInputValue('productoId', prod.IdProducto || prod.idProducto || prod.id);
-    setInputValue('codigoBarras', prod.CodigoBarras || prod.codigo);
-    setInputValue('nombreProducto', prod.ProductoN || prod.Nombre || prod.nombre);
-    setInputValue('descripcionProducto', prod.Descripcion || prod.descripcion);
-    
-    setInputValue('precio', prod.Precio ?? prod.precio);
-    setInputValue('precioProveedor', prod.PrecioProveedor ?? prod.precioProveedor);
-    setInputValue('stock', prod.Stock ?? prod.stock);
-    setInputValue('stockMinimo', prod.StockMinimo ?? prod.stockMinimo);
+    setInputValue('productoId', prod.idProducto);
+    setInputValue('codigoBarras', prod.codigoBarras);
+    setInputValue('nombreProducto', prod.nombreProducto);
+    setInputValue('descripcionProducto', prod.descripcion);
+    setInputValue('precio', prod.precio);
+    setInputValue('precioProveedor', prod.precioProveedor);
+    setInputValue('stock', prod.stock);
+    setInputValue('stockMinimo', prod.stockMinimo);
 
-    setSelectValue('idCategoria', prod.idCategoria || prod.IdCategoria);
-    setSelectValue('idMarca', prod.idMarca || prod.IdMarca);
-    setSelectValue('idProveedor', prod.idProveedor || prod.IdProveedor);
+    setSelectValue('idCategoria', prod.idCategoria);
+    setSelectValue('idMarca', prod.idMarca);
+    setSelectValue('idProveedor', prod.idProveedor);
+    setSelectValue('estatusProducto', prod.estatus || 'Activo');
 
-    const selectEstatus = getElem('estatusProducto');
-    if (selectEstatus) {
-        const estatusActual = prod.Estatus || prod.estatus || (prod.Activo === false || prod.activo === 0 ? 'Inactivo' : 'Activo');
-        selectEstatus.value = estatusActual;
-    }
-
-    const imagenBD = prod.Imagen || prod.imagen || prod.urlImagen;
-    const urlImagenActual = resolverUrlImagen(imagenBD);
-
+    const urlImagenActual = resolverUrlImagen(prod.imagen);
     const previewImagen = getElem('previewImagen');
     if (previewImagen) previewImagen.src = urlImagenActual;
 
@@ -340,8 +274,8 @@ function editarProducto(id) {
     if (inputArchivo) {
         inputArchivo.value = '';
         inputArchivo.dataset.urlActual = (urlImagenActual !== IMAGEN_DEFAULT) ? urlImagenActual : '';
-        inputArchivo.dataset.deleteHashActual = prod.DeleteHash || prod.deleteHash || '';
-        inputArchivo.dataset.deleteUrlActual = prod.DeleteUrl || prod.deleteUrl || '';
+        inputArchivo.dataset.deleteHashActual = prod.deleteHash || '';
+        inputArchivo.dataset.deleteUrlActual = prod.deleteUrl || '';
         inputArchivo.dataset.eliminarFoto = 'false';
     }
 
@@ -351,30 +285,25 @@ function editarProducto(id) {
 async function borrarFisicoDefinitivo(id) {
     if (!confirm('⚠️ ¿Confirmas la eliminación permanente de este producto?')) return;
 
-    mostrarAlerta('Eliminando permanentemente... ⏳');
+    mostrarAdvertencia('Eliminando permanentemente... ⏳');
     const respuesta = await eliminarProductoDefinitivoAPI(id);
 
     if (respuesta.exito) {
         await cargarTabla();
-        mostrarAlerta(respuesta.mensaje || 'Producto eliminado.');
+        mostrarExito(respuesta.mensaje || 'Producto eliminado.');
     } else {
-        mostrarAlerta('Error: ' + respuesta.mensaje);
+        mostrarError('Error: ' + respuesta.mensaje);
     }
 }
 
-// 6. HELPER FUNCTIONS
 function setInputValue(elemId, valor) {
     const elem = getElem(elemId);
-    if (elem) {
-        elem.value = (valor !== null && valor !== undefined) ? valor : '';
-    }
+    if (elem) elem.value = (valor !== null && valor !== undefined) ? valor : '';
 }
 
 function setSelectValue(elemId, valor) {
     const elem = getElem(elemId);
-    if (elem) {
-        elem.value = valor || '';
-    }
+    if (elem) elem.value = valor || '';
 }
 
 function limpiarDatasetImagen(elem) {

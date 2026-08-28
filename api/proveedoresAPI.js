@@ -1,14 +1,8 @@
-const HOST = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'http://localhost:3000/api'
-    : 'https://lcaw-server.onrender.com/api';
+import { fetchConAuth } from '../utils/helpers.js';
+
+const ENDPOINT = '/api/proveedores';
 
 export async function obtenerProveedoresAPI() {
-    try {
-        const res = await fetch(`${HOST}/proveedores`);
-        if (!res.ok) throw new Error('Error en la respuesta del servidor');
-        return await res.json();
-    } catch (error) {
-        console.error('Error al obtener proveedores:', error);
-        return [];
-    }
+    const res = await fetchConAuth(ENDPOINT);
+    return res.exito ? (res.datos || []) : (Array.isArray(res) ? res : []);
 }

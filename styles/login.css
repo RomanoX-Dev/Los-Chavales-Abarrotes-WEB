@@ -1,125 +1,174 @@
-/* Limpiamos márgenes por defecto */
+/* === RESETS Y BASE === */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 
 body {
-    height: 100vh;
+    min-height: 100vh;
+    height: 100dvh; /* Evita saltos por barra de navegación en móviles */
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #0f2027; /* Fondo oscuro base */
-    color: white;
+    background-color: #0f2027;
+    color: #ffffff;
     overflow: hidden;
     position: relative;
 }
 
-/* === DECORACIÓN DE FONDO (ORBES IGUAL AL MENÚ) === */
+/* === DECORACIÓN DE FONDO (ORBES ESTABILIZADOS) === */
 .orb {
-    position: absolute;
+    position: fixed; /* Evita que los orbes empujen la maquetación al cargar */
     border-radius: 50%;
     filter: blur(80px);
     z-index: -1;
+    pointer-events: none;
+    will-change: transform;
     animation: flotar 10s infinite alternate ease-in-out;
 }
 
-.orb-1 { width: 400px; height: 400px; background: #203a43; top: -10%; left: -5%; }
-.orb-2 { width: 500px; height: 500px; background: #2c5364; bottom: -20%; right: -10%; animation-delay: -3s; }
-.orb-3 { width: 300px; height: 300px; background: rgba(0, 150, 255, 0.2); top: 40%; left: 40%; animation-delay: -5s; }
+.orb-1 { 
+    width: 400px; 
+    height: 400px; 
+    background: #203a43; 
+    top: -10%; 
+    left: -5%; 
+}
+
+.orb-2 { 
+    width: 500px; 
+    height: 500px; 
+    background: #2c5364; 
+    bottom: -20%; 
+    right: -10%; 
+    animation-delay: -3s; 
+}
+
+.orb-3 { 
+    width: 300px; 
+    height: 300px; 
+    background: rgba(0, 150, 255, 0.25); 
+    top: 40%; 
+    left: 40%; 
+    animation-delay: -5s; 
+}
 
 @keyframes flotar {
     0% { transform: translateY(0) scale(1); }
-    100% { transform: translateY(50px) scale(1.1); }
+    100% { transform: translateY(40px) scale(1.08); }
 }
 
-/* === EL EFECTO GLASSMORPHISM (MÁS GRANDE Y RESPONSIVO) === */
+/* === CONTENEDOR GLASSMORPHISM ADAPTABLE === */
 .glass-login {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.06);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.18);
     border-radius: 20px;
-    padding: 40px;
-    width: 420px; /* Lo hicimos un poco más grande (antes 350px) */
-    max-width: 90%; /* Evita que se desborde en celulares pequeños */
+    padding: clamp(25px, 5vw, 40px); /* Padding dinámico según la pantalla */
+    width: clamp(300px, 90vw, 420px); /* Tamaño fluido sin desbordes */
     text-align: center;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
     position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.glass-login h2 { margin-bottom: 5px; color: #4facfe; }
-.glass-login p { font-size: 14px; margin-bottom: 25px; color: #cccccc; }
+.glass-login h2 { 
+    margin-bottom: 6px; 
+    color: #4facfe; 
+    font-size: 1.8rem;
+    letter-spacing: 0.5px;
+}
+
+.glass-login p { 
+    font-size: 0.9rem; 
+    margin-bottom: 25px; 
+    color: #e0e0e0; 
+}
 
 /* === INPUTS Y CONTENEDOR DE CONTRASEÑA === */
 input {
     width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
-    border: none;
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
+    padding: 13px 15px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    font-size: 0.95rem;
     outline: none;
+    transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
 }
-input::placeholder { color: #dddddd; }
 
-/* Contenedor relativo para posicionar el ojito */
+input:focus {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: #4facfe;
+    box-shadow: 0 0 10px rgba(79, 172, 254, 0.4);
+}
+
+input::placeholder { 
+    color: #b0b0b0; 
+}
+
+/* Agrupación limpia de contenedor contraseña */
 .password-container {
     position: relative;
     width: 100%;
+    margin-top: 15px;
+    margin-bottom: 20px;
 }
 
-/* Quitamos el margen inferior al input de contraseña para dárselo al contenedor */
 .password-container input {
     margin-bottom: 0; 
-    padding-right: 40px; /* Espacio para que el texto no pise el ojito */
-}
-
-.password-container {
-    margin-bottom: 15px;
+    padding-right: 45px;
 }
 
 /* Botón del Ojito */
 .btn-eye {
     position: absolute;
-    right: 10px;
+    right: 12px;
     top: 50%;
     transform: translateY(-50%);
     background: transparent;
     border: none;
-    color: white;
+    color: #ffffff;
     cursor: pointer;
-    font-size: 16px;
-    padding: 5px;
-    width: auto;
-    transition: 0.2s;
-    opacity: 0.7;
+    font-size: 1.1rem;
+    padding: 4px;
+    line-height: 1;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    opacity: 0.65;
 }
 
 .btn-eye:hover {
-    background: transparent;
     opacity: 1;
+    transform: translateY(-50%) scale(1.1);
 }
 
 /* Botón Principal */
 .btn-entrar {
     width: 100%;
-    padding: 12px;
-    background: rgba(0, 150, 255, 0.7);
+    padding: 13px;
+    background: linear-gradient(135deg, #007bff, #0056b3);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    color: white;
-    font-weight: bold;
+    border-radius: 10px;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: 0.3s ease;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
 }
 
 .btn-entrar:hover {
-    background: rgba(0, 150, 255, 1);
-    box-shadow: 0 0 15px rgba(0, 150, 255, 0.4);
+    background: linear-gradient(135deg, #0056b3, #003d80);
+    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.5);
+    transform: translateY(-1px);
+}
+
+.btn-entrar:active {
+    transform: translateY(1px);
 }
 
 /* === PANTALLA DE CARGA ANIMADA === */
@@ -141,7 +190,7 @@ input::placeholder { color: #dddddd; }
     border: 4px solid rgba(255, 255, 255, 0.1);
     border-top: 4px solid #4facfe;
     border-radius: 50%;
-    animation: girar 1s linear infinite;
+    animation: girar 0.8s linear infinite;
     margin-bottom: 15px;
 }
 
@@ -150,23 +199,32 @@ input::placeholder { color: #dddddd; }
     100% { transform: rotate(360deg); }
 }
 
-#pantallaCarga h3 { font-size: 18px; color: #4facfe; margin-bottom: 5px; }
-#pantallaCarga p { font-size: 13px; color: #ccc; margin-bottom: 0; }
+#pantallaCarga h3 { 
+    font-size: 1.1rem; 
+    color: #4facfe; 
+    margin-bottom: 6px; 
+}
 
-/* === NUEVOS ENLACES EXTRA === */
+#pantallaCarga p { 
+    font-size: 0.85rem; 
+    color: #cccccc; 
+}
+
+/* === ENLACES EXTRA === */
 .enlaces-extra {
     margin-top: 25px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
 }
 
 .link-olvido, .link-crear {
     color: #4facfe;
     text-decoration: none;
-    font-size: 14px;
-    transition: color 0.3s ease, text-shadow 0.3s ease;
+    font-size: 0.88rem;
+    font-weight: 500;
+    transition: color 0.2s ease, text-shadow 0.2s ease;
 }
 
 .link-olvido:hover, .link-crear:hover {
@@ -175,60 +233,60 @@ input::placeholder { color: #dddddd; }
 }
 
 .separador-linea {
-    width: 60%;
+    width: 70%;
     height: 1px;
-    background: rgba(255, 255, 255, 0.1);
-    margin: 5px 0;
+    background: rgba(255, 255, 255, 0.12);
+    margin: 4px 0;
 }
 
 .texto-nuevo {
-    font-size: 14px;
+    font-size: 0.88rem;
     color: #cccccc;
 }
 
-/* === ALERTA PROFESIONAL (CENTRADA PARA MÓVIL Y PC) === */
+/* === ALERTA PROFESIONAL === */
 #alertaCustom {
     position: fixed;
-    top: 20px;
-    left: 50%; /* Lo centramos en la pantalla */
-    width: 90%;
-    max-width: 400px; /* No será gigantesco en PC */
-    padding: 15px 20px;
-    border-radius: 8px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-    font-weight: bold;
+    top: 25px;
+    left: 50%;
+    width: calc(100% - 40px);
+    max-width: 380px;
+    padding: 14px 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    font-weight: 600;
+    font-size: 0.95rem;
     text-align: center;
-    z-index: 1000;
+    z-index: 10000;
+    will-change: transform, opacity;
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
 }
 
-/* Clases para manejar oculto/visible con el centrado */
 .alerta-oculta {
     opacity: 0;
-    transform: translate(-50%, -40px); /* Sube y se centra */
+    transform: translate(-50%, -50px);
     pointer-events: none;
 }
 
 .alerta-visible {
     opacity: 1;
-    transform: translate(-50%, 0); /* Baja y se centra */
+    transform: translate(-50%, 0);
 }
 
-/* Colores dinámicos para éxito o error */
 .alerta-error {
-    background-color: #ff4d4f;
-    color: white;
+    background-color: #d9534f;
+    color: #ffffff;
     border: 1px solid #ff7875;
 }
 
 .alerta-advertencia {
-    background-color: #ffc107; /* Amarillo/Naranja */
-    color: #333; /* Texto oscuro para contrastar */
-    border: 1px solid #ffb300;
+    background-color: #f0ad4e;
+    color: #1a1a1a;
+    border: 1px solid #ffc107;
 }
 
 .alerta-exito {
-    background-color: #28a745;
-    color: white;
-    border: 1px solid #34ce57;
+    background-color: #4bbf73;
+    color: #ffffff;
+    border: 1px solid #5cdbd3;
 }

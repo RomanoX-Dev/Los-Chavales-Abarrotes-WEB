@@ -1,21 +1,31 @@
+.tabla-container {
+    background: var(--bg-glass, rgba(30, 41, 59, 0.4));
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.12));
+    border-radius: 24px;
+    padding: 24px;
+    margin: 20px auto;
+    width: 100%;
+    max-width: 1200px; /* Hace la tabla más grande hacia los lados */
+    box-shadow: var(--shadow-glass, 0 8px 32px rgba(0, 0, 0, 0.3));
+    overflow-x: auto; /* Permite scroll horizontal si la pantalla es pequeña */
+}
+
+/* Scrollbar personalizada para la tabla */
+.tabla-container::-webkit-scrollbar { height: 8px; }
+.tabla-container::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.3); border-radius: 10px; }
+.tabla-container::-webkit-scrollbar-thumb { background: var(--color-accent, #00f2fe); border-radius: 10px; }
+
 /* ==========================================
    TABLA DE INVENTARIO - GLASSMORPHISM PRO
    ========================================== */
-
-/* Fallbacks de variables de color por si no están definidas globalmente */
-:root {
-    --inv-border: rgba(255, 255, 255, 0.12);
-    --inv-accent: #00f2fe;
-    --inv-success: #2ed573;
-    --inv-warning: #ffa502;
-    --inv-danger: #ff4757;
-}
-
 table {
     width: 100%;
+    min-width: 900px; /* Evita que las columnas se apachurren */
     border-collapse: separate; 
     border-spacing: 0 12px; /* Separación limpia entre filas flotantes */
-    color: #f8fafc;
+    color: var(--text-main, #f8fafc);
     font-family: inherit;
 }
 
@@ -23,11 +33,11 @@ table {
 th {
     padding: 16px 22px;
     text-transform: uppercase;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     font-weight: 700;
     letter-spacing: 1.4px;
-    color: #38bdf8;
-    border-bottom: 2px solid rgba(56, 189, 248, 0.2);
+    color: var(--color-accent, #00f2fe);
+    border-bottom: 2px solid rgba(0, 242, 254, 0.2);
     text-align: left;
 }
 
@@ -44,8 +54,8 @@ th {
 
 .fila-tabla td, tbody tr td {
     padding: 16px 20px;
-    border-top: 1px solid var(--inv-border);
-    border-bottom: 1px solid var(--inv-border);
+    border-top: 1px solid var(--border-glass, rgba(255, 255, 255, 0.12));
+    border-bottom: 1px solid var(--border-glass, rgba(255, 255, 255, 0.12));
     vertical-align: middle;
     font-size: 0.98rem;
     font-weight: 500;
@@ -53,12 +63,12 @@ th {
 
 /* Bordes redondeados en los extremos de las filas flotantes */
 .fila-tabla td:first-child, tbody tr td:first-child { 
-    border-left: 1px solid var(--inv-border); 
+    border-left: 1px solid var(--border-glass, rgba(255, 255, 255, 0.12)); 
     border-radius: 16px 0 0 16px; 
 }
 
 .fila-tabla td:last-child, tbody tr td:last-child { 
-    border-right: 1px solid var(--inv-border); 
+    border-right: 1px solid var(--border-glass, rgba(255, 255, 255, 0.12)); 
     border-radius: 0 16px 16px 0; 
 }
 
@@ -90,17 +100,17 @@ th {
 .tabla-vacia {
     text-align: center;
     padding: 3.5rem !important;
-    color: #94a3b8;
+    color: var(--text-muted, #94a3b8);
     font-size: 1.1rem;
     font-style: italic;
     background: rgba(15, 23, 42, 0.5);
     backdrop-filter: blur(12px);
-    border: 1px solid var(--inv-border);
+    border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.12));
     border-radius: 16px;
 }
 
 .texto-precio {
-    color: #00f2fe;
+    color: var(--color-accent, #00f2fe);
     font-weight: 700;
     font-size: 1.15rem;
     letter-spacing: -0.3px;
@@ -111,26 +121,28 @@ th {
    IMÁGENES (Efecto Pop-Out con Cristal)
    ========================================== */
 .img-tabla {
-    width: 68px;
-    height: 68px;
-    object-fit: cover;
+    width: 75px; /* Tamaño ajustado */
+    height: 75px;
+    object-fit: contain; /* Para que la imagen se vea completa sin deformarse */
     object-position: center;
     border-radius: 14px;
-    border: 1.5px solid rgba(255, 255, 255, 0.18);
+    border: 1.5px solid var(--border-glass, rgba(255, 255, 255, 0.18));
     background: rgba(15, 23, 42, 0.6);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     cursor: pointer;
+    padding: 2px;
 }
 
 .img-tabla:hover {
-    transform: scale(1.8) translateY(-4px) rotate(2deg);
-    border-color: var(--inv-accent);
+    transform: scale(1.5) translateY(-5px) rotate(2deg); /* Mantenemos tu efecto 3D */
+    border-color: var(--color-accent, #00f2fe);
     box-shadow: 
         0 20px 35px rgba(0, 0, 0, 0.7), 
         0 0 25px rgba(0, 242, 254, 0.5);
     z-index: 20;
     position: relative;
+    background: rgba(15, 23, 42, 0.95);
 }
 
 /* ==========================================
@@ -199,8 +211,8 @@ th {
     background: rgba(255, 255, 255, 0.06);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    color: #f8fafc;
+    border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.14));
+    color: var(--text-main, #f8fafc);
     width: 40px;
     height: 40px;
     border-radius: 12px;
@@ -218,6 +230,7 @@ th {
     border-color: rgba(255, 255, 255, 0.3);
     transform: translateY(-2px) scale(1.05);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    color: var(--color-accent, #00f2fe);
 }
 
 .btn-icon:active {

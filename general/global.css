@@ -1,0 +1,219 @@
+/* ==========================================
+   ESTILOS GLOBALES - UI COMPONENTS
+   ========================================== */
+
+@import 'variables.css'; /* Importamos variables al inicio */
+
+/* --- TOOLBAR Y BÚSQUEDA FLOTANTE --- */
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 28px;
+    margin-bottom: 24px;
+    flex-wrap: wrap; 
+    gap: 18px;
+    background: var(--bg-glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-lg);
+    box-shadow: 
+        var(--shadow-glass),
+        inset 0 1px 1px rgba(255, 255, 255, 0.15);
+    transition: var(--transition-main);
+}
+
+.toolbar:hover {
+    border-color: rgba(255, 255, 255, 0.22);
+}
+
+/* Campo de Búsqueda de Cristal */
+.search-box {
+    display: flex;
+    align-items: center;
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-md);
+    padding: 10px 18px;
+    width: 100%;
+    max-width: 380px; 
+    transition: var(--transition-main);
+}
+
+.search-box:hover {
+    border-color: rgba(255, 255, 255, 0.25);
+    background: rgba(15, 23, 42, 0.7);
+}
+
+.search-box:focus-within {
+    box-shadow: var(--shadow-glow);
+    border-color: var(--color-accent);
+    background: rgba(15, 23, 42, 0.85);
+    transform: translateY(-1px);
+}
+
+.search-box svg, 
+.search-box i {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+    flex-shrink: 0;
+}
+
+.search-box:focus-within svg,
+.search-box:focus-within i {
+    color: var(--color-accent);
+}
+
+.search-box input {
+    background: transparent;
+    border: none;
+    color: var(--text-main);
+    width: 100%;
+    margin-left: 12px;
+    outline: none;
+    font-size: 0.98rem;
+    font-family: inherit;
+    font-weight: 500;
+}
+
+.search-box input::placeholder {
+    color: var(--text-muted);
+    opacity: 0.85;
+}
+
+/* --- BOTONES GLOBALES --- */
+.btn-primario, .btn-secundario {
+    min-height: 46px;
+    padding: 12px 24px;
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    transition: var(--transition-main);
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.btn-primario {
+    background: var(--gradient-primary);
+    color: #ffffff;
+    box-shadow: 0 4px 18px rgba(0, 150, 255, 0.38);
+}
+
+.btn-primario:hover { 
+    transform: translateY(-2px) scale(1.02); 
+    box-shadow: 0 8px 25px rgba(0, 242, 254, 0.55); 
+}
+
+.btn-primario:active {
+    transform: scale(0.98);
+}
+
+.btn-secundario { 
+    background: rgba(255, 255, 255, 0.08); 
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--border-glass); 
+    color: var(--text-main); 
+}
+
+.btn-secundario:hover { 
+    background: rgba(255, 255, 255, 0.18); 
+    border-color: rgba(255, 255, 255, 0.28);
+    transform: translateY(-2px);
+}
+
+.btn-secundario:active {
+    transform: scale(0.98);
+}
+
+/* --- CLASES DE UTILIDAD GLOBALES --- */
+.oculto { 
+    display: none !important; 
+}
+
+/* --- RESPONSIVE DE COMPONENTES GLOBALES --- */
+@media (max-width: 820px) {
+    .toolbar { 
+        flex-direction: column; 
+        align-items: stretch; 
+        padding: 16px 20px;
+        gap: 14px;
+    }
+    
+    .search-box { 
+        max-width: 100%; 
+    }
+
+    .btn-primario, .btn-secundario {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* === RESETS Y BASE GLOBALES === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* === INPUTS GLOBALES === */
+input {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-md);
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: var(--text-main);
+    font-size: 0.95rem;
+    font-weight: 500;
+    outline: none;
+    transition: var(--transition-main);
+}
+
+input:hover {
+    border-color: rgba(255, 255, 255, 0.25);
+    background: rgba(15, 23, 42, 0.7);
+}
+
+input:focus {
+    background: rgba(15, 23, 42, 0.85);
+    border-color: var(--color-accent);
+    box-shadow: var(--shadow-glow);
+    transform: translateY(-1px);
+}
+
+input::placeholder { 
+    color: var(--text-muted); 
+    opacity: 0.85;
+}
+
+/* === SPINNER / CARGA GLOBAL === */
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid rgba(255, 255, 255, 0.08);
+    border-top: 4px solid var(--color-accent);
+    border-right: 4px solid var(--color-primary);
+    border-radius: 50%;
+    animation: girar 0.75s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+    filter: drop-shadow(0 0 10px rgba(0, 242, 254, 0.4));
+}
+
+@keyframes girar {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

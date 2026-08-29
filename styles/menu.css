@@ -2,6 +2,8 @@
    INTERFAZ PRINCIPAL - GLASSMORPHISM PRO
    ========================================== */
 
+@import 'variables.css'; /* Importamos tus variables globales */
+
 /* === RESETS Y BASE === */
 * {
     margin: 0;
@@ -13,8 +15,8 @@
 body {
     min-height: 100vh;
     height: 100dvh;
-    background-color: #0f172a;
-    color: #f8fafc;
+    background-color: #0f172a; /* Fondo oscuro base */
+    color: var(--text-main);
     overflow: hidden;
     position: relative;
 }
@@ -30,29 +32,22 @@ body {
     animation: flotar 12s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Nota: Los orbes mantienen rgba para poder tener opacidad específica */
 .orb-1 { 
-    width: 450px; 
-    height: 450px; 
+    width: 450px; height: 450px; 
     background: rgba(0, 150, 255, 0.25); 
-    top: -10%; 
-    left: -5%; 
+    top: -10%; left: -5%; 
 }
-
 .orb-2 { 
-    width: 550px; 
-    height: 550px; 
+    width: 550px; height: 550px; 
     background: rgba(0, 242, 254, 0.18); 
-    bottom: -20%; 
-    right: -10%; 
+    bottom: -20%; right: -10%; 
     animation-delay: -4s; 
 }
-
 .orb-3 { 
-    width: 350px; 
-    height: 350px; 
+    width: 350px; height: 350px; 
     background: rgba(112, 0, 255, 0.2); 
-    top: 35%; 
-    left: 35%; 
+    top: 35%; left: 35%; 
     animation-delay: -7s; 
 }
 
@@ -69,15 +64,15 @@ body {
     gap: 20px;
 }
 
-/* Panel Genérico Glassmorphic */
+/* Panel Genérico Glassmorphic (Usa variables globales) */
 .glass-panel {
-    background: rgba(30, 41, 59, 0.55);
+    background: var(--bg-glass);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    border-radius: 20px;
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-lg);
     box-shadow: 
-        0 20px 40px -10px rgba(0, 0, 0, 0.5),
+        var(--shadow-glass),
         inset 0 1px 1px rgba(255, 255, 255, 0.15);
 }
 
@@ -99,13 +94,13 @@ body {
     font-size: 1.65rem; 
     font-weight: 800;
     letter-spacing: -0.5px;
-    background: linear-gradient(135deg, #ffffff 30%, #00f2fe 100%);
+    background: linear-gradient(135deg, #ffffff 30%, var(--color-accent) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 .logo span { 
-    color: #94a3b8; 
+    color: var(--text-muted); 
     font-size: 0.75rem; 
     letter-spacing: 1.5px; 
     font-weight: 600;
@@ -123,29 +118,29 @@ body {
 .menu-btn {
     background: transparent;
     border: 1px solid transparent;
-    color: #94a3b8;
+    color: var(--text-muted);
     text-align: left;
     padding: 13px 18px;
-    border-radius: 14px;
+    border-radius: var(--radius-md);
     font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: var(--transition-main);
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
 .menu-btn:hover {
-    color: #f8fafc;
+    color: var(--text-main);
     background: rgba(255, 255, 255, 0.08);
     transform: translateX(4px);
 }
 
 .menu-btn.active {
     background: linear-gradient(135deg, rgba(0, 150, 255, 0.25), rgba(0, 242, 254, 0.25));
-    border: 1px solid rgba(0, 242, 254, 0.4);
-    color: #ffffff;
+    border: 1px solid var(--border-glass-hover);
+    color: var(--text-main);
     box-shadow: 0 4px 15px rgba(0, 242, 254, 0.2);
     transform: translateX(4px);
 }
@@ -160,13 +155,13 @@ body {
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 71, 87, 0.35);
-    color: #ff4757;
+    color: var(--color-danger);
     padding: 12px;
-    border-radius: 14px;
+    border-radius: var(--radius-md);
     cursor: pointer;
     font-weight: 700;
     font-size: 0.92rem;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: var(--transition-main);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -175,7 +170,7 @@ body {
 
 .btn-logout:hover {
     background: rgba(255, 71, 87, 0.28);
-    border-color: #ff4757;
+    border-color: var(--color-danger);
     color: #ffffff;
     box-shadow: 0 6px 18px rgba(255, 71, 87, 0.35);
     transform: translateY(-2px);
@@ -203,13 +198,13 @@ body {
 .bienvenida h1 { 
     font-size: 1.45rem; 
     font-weight: 700;
-    color: #ffffff; 
+    color: var(--text-main); 
     letter-spacing: -0.3px;
 }
 
 .subtitulo-header { 
     font-size: 0.88rem; 
-    color: #94a3b8; 
+    color: var(--text-muted); 
     margin-top: 3px; 
 }
 
@@ -234,19 +229,19 @@ body {
 .perfil-nombre { 
     font-weight: 700; 
     font-size: 0.95rem; 
-    color: #ffffff; 
+    color: var(--text-main); 
 }
 
 .perfil-nick { 
     font-size: 0.8rem; 
-    color: #00f2fe; 
+    color: var(--color-accent); 
     font-weight: 600;
 }
 
 .badge-rol {
     background: rgba(0, 242, 254, 0.15);
-    border: 1px solid rgba(0, 242, 254, 0.4);
-    color: #00f2fe;
+    border: 1px solid var(--border-glass-hover);
+    color: var(--color-accent);
     padding: 3px 10px;
     border-radius: 20px;
     font-size: 0.72rem;
@@ -262,16 +257,16 @@ body {
     border-radius: 50%;
     overflow: hidden;
     background: rgba(15, 23, 42, 0.6);
-    border: 2px solid rgba(0, 242, 254, 0.4);
-    box-shadow: 0 0 15px rgba(0, 242, 254, 0.25);
+    border: 2px solid var(--border-glass-hover);
+    box-shadow: var(--shadow-glow);
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
+    transition: var(--transition-main);
 }
 
 .avatar-container:hover {
-    border-color: #00f2fe;
+    border-color: var(--color-accent);
     box-shadow: 0 0 22px rgba(0, 242, 254, 0.45);
     transform: scale(1.05);
 }
@@ -297,17 +292,17 @@ body {
 .seccion-header h2 {
     font-size: 1.25rem;
     font-weight: 700;
-    color: #f8fafc;
+    color: var(--text-main);
 }
 
 .badge-estado {
     background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid var(--border-glass);
     padding: 3px 10px;
     border-radius: 10px;
     font-size: 0.78rem;
     font-weight: 600;
-    color: #94a3b8;
+    color: var(--text-muted);
 }
 
 /* GRID ADAPTABLE */
@@ -326,21 +321,21 @@ body {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    background: rgba(30, 41, 59, 0.45);
+    background: var(--bg-glass);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 20px;
-    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-lg);
+    transition: var(--transition-main);
 }
 
 .tarjeta-producto:hover {
     transform: translateY(-6px) scale(1.02);
-    background: rgba(30, 41, 59, 0.7);
-    border-color: rgba(0, 242, 254, 0.4);
+    background: var(--bg-glass-hover);
+    border-color: var(--border-glass-hover);
     box-shadow: 
-        0 20px 35px -10px rgba(0, 0, 0, 0.6),
-        0 0 20px rgba(0, 242, 254, 0.2);
+        var(--shadow-glass),
+        var(--shadow-glow);
 }
 
 .badge-promocion {
@@ -349,7 +344,7 @@ body {
     left: 14px;
     background: rgba(0, 150, 255, 0.25);
     border: 1px solid rgba(0, 150, 255, 0.5);
-    color: #00f2fe;
+    color: var(--color-accent);
     font-size: 0.68rem;
     font-weight: 800;
     padding: 4px 10px;
@@ -362,22 +357,22 @@ body {
 .badge-promocion.oferta {
     background: rgba(255, 71, 87, 0.25);
     border-color: rgba(255, 71, 87, 0.5);
-    color: #ff4757;
+    color: var(--color-danger);
 }
 
 .imagen-producto-placeholder {
     width: 80px;
     height: 80px;
     background: rgba(15, 23, 42, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 16px;
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-lg);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 2.2rem;
     margin: 12px 0 16px 0;
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s ease;
+    transition: var(--transition-main);
 }
 
 .tarjeta-producto:hover .imagen-producto-placeholder {
@@ -387,13 +382,13 @@ body {
 .info-producto h3 {
     font-size: 1.05rem;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--text-main);
     margin-bottom: 6px;
 }
 
 .descripcion-corta {
     font-size: 0.83rem;
-    color: #94a3b8;
+    color: var(--text-muted);
     margin-bottom: 16px;
     line-height: 1.4;
 }
@@ -404,20 +399,20 @@ body {
     justify-content: space-between;
     align-items: center;
     padding-top: 12px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid var(--border-glass);
 }
 
 .precio {
     font-size: 1.15rem;
     font-weight: 800;
-    color: #00f2fe;
+    color: var(--color-accent);
     text-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
 }
 
 .stock-tag {
     font-size: 0.8rem;
     font-weight: 600;
-    color: #64748b;
+    color: var(--text-muted);
 }
 
 /* === ADAPTABILIDAD MÓVIL Y TABLETS === */

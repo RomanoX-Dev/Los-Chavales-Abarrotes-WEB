@@ -1,3 +1,9 @@
+/* ==========================================
+   CARGADOR.CSS - LOADER CON GLASSMORPHISM
+   ========================================== */
+
+@import 'variables.css'; 
+
 /* Overlay completo que bloquea clicks y oscurece la pantalla */
 .loader-overlay {
     position: fixed;
@@ -7,7 +13,8 @@
     bottom: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(15, 32, 39, 0.65); /* Fondo ajustado a la paleta base */
+    /* Tono oscuro para contrastar con tu app */
+    background-color: rgba(15, 23, 42, 0.75); 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -20,18 +27,18 @@
     display: none !important;
 }
 
-/* Caja del loader con Glassmorphism */
+/* Caja del loader conectada a tus variables */
 .loader-contenido {
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--bg-glass);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    padding: 35px 50px; /* Tamaño más amplio */
-    border-radius: 20px;
+    border: 1px solid var(--border-glass);
+    padding: 35px 50px;
+    border-radius: var(--radius-lg);
     display: flex;
     flex-direction: column;
     align-items: center;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-glass);
     min-width: 220px;
 }
 
@@ -39,21 +46,23 @@
     margin-top: 18px;
     margin-bottom: 0;
     font-weight: 600;
-    color: #ffffff;
+    color: var(--text-main);
     font-size: 1rem;
-    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
     letter-spacing: 0.5px;
 }
 
-/* Animación del círculo ampliada */
+/* Animación del círculo ampliada a 55px */
 .spinner {
-    width: 55px; /* Incrementado de 45px a 55px */
+    width: 55px; 
     height: 55px;
-    border: 5px solid rgba(255, 255, 255, 0.15);
-    border-top: 5px solid #4facfe; /* Azul neón a juego con los botones del login */
+    border: 5px solid rgba(255, 255, 255, 0.08);
+    /* Usamos tus colores de neón para el giro */
+    border-top: 5px solid var(--color-accent);
+    border-right: 5px solid var(--color-primary); 
     border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    filter: drop-shadow(0 0 6px rgba(79, 172, 254, 0.5));
+    animation: spin 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+    filter: drop-shadow(var(--shadow-glow));
 }
 
 @keyframes spin {

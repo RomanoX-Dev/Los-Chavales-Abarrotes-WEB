@@ -7,7 +7,7 @@
     top: 24px;
     right: 24px;
     padding: 18px 26px;
-    border-radius: 16px;
+    border-radius: var(--radius-lg);
     font-weight: 600;
     font-size: 16px;
     z-index: 9999;
@@ -21,30 +21,25 @@
     flex-direction: column;
     gap: 14px;
     max-width: 420px;
-    color: #fff;
+    color: var(--text-main);
 }
 
-#alertaCustom.alerta-visible {
-    transform: translateX(0);
-}
+#alertaCustom.alerta-visible { transform: translateX(0); }
+#alertaCustom.alerta-oculta { transform: translateX(160%); }
 
-#alertaCustom.alerta-oculta {
-    transform: translateX(160%);
-}
-
-/* Tipos de Alerta Notificación */
+/* Tipos de Alerta Notificación conectadas a variables.css */
 .alerta-exito {
-    background: rgba(46, 213, 115, 0.85);
-    border-left: 5px solid #2ed573;
+    background: rgba(46, 213, 115, 0.85); /* rgba basado en --color-success */
+    border-left: 5px solid var(--color-success);
 }
 
 .alerta-advertencia {
-    background: rgba(255, 204, 0, 0.85);
-    border-left: 5px solid #ffcc00;
-    color: #0f172a !important;
+    background: rgba(255, 204, 0, 0.85); /* rgba basado en --color-warning */
+    border-left: 5px solid var(--color-warning);
+    color: #0f172a !important; /* Texto oscuro para contraste */
 }
 
 .alerta-error {
-    background: rgba(255, 71, 87, 0.85);
-    border-left: 5px solid #ff4757;
+    background: rgba(255, 71, 87, 0.85); /* rgba basado en --color-danger */
+    border-left: 5px solid var(--color-danger);
 }

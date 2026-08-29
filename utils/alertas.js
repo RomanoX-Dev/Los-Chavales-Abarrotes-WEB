@@ -4,11 +4,14 @@ const asegurarComponenteAlerta = async () => {
     if (document.getElementById('alertaCustom')) return;
 
     try {
-        const respuesta = await fetch('../cards/Tarjetaeliminacion.html');
+        const respuesta = await fetch('/LCAWFrontend/cards/Tarjetaeliminacion.html');
+        
+        if (!respuesta.ok) throw new Error('No se pudo cargar el componente de alerta');
+        
         const html = await respuesta.text();
         document.body.insertAdjacentHTML('beforeend', html);
     } catch (error) {
-        console.error('Error al cargar la tarjeta de eliminación/alerta:', error);
+        console.error('Error al cargar la tarjeta de alerta:', error);
     }
 };
 

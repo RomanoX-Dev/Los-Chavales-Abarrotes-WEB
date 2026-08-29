@@ -1,31 +1,29 @@
 import { fetchConAuth } from '../utils/helpers.js';
 
+const BASE_URL = '/api/usuarios';
+
 export const usuariosAPI = {
     // POST: /api/usuarios/login
     login: async (nombreUsuario, contrasena) => {
-        return await fetchConAuth('/api/usuarios/login', {
+        return await fetchConAuth(`${BASE_URL}/login`, {
             method: 'POST',
             body: JSON.stringify({ nombreUsuario, contrasena })
         });
     },
 
-    // POST: /api/usuarios/logout
-    logout: async () => await fetchConAuth('/api/usuarios/logout', { method: 'POST' }),
+    logout: async () => await fetchConAuth(`${BASE_URL}/logout`, { method: 'POST' }),
 
-    // GET: /api/usuarios
-    obtenerTodos: async () => await fetchConAuth('/api/usuarios'),
+    obtenerTodos: async () => await fetchConAuth(BASE_URL),
 
-    // POST: /api/usuarios (Requiere idEmpleado, idRol, nombreUsuario, contrasena)
     crear: async (datosUsuario) => {
-        return await fetchConAuth('/api/usuarios', {
+        return await fetchConAuth(BASE_URL, {
             method: 'POST',
             body: JSON.stringify(datosUsuario)
         });
     },
 
-    // PATCH: /api/usuarios/:id/estatus
     cambiarEstatus: async (id, estatusActivo) => {
-        return await fetchConAuth(`/api/usuarios/${id}/estatus`, {
+        return await fetchConAuth(`${BASE_URL}/${id}/estatus`, {
             method: 'PATCH',
             body: JSON.stringify({ estatusActivo })
         });

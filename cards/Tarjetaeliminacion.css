@@ -1,0 +1,119 @@
+/* ==========================================
+   TARJETA Y MODAL DE CONFIRMACIÓN CRÍTICA
+   ========================================== */
+
+/* Fondo bloqueado y difuminado progresivo */
+.alerta-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 9998;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease-out;
+}
+
+.alerta-backdrop.activo {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Posicionamiento centrado y ajuste de dimensiones */
+#alertaCustom.alerta-confirmacion {
+    top: 50%;
+    right: 50%;
+    width: 90%;
+    max-width: 440px;
+    padding: 28px 32px;
+    border-radius: 20px;
+    font-size: 16px;
+    line-height: 1.5;
+    
+    /* Estado inicial fuera de foco */
+    transform: translate(50%, -50%) scale(0.82);
+    opacity: 0;
+    
+    /* Animación elástica / Spring effect */
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+                opacity 0.3s ease-out,
+                box-shadow 0.3s ease;
+}
+
+/* Animación de entrada (Pop-In) */
+#alertaCustom.alerta-confirmacion.alerta-visible {
+    transform: translate(50%, -50%) scale(1);
+    opacity: 1;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8),
+                0 0 35px rgba(255, 71, 87, 0.25),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+/* Estilo del contenedor de peligro crítico */
+.alerta-peligro-critico {
+    background: linear-gradient(145deg, rgba(30, 41, 59, 0.98), rgba(15, 23, 42, 0.98));
+    border: 1px solid rgba(255, 71, 87, 0.4);
+    border-top: 4px solid #ff4757;
+}
+
+/* Texto del mensaje */
+#alertaMensaje {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    color: #f1f5f9;
+    letter-spacing: -0.2px;
+}
+
+/* Acciones y Botones optimizados */
+.alerta-acciones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.alerta-acciones.oculto {
+    display: none;
+}
+
+.btn-alerta {
+    min-height: 44px;
+    padding: 10px 22px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1),
+                background-color 0.2s ease,
+                box-shadow 0.2s ease;
+}
+
+.btn-alerta:active {
+    transform: scale(0.96);
+}
+
+.btn-alerta-cancelar {
+    background: rgba(255, 255, 255, 0.08);
+    color: #94a3b8;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-alerta-cancelar:hover {
+    background: rgba(255, 255, 255, 0.16);
+    color: #f8fafc;
+}
+
+.btn-alerta-confirmar {
+    background: #ff4757;
+    color: #ffffff;
+    box-shadow: 0 4px 16px rgba(255, 71, 87, 0.35);
+}
+
+.btn-alerta-confirmar:hover {
+    background: #ff6b81;
+    box-shadow: 0 6px 20px rgba(255, 71, 87, 0.5);
+    transform: translateY(-2px);
+}

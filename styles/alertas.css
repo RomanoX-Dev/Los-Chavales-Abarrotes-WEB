@@ -1,0 +1,50 @@
+/* ==========================================
+   ALERTAS ESTÁNDAR (TOASTS)
+   ========================================== */
+
+#alertaCustom {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    padding: 18px 26px;
+    border-radius: 16px;
+    font-weight: 600;
+    font-size: 16px;
+    z-index: 9999;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+    transform: translateX(160%);
+    transition: transform 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-width: 420px;
+    color: #fff;
+}
+
+#alertaCustom.alerta-visible {
+    transform: translateX(0);
+}
+
+#alertaCustom.alerta-oculta {
+    transform: translateX(160%);
+}
+
+/* Tipos de Alerta Notificación */
+.alerta-exito {
+    background: rgba(46, 213, 115, 0.85);
+    border-left: 5px solid #2ed573;
+}
+
+.alerta-advertencia {
+    background: rgba(255, 204, 0, 0.85);
+    border-left: 5px solid #ffcc00;
+    color: #0f172a !important;
+}
+
+.alerta-error {
+    background: rgba(255, 71, 87, 0.85);
+    border-left: 5px solid #ff4757;
+}

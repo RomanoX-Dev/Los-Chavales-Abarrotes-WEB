@@ -6,8 +6,8 @@ import {
 } from '../api/inventarioAPI.js';
 import { obtenerCategoriasAPI } from '../api/categoriasAPI.js';
 import { obtenerMarcasAPI } from '../api/marcasAPI.js';
-import { obtenerProveedoresAPI } from '../api/proveedoresAPI.js';
-import { mostrarExito, mostrarError, mostrarAdvertencia } from '../utils/alertas.js';
+import { obtenerUnidadesAPI } from '../api/unidadesMedidaAPI.js'; 
+import { mostrarExito, mostrarError, mostrarAdvertencia, mostrarConfirmacion } from '../utils/alertas.js';
 import { renderizarTablaInventario } from '../components/inventarioCOM.js';
 import { IMGBB_API_KEY, IMAGEN_DEFAULT, resolverUrlImagen } from '../utils/helpers.js';
 
@@ -17,6 +17,7 @@ const getElem = (id) => document.getElementById(id);
 const getVal = (id) => getElem(id)?.value?.trim() || '';
 
 document.addEventListener('DOMContentLoaded', async () => {
+    await cargarModalProducto();
     await Promise.all([cargarTabla(), cargarCombos()]);
 
     const modal = getElem('modalProducto');
@@ -26,18 +27,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     const nombreArchivoText = getElem('nombreArchivoText');
     const btnQuitarFoto = getElem('btnQuitarFoto');
 
-    // Buscador en tiempo real
     getElem('buscadorProductos')?.addEventListener('input', (e) => {
         const texto = e.target.value.toLowerCase().trim();
         const filtrados = productosGlobales.filter(p => {
-            const nombre = (p.nombreProducto || '').toLowerCase();
+            const nombre = (p.nombre || p.nombreProducto || '').toLowerCase();
             const codigo = (p.codigoBarras || '').toLowerCase();
             return nombre.includes(texto) || codigo.includes(texto);
         });
         actualizarUI(filtrados);
     });
 
-    // Abrir modal para crear
     getElem('btnAgregarProducto')?.addEventListener('click', () => {
         if (getElem('tituloModal')) getElem('tituloModal').textContent = 'Nuevo Producto 📦';
         if (form) form.reset(); 
@@ -53,7 +52,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         modal?.classList.remove('oculto');
     });
 
-    // Cerrar modal
     const cerrarModal = () => {
         modal?.classList.add('oculto');
         if (form) form.reset();
@@ -66,7 +64,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     getElem('btnCerrarModal')?.addEventListener('click', cerrarModal);
     getElem('btnCerrarModalInferior')?.addEventListener('click', cerrarModal);
 
-    // Remover foto
     btnQuitarFoto?.addEventListener('click', () => {
         if (inputArchivo) {
             inputArchivo.value = '';
@@ -77,7 +74,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         mostrarAdvertencia('Foto marcada para eliminación al guardar 🗑️');
     });
 
-    // Previsualizar imagen
     inputArchivo?.addEventListener('change', (e) => {
         const file = e.target.files?.[0];
         if (inputArchivo) inputArchivo.dataset.eliminarFoto = 'false';
@@ -98,30 +94,39 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // Guardar (Crear / Editar)
     form?.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const idActual = getVal('productoId');
         const esEdicion = Boolean(idActual);
-
         const codigoIngresado = getVal('codigoBarras');
-        const nombreIngresado = getVal('nombreProducto').toLowerCase();
+        const nombreIngresado = getVal('nombreProducto');
 
-        // Validar duplicados
+        const datosTemporal = {
+            nombreProducto: nombreIngresado,
+            codigoBarras: codigoIngresado,
+            precio: parseFloat(getVal('precio')),
+            stock: parseFloat(getVal('stock')) || 0,
+            stockMinimo: parseFloat(getVal('stockMinimo')) || 0,
+            idCategoria: parseInt(getVal('idCategoria'), 10) || null,
+            idMarca: parseInt(getVal('idMarca'), 10) || null,
+            idUnidad: parseInt(getVal('idUnidad'), 10) || null
+        };
+
+        if (!validarDatosProducto(datosTemporal)) return;
+
         const duplicado = productosGlobales.find(p => {
             const idProd = String(p.idProducto || '');
             if (esEdicion && idProd === String(idActual)) return false;
 
             const pCodigo = (p.codigoBarras || '').trim();
-            const pNombre = (p.nombreProducto || '').trim().toLowerCase();
+            const pNombre = (p.nombre || p.nombreProducto || '').trim().toLowerCase();
 
-            return (codigoIngresado && pCodigo === codigoIngresado) || 
-                   (nombreIngresado && pNombre === nombreIngresado);
+            return (pCodigo === codigoIngresado) || (pNombre === nombreIngresado.toLowerCase());
         });
 
         if (duplicado) {
-            mostrarAdvertencia('⚠️ Ya existe otro producto con este Nombre o Código de Barras.');
+            mostrarAdvertencia('Ya existe otro producto con este Nombre o Código de Barras');
             return;
         }
 
@@ -165,19 +170,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
-        // Estructura limpia enviada al inventarioCON
         const datosProducto = {
             nombreProducto: getVal('nombreProducto'),
             codigoBarras: codigoIngresado || null,
             descripcion: getVal('descripcionProducto') || null,
             precio: parseFloat(getVal('precio')) || 0,
-            precioProveedor: parseFloat(getVal('precioProveedor')) || 0,
             stock: parseFloat(getVal('stock')) || 0,
             stockMinimo: parseFloat(getVal('stockMinimo')) || 0,
             idCategoria: parseInt(getVal('idCategoria'), 10) || null,
             idMarca: parseInt(getVal('idMarca'), 10) || null,
-            idProveedor: parseInt(getVal('idProveedor'), 10) || null,
-            idUnidad: 1,
+            idUnidad: parseInt(getVal('idUnidad'), 10) || null,
             estatus: getVal('estatusProducto') || 'Activo',
             imagen: urlImagenFinal,
             deleteHash: deleteHashFinal,
@@ -198,6 +200,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 });
 
+async function cargarModalProducto() {
+    const contenedor = document.getElementById('contenedorModalProducto');
+    if (!contenedor) return;
+    try {
+        const respuesta = await fetch('../cards/Tarjetainventario.html');
+        const html = await respuesta.text();
+        contenedor.innerHTML = html;
+    } catch (error) {
+        console.error('Error al cargar la tarjeta:', error);
+    }
+}
+
 async function cargarTabla() {
     productosGlobales = await obtenerProductos();
     actualizarUI(productosGlobales);
@@ -205,17 +219,17 @@ async function cargarTabla() {
 
 async function cargarCombos() {
     try {
-        const [categorias, marcas, proveedores] = await Promise.all([
+        const [categorias, marcas, unidades] = await Promise.all([
             obtenerCategoriasAPI(),
             obtenerMarcasAPI(),
-            obtenerProveedoresAPI()
+            obtenerUnidadesAPI()
         ]);
 
         poblarSelect('idCategoria', categorias, 'Seleccione categoría...', 'idCategoria', 'nombreCategoria');
         poblarSelect('idMarca', marcas, 'Seleccione marca...', 'idMarca', 'nombreMarca');
-        poblarSelect('idProveedor', proveedores, 'Seleccione proveedor...', 'idProveedor', 'nombreEmpresa');
+        poblarSelect('idUnidad', unidades, 'Seleccione unidad...', 'idUnidad', 'nombreUnidad');
     } catch (error) {
-        console.error('Error al cargar los combos:', error);
+        console.error('Error al cargar combos:', error);
     }
 }
 
@@ -249,16 +263,15 @@ function editarProducto(id) {
 
     setInputValue('productoId', prod.idProducto);
     setInputValue('codigoBarras', prod.codigoBarras);
-    setInputValue('nombreProducto', prod.nombreProducto);
+    setInputValue('nombreProducto', prod.nombre || prod.nombreProducto);
     setInputValue('descripcionProducto', prod.descripcion);
     setInputValue('precio', prod.precio);
-    setInputValue('precioProveedor', prod.precioProveedor);
     setInputValue('stock', prod.stock);
     setInputValue('stockMinimo', prod.stockMinimo);
 
     setSelectValue('idCategoria', prod.idCategoria);
     setSelectValue('idMarca', prod.idMarca);
-    setSelectValue('idProveedor', prod.idProveedor);
+    setSelectValue('idUnidad', prod.idUnidad);
     setSelectValue('estatusProducto', prod.estatus || 'Activo');
 
     const urlImagenActual = resolverUrlImagen(prod.imagen);
@@ -282,15 +295,17 @@ function editarProducto(id) {
     getElem('modalProducto')?.classList.remove('oculto');
 }
 
+// Eliminación con confirmación dinámica y pantalla bloqueada
 async function borrarFisicoDefinitivo(id) {
-    if (!confirm('⚠️ ¿Confirmas la eliminación permanente de este producto?')) return;
+    const confirmado = await mostrarConfirmacion('¿Deseas eliminar permanentemente este producto? Esta acción no se puede deshacer.');
+    if (!confirmado) return;
 
     mostrarAdvertencia('Eliminando permanentemente... ⏳');
     const respuesta = await eliminarProductoDefinitivoAPI(id);
 
     if (respuesta.exito) {
         await cargarTabla();
-        mostrarExito(respuesta.mensaje || 'Producto eliminado.');
+        mostrarExito(respuesta.mensaje || 'Producto eliminado correctamente.');
     } else {
         mostrarError('Error: ' + respuesta.mensaje);
     }
@@ -312,4 +327,44 @@ function limpiarDatasetImagen(elem) {
     elem.dataset.deleteHashActual = '';
     elem.dataset.deleteUrlActual = '';
     elem.dataset.eliminarFoto = 'false';
+}
+
+function validarDatosProducto(datos) {
+    if (!datos.codigoBarras) {
+        mostrarAdvertencia('El código de barras es obligatorio 🏷️');
+        return false;
+    }
+    if (datos.codigoBarras.length < 3) {
+        mostrarAdvertencia('El código de barras debe tener al menos 3 caracteres');
+        return false;
+    }
+    if (!datos.nombreProducto || datos.nombreProducto.length < 3) {
+        mostrarAdvertencia('Ingresa un nombre de producto válido (mínimo 3 letras) 📦');
+        return false;
+    }
+    if (!datos.idCategoria) {
+        mostrarAdvertencia('Selecciona una categoría para el producto 📁');
+        return false;
+    }
+    if (!datos.idMarca) {
+        mostrarAdvertencia('Selecciona una marca para el producto 🏷️');
+        return false;
+    }
+    if (!datos.idUnidad) {
+        mostrarAdvertencia('Selecciona una unidad de medida 📏');
+        return false;
+    }
+    if (isNaN(datos.precio) || datos.precio <= 0) {
+        mostrarAdvertencia('El precio debe ser mayor a $0.00 💰');
+        return false;
+    }
+    if (isNaN(datos.stock) || datos.stock < 0) {
+        mostrarAdvertencia('El stock no puede ser un número negativo 📊');
+        return false;
+    }
+    if (isNaN(datos.stockMinimo) || datos.stockMinimo < 0) {
+        mostrarAdvertencia('El stock mínimo no puede ser negativo 📉');
+        return false;
+    }
+    return true;
 }

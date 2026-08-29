@@ -1,4 +1,4 @@
-import { API_URL, fetchConAuth } from '../utils/helpers.js';
+import { fetchConAuth } from '../utils/helpers.js';
 
 const ENDPOINT = '/api/productos';
 

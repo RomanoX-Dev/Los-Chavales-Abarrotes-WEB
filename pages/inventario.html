@@ -6,6 +6,10 @@
     <title>LCAW - Módulo de Inventario</title>
     <link rel="stylesheet" href="../styles/menu.css">
     <link rel="stylesheet" href="../styles/inventario.css">
+    <link rel="stylesheet" href="../styles/alertas.css">
+    <link rel="stylesheet" href="../tables/Tablainventario.css">
+    <link rel="stylesheet" href="../cards/Tarjetainventario.css">
+    <link rel="stylesheet" href="../cards/Tarjetaeliminacion.css">
 </head>
 <body>
 
@@ -15,8 +19,8 @@
     <div class="orb orb-3"></div>
 
     <div class="dashboard-container">
-        
-        <!-- BARRA LATERAL (Estilos heredados de menu.css) -->
+
+        <!-- BARRA LATERAL -->
         <aside class="sidebar glass-panel">
             <div class="logo">
                 <h2>🛒 LCAW</h2>
@@ -83,104 +87,9 @@
 
         </main>
     </div>
-    
-    <!-- MODAL ÚNICO: REGISTRO Y EDICIÓN -->
-    <div id="modalProducto" class="modal-overlay oculto">
-        <div class="glass-modal modal-wide">
-            <div class="modal-header">
-                <h2 id="tituloModal">Nuevo Producto 📦</h2>
-                <button class="btn-cerrar" id="btnCerrarModal">✖</button>
-            </div>
-            
-            <form id="formularioProducto">
-                <input type="hidden" id="productoId"> 
-                
-                <div class="form-layout-horizontal">
-                    
-                    <!-- Columna Izquierda: Fotografía e Identificación -->
-                    <div class="form-col">
-                        <div class="input-group text-center">
-                            <label>Fotografía del Producto</label>
-                            <div class="preview-container">
-                                <img id="previewImagen" alt="Vista Previa" class="img-preview" referrerpolicy="no-referrer">
-                            </div>
-                            <input type="file" id="imagenProductoFile" accept="image/*" style="display: none;">
-                            <div class="btn-img-group">
-                                <label for="imagenProductoFile" class="btn-secundario inline-btn">📁 Subir Foto</label>
-                                <button type="button" id="btnQuitarFoto" class="btn-danger-icon" title="Quitar fotografía">🗑️</button>
-                            </div>
-                            <p id="nombreArchivoText" class="file-info-text">Sin cambios en la imagen</p>
-                        </div>
 
-                        <div class="input-group">
-                            <label for="codigoBarras">Código de Barras</label>
-                            <input type="text" id="codigoBarras" placeholder="Ej. 750100112345">
-                        </div>
-                        
-                        <div class="input-group">
-                            <label for="nombreProducto">Nombre del Producto *</label>
-                            <input type="text" id="nombreProducto" required placeholder="Ej. Coca-Cola 600ml">
-                        </div>
-
-                        <div class="input-group">
-                            <label for="descripcionProducto">Descripción</label>
-                            <textarea id="descripcionProducto" rows="3" placeholder="Detalles adicionados, peso, presentación..."></textarea>
-                        </div>
-                    </div>
-
-                    <!-- Columna Derecha: Precios, Stock y Clasificación -->
-                    <div class="form-col">
-                        <div class="grid-2-col">
-                            <div class="input-group">
-                                <label for="precio">Precio Venta ($) *</label>
-                                <input type="number" id="precio" step="0.01" min="0" required placeholder="0.00">
-                            </div>
-
-                            <div class="input-group">
-                                <label for="stock">Stock Actual *</label>
-                                <input type="number" id="stock" required min="0" placeholder="0">
-                            </div>
-                        </div>
-
-                        <div class="input-group">
-                            <label for="stockMinimo">Stock Mínimo ⚠️</label>
-                            <input type="number" id="stockMinimo" min="0" placeholder="Ej. 5">
-                        </div>
-                        
-                        <div class="grid-2-col">
-                            <div class="input-group">
-                                <label for="idCategoria">Categoría *</label>
-                                <select id="idCategoria" required>
-                                    <option value="">Seleccione categoría...</option>
-                                </select>
-                            </div>
-
-                            <div class="input-group">
-                                <label for="idMarca">Marca *</label>
-                                <select id="idMarca" required>
-                                    <option value="">Seleccione marca...</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="input-group">
-                            <label for="estatusProducto">Estatus *</label>
-                            <select id="estatusProducto" required>
-                                <option value="Activo">Activo</option>
-                                <option value="Inactivo">Inactivo</option>
-                            </select>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" id="btnCerrarModalInferior" class="btn-secundario">Cancelar</button>
-                    <button type="submit" class="btn-primario">Guardar Producto</button>
-                </div>
-            </form>
-        </div>
-    </div>
+    <!-- CONTENEDOR DINÁMICO DEL MODAL DE PRODUCTO -->
+    <div id="contenedorModalProducto"></div>
 
     <script type="module" src="../utils/cargador.js"></script>
     <script type="module" src="../scripts/menu.js"></script>

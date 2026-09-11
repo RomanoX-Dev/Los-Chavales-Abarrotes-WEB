@@ -204,7 +204,7 @@ async function cargarModalProducto() {
     const contenedor = document.getElementById('contenedorModalProducto');
     if (!contenedor) return;
     try {
-        const respuesta = await fetch('../cards/tarjetaInventario.html');
+        const respuesta = await fetch('../cards/Tarjetainventario.html');
         const html = await respuesta.text();
         contenedor.innerHTML = html;
     } catch (error) {

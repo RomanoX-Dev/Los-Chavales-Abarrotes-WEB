@@ -2,7 +2,7 @@ import { mostrarCargador, ocultarCargador } from './cargador.js';
 
 //'https://lcaw-server.onrender.com'
 //'http://localhost:3000'
-export const API_URL = 'http://localhost:3000';
+export const API_URL = 'https://lcaw-server.onrender.com';
 export const IMGBB_API_KEY = 'c42145a4b70213cc343bc5bf54e8035c';
 export const IMAGEN_DEFAULT = '../assets/Prodefault.png';
 

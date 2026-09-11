@@ -2,7 +2,7 @@
    ESTILOS GLOBALES - UI COMPONENTS
    ========================================== */
 
-@import 'variables.css'; /* Importamos variables al inicio */
+@import 'variables.css'; 
 
 /* --- TOOLBAR Y BÚSQUEDA FLOTANTE --- */
 .toolbar {

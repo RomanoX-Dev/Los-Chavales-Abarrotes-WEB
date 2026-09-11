@@ -204,7 +204,7 @@ async function cargarModalProducto() {
     const contenedor = document.getElementById('contenedorModalProducto');
     if (!contenedor) return;
     try {
-        const respuesta = await fetch('../cards/Tarjetainventario.html');
+        const respuesta = await fetch('../cards/tarjetaInventario.html');
         const html = await respuesta.text();
         contenedor.innerHTML = html;
     } catch (error) {
@@ -297,7 +297,7 @@ function editarProducto(id) {
 
 // Eliminación con confirmación dinámica y pantalla bloqueada
 async function borrarFisicoDefinitivo(id) {
-    const confirmado = await mostrarConfirmacion('¿Deseas eliminar permanentemente este producto? Esta acción no se puede deshacer.');
+    const confirmado = await mostrarConfirmacion('¿Deseas eliminar permanentemente este producto?, Esta acción no se puede deshacer.');
     if (!confirmado) return;
 
     mostrarAdvertencia('Eliminando permanentemente... ⏳');

@@ -1,33 +1,20 @@
 /* ==========================================
    MODAL / TARJETA DE PRODUCTO (GLASSMORPHISM PRO)
+   OPTIMIZADO CON VARIABLES GLOBALES
    ========================================== */
 
-/* Keyframe Animations ultra fluidas con curvas cúbicas */
+/* Keyframe Animations */
 @keyframes overlayFadeIn {
-    0% {
-        opacity: 0;
-        backdrop-filter: blur(0px);
-        -webkit-backdrop-filter: blur(0px);
-    }
-    100% {
-        opacity: 1;
-        backdrop-filter: blur(14px);
-        -webkit-backdrop-filter: blur(14px);
-    }
+    0% { opacity: 0; backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px); }
+    100% { opacity: 1; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
 }
 
 @keyframes modalSlideUp {
-    0% {
-        opacity: 0;
-        transform: translateY(24px) scale(0.95);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+    0% { opacity: 0; transform: translateY(24px) scale(0.95); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* Overlay / Fondo difuminado de pantalla completa */
+/* Overlay / Fondo difuminado */
 .modal-overlay {
     position: fixed;
     inset: 0;
@@ -45,23 +32,16 @@
     will-change: opacity, backdrop-filter;
 }
 
-/* Tarjeta Principal Glassmorphic */
+/* Tarjeta Principal */
 .glass-modal {
-    background: linear-gradient(
-        135deg,
-        rgba(30, 41, 59, 0.75) 0%,
-        rgba(15, 23, 42, 0.85) 100%
-    );
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.75) 0%, rgba(15, 23, 42, 0.85) 100%);
     backdrop-filter: blur(28px);
     -webkit-backdrop-filter: blur(28px);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 24px;
+    border: 1px solid var(--border-glass);
+    border-radius: 24px; /* Un poco más grande que var(--radius-lg) para destacar el modal */
     padding: 32px 36px;
-    box-shadow: 
-        0 30px 60px -12px rgba(0, 0, 0, 0.7),
-        0 0 30px rgba(0, 242, 254, 0.1),
-        inset 0 1px 1px rgba(255, 255, 255, 0.2);
-    color: #fff;
+    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.7), var(--shadow-glow), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+    color: var(--text-main);
     max-height: 90vh;
     overflow-y: auto;
     animation: modalSlideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -74,23 +54,18 @@
 }
 
 /* Custom Scrollbar Suave */
-.glass-modal::-webkit-scrollbar {
-    width: 6px;
-}
-
+.glass-modal::-webkit-scrollbar { width: 6px; }
 .glass-modal::-webkit-scrollbar-track {
     background: rgba(15, 23, 42, 0.3);
     border-radius: 10px;
 }
-
 .glass-modal::-webkit-scrollbar-thumb {
     background: linear-gradient(180deg, rgba(0, 242, 254, 0.4), rgba(0, 150, 255, 0.4));
     border-radius: 10px;
     transition: background 0.3s ease;
 }
-
 .glass-modal::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, #00f2fe, #0096ff);
+    background: var(--gradient-primary);
 }
 
 /* Header del Modal */
@@ -99,7 +74,7 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 24px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--border-glass);
     padding-bottom: 16px;
 }
 
@@ -107,7 +82,7 @@
     font-size: 1.5rem;
     font-weight: 700;
     letter-spacing: -0.4px;
-    background: linear-gradient(135deg, #ffffff 30%, #cbd5e1 100%);
+    background: linear-gradient(135deg, var(--text-main) 30%, var(--text-muted) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -116,8 +91,8 @@
     background: rgba(255, 255, 255, 0.06);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: #cbd5e1;
+    border: 1px solid var(--border-glass);
+    color: var(--text-muted);
     width: 42px; 
     height: 42px;
     border-radius: 50%;
@@ -126,11 +101,11 @@
     align-items: center; 
     justify-content: center;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: var(--transition-main);
 }
 
 .btn-cerrar:hover {
-    color: #ff4757;
+    color: var(--color-danger);
     background: rgba(255, 71, 87, 0.2);
     border-color: rgba(255, 71, 87, 0.4);
     transform: rotate(90deg) scale(1.08);
@@ -143,48 +118,43 @@
     gap: 32px;
 }
 
-.form-col { 
-    display: flex; 
-    flex-direction: column; 
-    gap: 18px; 
-}
-
-.grid-2-col { 
-    display: grid; 
-    grid-template-columns: 1fr 1fr; 
-    gap: 16px; 
-}
+.form-col { display: flex; flex-direction: column; gap: 18px; }
+.grid-2-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
 /* Entradas de Texto y Selects */
-.input-group { 
-    display: flex; 
-    flex-direction: column; 
-    gap: 8px; 
-}
+.input-group { display: flex; flex-direction: column; gap: 8px; }
 
 .input-group label { 
     font-size: 13px; 
-    color: #94a3b8; 
+    color: var(--text-muted); 
     font-weight: 600; 
     text-transform: uppercase; 
     letter-spacing: 0.6px; 
 }
 
-.input-group input, 
+/* Nota: Los inputs ya están estilizados en global.css, aquí solo aplicamos a select y textarea para que coincidan */
 .input-group select, 
 textarea {
-    background: rgba(15, 23, 42, 0.55);
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: var(--bg-glass);
+    border: 1px solid var(--border-glass);
     padding: 13px 16px;
-    border-radius: 12px;
-    color: #fff;
+    border-radius: var(--radius-md);
+    color: var(--text-main);
     outline: none;
     font-family: inherit;
     font-size: 1rem;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: var(--transition-main);
 }
 
-/* Botones Incrementales (< >) de Inputs Numéricos estilo Glassmorphism */
+.input-group select:focus, 
+textarea:focus {
+    border-color: var(--color-accent);
+    box-shadow: var(--shadow-glow);
+    background: rgba(15, 23, 42, 0.75);
+    transform: translateY(-2px);
+}
+
+/* Botones Incrementales de Inputs Numéricos */
 .input-group input[type=number]::-webkit-inner-spin-button, 
 .input-group input[type=number]::-webkit-outer-spin-button {
     opacity: 0.85;
@@ -196,7 +166,7 @@ textarea {
     background: rgba(0, 242, 254, 0.15);
     backdrop-filter: blur(4px);
     filter: invert(0.9) sepia(1) saturate(4) hue-rotate(145deg);
-    transition: all 0.25s ease;
+    transition: var(--transition-main);
 }
 
 .input-group input[type=number]::-webkit-inner-spin-button:hover {
@@ -205,38 +175,29 @@ textarea {
     transform: scale(1.15);
 }
 
-.input-group input:focus, 
-.input-group select:focus, 
-textarea:focus {
-    border-color: #00f2fe;
-    box-shadow: 0 0 20px rgba(0, 242, 254, 0.28);
-    background: rgba(15, 23, 42, 0.75);
-    transform: translateY(-2px);
-}
-
-/* Contenedor Interactivo de Fotografía Optimizado */
+/* Contenedor Interactivo de Fotografía */
 .preview-container {
     position: relative;
     width: 100%;
     height: 180px;
     margin: 0 auto;
     padding: 8px;
-    border-radius: 16px;
-    border: 2px dashed rgba(0, 242, 254, 0.4);
+    border-radius: var(--radius-lg);
+    border: 2px dashed var(--border-glass-hover);
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    background: rgba(15, 23, 42, 0.5);
+    background: var(--bg-glass);
     backdrop-filter: blur(8px);
     cursor: pointer;
-    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: var(--transition-main);
 }
 
 .preview-container:hover {
-    border-color: #00f2fe;
+    border-color: var(--color-accent);
     border-style: solid;
-    box-shadow: 0 0 25px rgba(0, 242, 254, 0.35);
+    box-shadow: var(--shadow-glow);
     transform: translateY(-3px);
 }
 
@@ -244,9 +205,8 @@ textarea:focus {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    object-position: center;
     border-radius: 10px;
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: var(--transition-main);
 }
 
 .preview-overlay {
@@ -254,7 +214,6 @@ textarea:focus {
     inset: 0;
     background: rgba(15, 23, 42, 0.65);
     backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -263,7 +222,7 @@ textarea:focus {
 }
 
 .preview-overlay span {
-    color: #fff;
+    color: var(--text-main);
     font-size: 13px;
     font-weight: 600;
     padding: 8px 18px;
@@ -286,16 +245,14 @@ textarea:focus {
 
 .btn-danger-icon {
     background: rgba(255, 71, 87, 0.12);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 71, 87, 0.35);
-    color: #ff4757;
+    color: var(--color-danger);
     padding: 11px 20px;
-    border-radius: 12px;
+    border-radius: var(--radius-md);
     font-size: 0.92rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: var(--transition-main);
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -303,67 +260,27 @@ textarea:focus {
 
 .btn-danger-icon:hover {
     background: rgba(255, 71, 87, 0.28);
-    border-color: #ff4757;
+    border-color: var(--color-danger);
     transform: translateY(-2px);
     box-shadow: 0 6px 18px rgba(255, 71, 87, 0.35);
 }
 
 .file-info-text {
     font-size: 12px;
-    color: #94a3b8;
+    color: var(--text-muted);
     margin-top: 6px;
     text-align: center;
 }
 
-/* Botones Principales (Footer) */
+/* Footer del Modal (Solo Layout) */
 .modal-footer {
     display: flex;
     justify-content: flex-end;
     gap: 16px;
     margin-top: 30px;
     padding-top: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid var(--border-glass);
 }
-
-.modal-footer .btn-primario,
-.modal-footer .btn-secundario {
-    min-height: 48px;
-    padding: 14px 30px;
-    font-size: 1rem;
-    font-weight: 700;
-    border-radius: 14px;
-    letter-spacing: 0.3px;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.modal-footer .btn-primario {
-    background: linear-gradient(135deg, #0096ff 0%, #00f2fe 100%);
-    border: none;
-    color: #fff;
-    box-shadow: 0 6px 20px rgba(0, 150, 255, 0.4);
-}
-
-.modal-footer .btn-primario:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 8px 25px rgba(0, 242, 254, 0.55);
-}
-
-.modal-footer .btn-secundario {
-    background: rgba(255, 255, 255, 0.07);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    color: #cbd5e1;
-}
-
-.modal-footer .btn-secundario:hover {
-    background: rgba(255, 255, 255, 0.16);
-    color: #fff;
-    transform: translateY(-3px);
-}
-
-.oculto { display: none !important; }
 
 /* Adaptación Responsiva */
 @media (max-width: 820px) {
@@ -372,16 +289,11 @@ textarea:focus {
         max-height: 92vh;
         border-radius: 20px;
     }
-    
     .form-layout-horizontal {
         grid-template-columns: 1fr;
         gap: 20px;
     }
-
-    .preview-container { 
-        height: 150px; 
-    }
-    
+    .preview-container { height: 150px; }
     .preview-overlay { 
         opacity: 1; 
         background: rgba(15, 23, 42, 0.4); 
@@ -389,17 +301,10 @@ textarea:focus {
 }
 
 @media (max-width: 520px) {
-    .grid-2-col { 
-        grid-template-columns: 1fr; 
-    }
-
+    .grid-2-col { grid-template-columns: 1fr; }
     .modal-footer { 
         flex-direction: column-reverse; 
         gap: 12px; 
     }
-
-    .modal-footer button { 
-        width: 100%; 
-        text-align: center; 
-    }
+    .modal-footer button { width: 100%; text-align: center; }
 }

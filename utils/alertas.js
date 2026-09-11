@@ -2,11 +2,10 @@ let timerAlerta = null;
 
 const asegurarComponenteAlerta = async () => {
     if (document.getElementById('alertaCustom')) return;
-
     try {
-        const respuesta = await fetch('/LCAWFrontend/cards/Tarjetaeliminacion.html');
+        const respuesta = await fetch('../cards/Tarjetaeliminacion.html'); 
         
-        if (!respuesta.ok) throw new Error('No se pudo cargar el componente de alerta');
+        if (!respuesta.ok) throw new Error(`No se pudo cargar el componente de alerta (Status: ${respuesta.status})`);
         
         const html = await respuesta.text();
         document.body.insertAdjacentHTML('beforeend', html);

@@ -2,8 +2,6 @@
    INTERFAZ PRINCIPAL - GLASSMORPHISM PRO
    ========================================== */
 
-@import 'variables.css'; /* Importamos tus variables globales */
-
 /* === RESETS Y BASE === */
 * {
     margin: 0;

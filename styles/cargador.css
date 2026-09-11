@@ -1,8 +1,3 @@
-/* ==========================================
-   CARGADOR.CSS - LOADER CON GLASSMORPHISM
-   ========================================== */
-
-@import 'variables.css'; 
 
 /* Overlay completo que bloquea clicks y oscurece la pantalla */
 .loader-overlay {

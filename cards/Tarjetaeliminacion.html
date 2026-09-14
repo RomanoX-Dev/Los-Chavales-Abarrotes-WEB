@@ -1,8 +1,13 @@
+<!-- Backdrop oscuro traslúcido con desenfoque para modales -->
 <div id="alertaBackdrop" class="alerta-backdrop"></div>
-<div id="alertaCustom" class="alerta-oculta">
-    <span id="alertaMensaje"></span>
+
+<!-- Tarjeta contenedora principal (Funciona como Toast o Modal) -->
+<div id="alertaCustom" class="alerta-card alerta-oculta">
+    <div class="alerta-cuerpo">
+        <span id="alertaMensaje" class="alerta-texto"></span>
+    </div>
     <div id="alertaAcciones" class="alerta-acciones oculto">
-        <button id="btnAlertaCancelar" class="btn-alerta btn-alerta-cancelar">Cancelar</button>
-        <button id="btnAlertaConfirmar" class="btn-alerta btn-alerta-confirmar">Eliminar</button>
+        <button type="button" id="btnAlertaCancelar" class="btn-alerta btn-alerta-cancelar">Cancelar</button>
+        <button type="button" id="btnAlertaConfirmar" class="btn-alerta btn-alerta-confirmar">Eliminar</button>
     </div>
 </div>

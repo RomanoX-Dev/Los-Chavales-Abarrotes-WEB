@@ -1,0 +1,189 @@
+/* ==========================================================================
+   INVENTARIOCOM.CSS - ESTILOS OPTIMIZADOS (ESPACIADO Y SCROLL NEÓN)
+   ========================================================================== */
+
+/* === CONTENEDOR PRINCIPAL Y CENTRADO === */
+.tabla-container {
+    background: var(--bg-glass);
+    backdrop-filter: var(--blur-lg);
+    -webkit-backdrop-filter: var(--blur-lg);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    margin: 40px auto 30px auto; /* Mayor margen superior para evitar colisión con el menú */
+    width: calc(100% - 32px);
+    max-width: 1200px;
+    box-shadow: var(--shadow-glass);
+    
+    /* Scroll horizontal optimizado sin saltos verticales */
+    overflow-x: auto;
+    overflow-y: hidden;
+    touch-action: pan-x;
+    scrollbar-width: thin;
+    scrollbar-color: #00f2fe transparent;
+}
+
+/* Barra de desplazamiento delgada en Azul Neón */
+.tabla-container::-webkit-scrollbar { 
+    height: 4px; 
+}
+
+.tabla-container::-webkit-scrollbar-track { 
+    background: rgba(15, 23, 42, 0.5); 
+    border-radius: var(--radius-full);
+}
+
+.tabla-container::-webkit-scrollbar-thumb { 
+    background: #00f2fe; 
+    border-radius: var(--radius-full); 
+    box-shadow: 0 0 6px rgba(0, 242, 254, 0.5);
+}
+
+.tabla-container::-webkit-scrollbar-thumb:hover { 
+    background: #38ef7d;
+}
+
+/* === TABLA BASE === */
+.glass-table, table {
+    width: 100%;
+    min-width: 880px;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+    color: var(--text-main);
+    font-size: 0.9rem;
+    margin: 0 auto;
+}
+
+/* === ENCABEZADOS DE TABLA === */
+.glass-table th, table th {
+    padding: 14px 18px;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--color-accent, #00f2fe);
+    border-bottom: 2px solid rgba(0, 242, 254, 0.2);
+    text-align: left;
+}
+
+/* === FILAS Y CELDAS === */
+.glass-table tbody tr, .fila-tabla {
+    background: rgba(30, 41, 59, 0.4);
+    backdrop-filter: var(--blur-md);
+    -webkit-backdrop-filter: var(--blur-md);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.glass-table td, .fila-tabla td {
+    padding: 12px 16px;
+    border-top: 1px solid var(--border-glass);
+    border-bottom: 1px solid var(--border-glass);
+    vertical-align: middle;
+}
+
+.glass-table td:first-child, .fila-tabla td:first-child {
+    border-left: 1px solid var(--border-glass);
+    border-radius: var(--radius-md) 0 0 var(--radius-md);
+}
+
+.glass-table td:last-child, .fila-tabla td:last-child {
+    border-right: 1px solid var(--border-glass);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+.glass-table tbody tr:hover, .fila-tabla:hover {
+    background: rgba(30, 41, 59, 0.75);
+    transform: translateY(-2px);
+}
+
+.fila-inactiva {
+    opacity: 0.45;
+    filter: grayscale(60%);
+}
+
+/* === COLUMNAS ESPECÍFICAS === */
+.col-img {
+    width: 60px;
+    text-align: center;
+}
+
+.col-precio, .texto-precio {
+    color: var(--color-accent, #00f2fe);
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.col-acciones, .celda-acciones {
+    text-align: center;
+    white-space: nowrap;
+    min-width: 100px;
+}
+
+.texto-vacio, .tabla-vacia {
+    text-align: center;
+    padding: 30px !important;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* === IMÁGENES EN TABLA === */
+.img-tabla {
+    width: 44px;
+    height: 44px;
+    object-fit: cover;
+    border-radius: var(--radius-sm, 8px);
+    border: 1px solid var(--border-glass);
+    background: rgba(15, 23, 42, 0.5);
+    display: block;
+    margin: 0 auto;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.img-tabla:hover {
+    transform: scale(1.15);
+    border-color: var(--color-accent, #00f2fe);
+}
+
+/* === BADGES DE STOCK Y ESTATUS === */
+.badge-stock, .badge-estatus {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.3px;
+}
+
+.stock-verde { color: #2ed573; background: rgba(46, 213, 115, 0.12); border: 1px solid rgba(46, 213, 115, 0.3); }
+.stock-amarillo { color: #ffa502; background: rgba(255, 165, 2, 0.12); border: 1px solid rgba(255, 165, 2, 0.3); }
+.stock-rojo { color: #ff4757; background: rgba(255, 71, 87, 0.12); border: 1px solid rgba(255, 71, 87, 0.3); }
+
+.badge-estatus.activo { color: #2ed573; background: rgba(46, 213, 115, 0.12); border: 1px solid rgba(46, 213, 115, 0.3); }
+.badge-estatus.inactivo { color: #ff4757; background: rgba(255, 71, 87, 0.12); border: 1px solid rgba(255, 71, 87, 0.3); }
+
+/* === BOTONES DE ACCIÓN === */
+.btn-icon {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-glass);
+    color: var(--text-main);
+    width: 34px;
+    height: 34px;
+    border-radius: var(--radius-sm, 8px);
+    cursor: pointer;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s ease, background-color 0.15s ease;
+    margin: 0 3px;
+}
+
+.btn-icon:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+}
+
+.btn-borrar-definitivo:hover {
+    background: rgba(255, 71, 87, 0.2);
+    border-color: rgba(255, 71, 87, 0.4);
+}

@@ -4,104 +4,115 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LCAW - Punto de Venta</title>
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <!-- Estilos Madre y Componentes -->
     <link rel="stylesheet" href="../styles/menu.css">
+    <link rel="stylesheet" href="../general/global.css">
+    <link rel="stylesheet" href="../componentstyles/menuCOM.css">
+    <link rel="stylesheet" href="../componentstyles/posCOM.css">
+    <link rel="stylesheet" href="../styles/cargador.css">
     <link rel="stylesheet" href="../styles/pos.css">
 </head>
 <body>
 
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
-
     <div class="dashboard-container">
         
-        <aside class="sidebar glass-panel">
-            <div class="logo">
-                <h2>🛒 LCAW</h2>
-                <span>Los Chavales</span>
-            </div>
-            <nav class="sidebar-menu">
-                <button class="menu-btn" onclick="navegarA('menu.html')">🏠 Inicio</button>
-                <button class="menu-btn active" onclick="navegarA('pos.html')">💻 Punto de Venta</button>
-                <button class="menu-btn" onclick="navegarA('productos.html')">📦 Inventario</button>
-                <button class="menu-btn" onclick="navegarA('clientes.html')">👥 Clientes</button>
-                <button class="menu-btn" onclick="navegarA('ventas.html')">📊 Historial</button>
-                <button class="menu-btn" onclick="navegarA('usuarios.html')">⚙️ Usuarios</button>
-            </nav>
-            <div class="sidebar-footer">
-                <button id="btnCerrarSesion" class="btn-logout">🚪 Cerrar Sesión</button>
-            </div>
-        </aside>
+        <!-- Web Component del Sidebar Madre -->
+        <app-sidebar></app-sidebar>
 
-        <main class="main-content pos-layout">
-            
-            <section class="panel-carrito glass-panel">
-                <div class="carrito-header">
-                    <h2>Ticket de Venta 🧾</h2>
-                    <button class="btn-icon" id="btnVaciarCarrito" title="Vaciar Ticket">🗑️</button>
-                </div>
+        <!-- Área de Contenido Principal -->
+        <div class="main-wrapper">
+            <!-- Web Component del Encabezado Madre -->
+            <app-header titulo="Punto de Venta 💻" subtitulo="Cargando sesión..."></app-header>
+
+            <main class="main-content pos-layout">
                 
-                <div class="carrito-items" id="listaCarrito">
-                    <div class="mensaje-vacio">El carrito está vacío. Agrega productos para comenzar.</div>
-                </div>
-
-                <div class="carrito-footer">
-                    <div class="totales">
-                        <div class="fila-total">
-                            <span>Subtotal:</span>
-                            <span id="txtSubtotal">$0.00</span>
-                        </div>
-                        <div class="fila-total">
-                            <span>IVA (16%):</span>
-                            <span id="txtIva">$0.00</span>
-                        </div>
-                        <div class="fila-total gran-total">
-                            <span>TOTAL:</span>
-                            <span id="txtTotal">$0.00</span>
+                <!-- Panel Izquierdo: Ticket de Venta -->
+                <section class="panel-carrito glass-panel">
+                    <div class="carrito-header">
+                        <h2>Ticket de Venta 🧾</h2>
+                        <button type="button" class="btn-icon-danger" id="btnVaciarCarrito" title="Vaciar Carrito">
+                            🗑️
+                        </button>
+                    </div>
+                    
+                    <div class="carrito-items" id="listaCarrito">
+                        <div class="mensaje-vacio">
+                            <span class="icono-vacio">🛒</span>
+                            <p>El carrito está vacío.<br>Escanea o selecciona productos para comenzar.</p>
                         </div>
                     </div>
-                    <button class="btn-cobrar" id="btnCobrar">💰 COBRAR</button>
-                </div>
-            </section>
 
-            <section class="panel-productos">
-                <header class="topbar glass-panel pos-topbar">
-                    <div class="search-box pos-search">
-                        <span>🔍</span>
-                        <input type="text" id="buscadorPos" placeholder="Escanear código de barras o buscar producto...">
+                    <div class="carrito-footer">
+                        <div class="totales-summary">
+                            <div class="fila-total">
+                                <span>Subtotal</span>
+                                <strong id="txtSubtotal">$0.00</strong>
+                            </div>
+                            <div class="fila-total">
+                                <span>IVA (16%)</span>
+                                <strong id="txtIva">$0.00</strong>
+                            </div>
+                            <div class="fila-total gran-total">
+                                <span>TOTAL</span>
+                                <strong id="txtTotal">$0.00</strong>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-cobrar" id="btnCobrar" disabled>
+                            💰 COBRAR TICKET
+                        </button>
                     </div>
-                </header>
+                </section>
 
-                <div class="grid-productos" id="contenedorProductosPos">
-                    <h3 style="color: white; text-align: center; width: 100%; margin-top: 50px;">Cargando productos... ⏳</h3>
-                </div>
-            </section>
+                <!-- Panel Derecho: Catálogo de Productos y Búsqueda -->
+                <section class="panel-productos">
+                    <div class="search-bar-container glass-panel">
+                        <div class="pos-search">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" id="buscadorPos" placeholder="Escanear código de barras o buscar por nombre..." autofocus autocomplete="off">
+                            <button type="button" class="btn-clear-search oculto" id="btnLimpiarBuscador">✕</button>
+                        </div>
+                    </div>
 
-        </main>
+                    <div class="grid-productos" id="contenedorProductosPos">
+                        <div class="pos-state-loader">
+                            <div class="spinner"></div>
+                            <p>Cargando catálogo de productos...</p>
+                        </div>
+                    </div>
+                </section>
+
+            </main>
+        </div>
     </div>
 
-    <!-- MODAL DE MÉTODO DE PAGO -->
-    <div id="modalPago" class="modal-overlay oculto">
-        <div class="glass-modal" style="width: 400px; text-align: center;">
+    <!-- Modal de Proceso de Pago -->
+    <div id="modalPago" class="modal-overlay oculto" role="dialog" aria-modal="true">
+        <div class="modal-card modal-pago">
             <div class="modal-header">
                 <h3>Método de Pago 💳</h3>
-                <button class="btn-cerrar" id="btnCerrarModalPago">✖</button>
+                <button type="button" class="btn-cerrar" id="btnCerrarModalPago">✕</button>
             </div>
             
-            <h2 id="totalAPagarModal" style="color: #4facfe; margin-bottom: 20px;">$0.00</h2>
-            
-            <div class="opciones-pago" style="display: flex; gap: 15px; justify-content: center;">
-                <button class="btn-primario btn-pago" data-metodo="1" style="flex: 1; padding: 20px; font-size: 1.2rem;">
-                    💵 Efectivo
-                </button>
-                <button class="btn-primario btn-pago" data-metodo="2" style="flex: 1; padding: 20px; font-size: 1.2rem; background: #8e44ad;">
-                    💳 Tarjeta
-                </button>
+            <div class="pago-body">
+                <span class="pago-label">Total a Cobrar</span>
+                <h2 id="totalAPagarModal">$0.00</h2>
+                
+                <div class="opciones-pago">
+                    <button type="button" class="btn-metodo-pago" data-metodo="efectivo">
+                        <span class="metodo-icon">💵</span>
+                        <span>Efectivo</span>
+                    </button>
+                    <button type="button" class="btn-metodo-pago" data-metodo="tarjeta">
+                        <span class="metodo-icon">💳</span>
+                        <span>Tarjeta</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- Scripts ES Modules -->
     <script type="module" src="../scripts/menu.js"></script>
     <script type="module" src="../scripts/pos.js"></script>
 </body>

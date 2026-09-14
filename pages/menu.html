@@ -3,125 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LCAW - Catálogo y Panel</title>
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="../styles/menu.css">
+    <title>LCAW - Panel Principal</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <!-- Estilos globales y específicos -->
     <link rel="stylesheet" href="../general/global.css">
+    <link rel="stylesheet" href="../styles/menu.css">
+    <link rel="stylesheet" href="../componentstyles/menuCOM.css">
 </head>
 <body>
 
-    <!-- Fondo dinámico con orbes fijos -->
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
-
     <div class="dashboard-container">
         
-        <!-- MENÚ LATERAL -->
-        <aside class="sidebar glass-panel">
-            <div class="logo">
-                <h2>🛒 LCAW</h2>
-                <span>Los Chavales Abarrotes</span>
-            </div>
-
-            <nav class="sidebar-menu">
-                <button class="menu-btn active" onclick="navegarA('menu.html')">🏠 Inicio </button>
-                <button class="menu-btn" onclick="navegarA('pos.html')">💻 Punto de Venta</button>
-                <button class="menu-btn active" onclick="navegarA('inventario.html')">📦 Inventario</button>
-                <button class="menu-btn" onclick="navegarA('clientes.html')">👥 Clientes</button>
-                <button class="menu-btn" onclick="navegarA('ventas.html')">📊 Historial</button>
-                <button class="menu-btn" onclick="navegarA('usuarios.html')">⚙️ Usuarios</button>
-            </nav>
-
-            <div class="sidebar-footer">
-                <button id="btnCerrarSesion" class="btn-logout">🚪 Cerrar Sesión</button>
-            </div>
-        </aside>
+        <!-- 1. BARRA LATERAL REUTILIZABLE -->
+        <app-sidebar></app-sidebar>
 
         <!-- ÁREA PRINCIPAL -->
         <main class="main-content">
             
-            <!-- BARRA SUPERIOR -->
-            <header class="topbar glass-panel">
-                <div class="bienvenida">
-                    <h1 id="saludoUsuario">Cargando bienvenida...</h1>
-                    <p class="subtitulo-header">Catálogo de productos destacados y novedades</p>
-                </div>
-                
-                <div class="topbar-derecha">
-                    <div class="usuario-info">
-                        <div class="detalles-texto">
-                            <span id="nombreUsuario" class="perfil-nombre">Cargando...</span>
-                            <span id="nomUsuario" class="perfil-nick">@usuario</span>
-                        </div>
-                        <span id="rolUsuario" class="badge-rol">Rol</span>
+            <!-- 2. BARRA SUPERIOR REUTILIZABLE (con el botón ⚡ Nueva Venta activado por atributo 'mostrar-pos') -->
+            <app-header 
+                titulo="Panel Principal 🏠" 
+                subtitulo="Resumen operativo y anuncios del día"
+                mostrar-pos>
+            </app-header>
 
-                        <!-- AVATAR: Estructura lista para sustituir src por la foto del backend -->
-                        <div class="avatar-container">
-                            <img id="imgPerfilUsuario" src="../assets/Prodefault.png" alt="Foto de perfil" class="avatar-img oculto">
-                            <span id="avatarPlaceholder" class="avatar-placeholder">👤</span>
-                        </div>
+            <!-- MÉTRICAS OPERATIVAS (KPIs) -->
+            <section class="kpi-grid">
+                <article class="kpi-card glass-panel">
+                    <div class="kpi-icono">💰</div>
+                    <div class="kpi-info">
+                        <span class="kpi-titulo">Ventas del Día</span>
+                        <h3 id="kpiVentas" class="kpi-monto">$0.00</h3>
                     </div>
-                </div>
-            </header>
-            
-            <!-- CONTENIDO PRINCIPAL: CATÁLOGO DE ANUNCIOS Y PRODUCTOS -->
+                </article>
+
+                <article class="kpi-card glass-panel warning">
+                    <div class="kpi-icono">⚠️</div>
+                    <div class="kpi-info">
+                        <span class="kpi-titulo">Stock Bajo</span>
+                        <h3 id="kpiStockBajo" class="kpi-monto">0 productos</h3>
+                    </div>
+                </article>
+
+                <article class="kpi-card glass-panel success">
+                    <div class="kpi-icono">🔓</div>
+                    <div class="kpi-info">
+                        <span class="kpi-titulo">Corte de Caja</span>
+                        <h3 id="kpiCorteEstado" class="kpi-monto">Abierto</h3>
+                    </div>
+                </article>
+            </section>
+
+            <!-- CATÁLOGO Y ANUNCIOS (Se llena desde menuCOM.js) -->
             <section class="catalogo-seccion">
                 <div class="seccion-header">
                     <h2>📢 Anuncios & Productos Destacados</h2>
                     <span class="badge-estado">Vista previa</span>
                 </div>
 
-                <!-- GRID DE TARJETAS (Futura conexión a Inventario) -->
                 <div id="contenedorCatalogo" class="catalogo-grid">
-
-                    <!-- Tarjeta de Ejemplo 1 -->
-                    <article class="tarjeta-producto glass-panel">
-                        <div class="badge-promocion">Nuevo</div>
-                        <div class="imagen-producto-placeholder">📦</div>
-                        <div class="info-producto">
-                            <h3>Producto de Muestra A</h3>
-                            <p class="descripcion-corta">Descripción breve del producto o promoción destacada del día.</p>
-                            <div class="meta-producto">
-                                <span class="precio">$0.00</span>
-                                <span class="stock-tag">Stock: --</span>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- Tarjeta de Ejemplo 2 -->
-                    <article class="tarjeta-producto glass-panel">
-                        <div class="badge-promocion oferta">Oferta</div>
-                        <div class="imagen-producto-placeholder">🏷️</div>
-                        <div class="info-producto">
-                            <h3>Producto de Muestra B</h3>
-                            <p class="descripcion-corta">Anuncio especial de temporada o descuento activo.</p>
-                            <div class="meta-producto">
-                                <span class="precio">$0.00</span>
-                                <span class="stock-tag">Stock: --</span>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- Tarjeta de Ejemplo 3 -->
-                    <article class="tarjeta-producto glass-panel">
-                        <div class="imagen-producto-placeholder">🥤</div>
-                        <div class="info-producto">
-                            <h3>Producto de Muestra C</h3>
-                            <p class="descripcion-corta">Artículo disponible en el inventario general de la tienda.</p>
-                            <div class="meta-producto">
-                                <span class="precio">$0.00</span>
-                                <span class="stock-tag">Stock: --</span>
-                            </div>
-                        </div>
-                    </article>
-
+                    <p class="mensaje-cargando">Cargando catálogo...</p>
                 </div>
             </section>
 
         </main>
     </div>
 
+    <!-- Script principal -->
     <script type="module" src="../scripts/menu.js"></script>
 </body>
 </html>

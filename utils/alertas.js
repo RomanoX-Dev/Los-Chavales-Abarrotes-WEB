@@ -1,19 +1,36 @@
-let timerAlerta = null;
+/* ==========================================================================
+   ALERTAS.JS - GESTIÓN EFICIENTE DE NOTIFICACIONES Y MODALES
+   ========================================================================== */
 
-const asegurarComponenteAlerta = async () => {
-    if (document.getElementById('alertaCustom')) return;
-    try {
-        const respuesta = await fetch('../cards/Tarjetaeliminacion.html'); 
-        
-        if (!respuesta.ok) throw new Error(`No se pudo cargar el componente de alerta (Status: ${respuesta.status})`);
-        
-        const html = await respuesta.text();
-        document.body.insertAdjacentHTML('beforeend', html);
-    } catch (error) {
-        console.error('Error al cargar la tarjeta de alerta:', error);
+let timerAlerta = null;
+let promesaCarga = null;
+
+/**
+ * Carga asíncrona única del HTML de alertas previniendo condiciones de carrera
+ */
+const asegurarComponenteAlerta = () => {
+    if (document.getElementById('alertaCustom')) return Promise.resolve();
+
+    if (!promesaCarga) {
+        promesaCarga = fetch('../cards/Tarjetaeliminacion.html')
+            .then((respuesta) => {
+                if (!respuesta.ok) throw new Error(`Status: ${respuesta.status}`);
+                return respuesta.text();
+            })
+            .then((html) => {
+                document.body.insertAdjacentHTML('beforeend', html);
+            })
+            .catch((error) => {
+                promesaCarga = null; // Permite reintentar si falló la red
+                console.error('Error al cargar la tarjeta de alerta:', error);
+            });
     }
+    return promesaCarga;
 };
 
+/**
+ * Muestra notificaciones estilo Toast
+ */
 const mostrarAlertaPersonalizada = async (mensaje, tipo) => {
     await asegurarComponenteAlerta();
 
@@ -28,34 +45,39 @@ const mostrarAlertaPersonalizada = async (mensaje, tipo) => {
     }
 
     clearTimeout(timerAlerta);
+
+    // Ocultar modal/backdrop previa
     if (acciones) acciones.classList.add('oculto');
     if (backdrop) backdrop.classList.remove('activo');
-    contenedor.className = '';
 
-    let duracion = 5000;
+    // Reinicio de clase base manteniendo la estructura
+    contenedor.className = 'alerta-card';
 
-    if (tipo === 'exito') {
-        contenedor.classList.add('alerta-exito');
-        spanMensaje.textContent = `✅ ${mensaje}`;
-        duracion = 5000;
-    } else if (tipo === 'advertencia') {
-        contenedor.classList.add('alerta-advertencia');
-        spanMensaje.textContent = `⚠️ ${mensaje}`;
-        duracion = 6000;
-    } else if (tipo === 'error') {
-        contenedor.classList.add('alerta-error');
-        spanMensaje.textContent = `❌ ${mensaje}`;
-        duracion = 7000;
-    }
+    const configuraciones = {
+        exito: { clase: 'alerta-exito', icono: '✅', duracion: 4500 },
+        advertencia: { clase: 'alerta-advertencia', icono: '⚠️', duracion: 5500 },
+        error: { clase: 'alerta-error', icono: '❌', duracion: 6500 }
+    };
 
+    const config = configuraciones[tipo] || configuraciones.exito;
+
+    contenedor.classList.add(config.clase);
+    spanMensaje.textContent = `${config.icono} ${mensaje}`;
+
+    // Forzar reflow para reiniciar la animación CSS limpiamente
+    void contenedor.offsetWidth;
+    contenedor.classList.remove('alerta-oculta');
     contenedor.classList.add('alerta-visible');
 
     timerAlerta = setTimeout(() => {
         contenedor.classList.remove('alerta-visible');
         contenedor.classList.add('alerta-oculta');
-    }, duracion);
+    }, config.duracion);
 };
 
+/**
+ * Muestra un modal de confirmación asíncrono basado en Promesas
+ */
 export const mostrarConfirmacion = async (mensaje) => {
     await asegurarComponenteAlerta();
 
@@ -71,14 +93,16 @@ export const mostrarConfirmacion = async (mensaje) => {
         }
 
         clearTimeout(timerAlerta);
-        contenedor.className = '';
 
-        // Estilos para modal destructivo centrado con overlay
-        contenedor.classList.add('alerta-peligro-critico', 'alerta-confirmacion');
+        // Clases base para modal centrado
+        contenedor.className = 'alerta-card alerta-confirmacion alerta-peligro-critico';
         spanMensaje.textContent = `🚨 ${mensaje}`;
-        
+
         if (acciones) acciones.classList.remove('oculto');
         if (backdrop) backdrop.classList.add('activo');
+
+        void contenedor.offsetWidth;
+        contenedor.classList.remove('alerta-oculta');
         contenedor.classList.add('alerta-visible');
 
         const btnConfirmar = document.getElementById('btnAlertaConfirmar');
@@ -90,12 +114,14 @@ export const mostrarConfirmacion = async (mensaje) => {
             if (backdrop) backdrop.classList.remove('activo');
 
             setTimeout(() => {
-                contenedor.classList.remove('alerta-confirmacion', 'alerta-peligro-critico');
+                contenedor.className = 'alerta-card alerta-oculta';
                 if (acciones) acciones.classList.add('oculto');
             }, 300);
 
+            // Limpieza estricta de eventos
             btnConfirmar?.removeEventListener('click', onConfirmar);
             btnCancelar?.removeEventListener('click', onCancelar);
+            backdrop?.removeEventListener('click', onCancelar);
             resolve(resultado);
         };
 
@@ -104,6 +130,7 @@ export const mostrarConfirmacion = async (mensaje) => {
 
         btnConfirmar?.addEventListener('click', onConfirmar);
         btnCancelar?.addEventListener('click', onCancelar);
+        backdrop?.addEventListener('click', onCancelar);
     });
 };
 

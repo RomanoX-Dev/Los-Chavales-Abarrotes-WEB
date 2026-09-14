@@ -1,34 +1,56 @@
-
+/* ==========================================================================
+   VARIABLES.CSS - TOKENS DE DISEÑO Y CONFIGURACIÓN GLOBAL
+   ========================================================================== */
 :root {
-    /* Paleta Principal */
-    --color-accent: #00f2fe;
+    /* Paleta Principal y Estado */
     --color-primary: #0096ff;
-    --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
-    
-    /* Fondos y Bordes Glassmorphism */
-    --bg-glass: rgba(30, 41, 59, 0.55);
-    --bg-glass-hover: rgba(30, 41, 59, 0.75);
-    --border-glass: rgba(255, 255, 255, 0.14);
-    --border-glass-hover: rgba(0, 242, 254, 0.4);
-    
-    /* Colores de Estado */
+    --color-accent: #00f2fe;
     --color-danger: #ff4757;
     --color-success: #2ed573;
     --color-warning: #ffa502;
-    
+
     /* Textos */
     --text-main: #f8fafc;
     --text-muted: #94a3b8;
-    
-    /* Sombras y Efectos */
+
+    /* Fondos y Capas */
+    --bg-body: #0f172a;
+    --bg-overlay: rgba(15, 23, 42, 0.55); /* Capa para garantizar legibilidad con GIFs de fondo */
+    --bg-glass: rgba(30, 41, 59, 0.65);
+    --bg-glass-hover: rgba(30, 41, 59, 0.80);
+    --bg-glass-input: rgba(15, 23, 42, 0.60);
+    --bg-glass-input-hover: rgba(15, 23, 42, 0.75);
+    --bg-glass-input-focus: rgba(15, 23, 42, 0.90);
+
+    /* Estilos Danger / Salir */
+    --bg-danger-glass: rgba(255, 71, 87, 0.12);
+    --bg-danger-glass-hover: rgba(255, 71, 87, 0.28);
+    --border-danger-glass: rgba(255, 71, 87, 0.35);
+
+    /* Bordes */
+    --border-glass: rgba(255, 255, 255, 0.14);
+    --border-glass-hover: rgba(0, 242, 254, 0.4);
+
+    /* Gradientes */
+    --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+    --gradient-active: linear-gradient(135deg, rgba(0, 150, 255, 0.25), rgba(0, 242, 254, 0.25));
+
+    /* Desenfoques (Backdrop Blur) */
+    --blur-lg: blur(24px);
+    --blur-md: blur(16px);
+    --blur-sm: blur(8px);
+
+    /* Sombras */
     --shadow-glass: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
     --shadow-glow: 0 0 20px rgba(0, 242, 254, 0.25);
-    
-    /* Radios (Bordes Redondeados) */
+    --shadow-glow-accent: 0 0 22px rgba(0, 242, 254, 0.45);
+    --shadow-danger: 0 6px 18px rgba(255, 71, 87, 0.35);
+
+    /* Geometría y Animación */
     --radius-lg: 16px;
     --radius-md: 12px;
     --radius-sm: 8px;
-    
-    /* Animaciones */
+    --radius-full: 9999px;
     --transition-main: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    --font-base: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
 }

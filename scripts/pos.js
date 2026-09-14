@@ -1,198 +1,224 @@
-import { obtenerProductosPOS, registrarVentaDB } from '../api/posAPI.js';
-import { mostrarAlerta } from '../utils/alertas.js'; 
+/* ==========================================================================
+   POS.JS - MOTOR PRINCIPAL DEL PUNTO DE VENTA (INTEGRACIÓN CON INVENTARIO API)
+   ========================================================================== */
 
-let productosGlobales = []; 
-let carrito = []; 
+import { obtenerProductos } from '../api/inventarioAPI.js';
+import { 
+    renderizarGridProductosPOS, 
+    renderizarEstadoCargaPOS, 
+    renderizarEstadoVacioPOS 
+} from '../components/posCOM.js';
+import { mostrarAdvertencia, mostrarExito, mostrarError } from '../utils/alertas.js';
 
-document.addEventListener('DOMContentLoaded', () => {
-    cargarCatalogo();
+let productosGlobales = [];
+let carrito = [];
+const IVA_TASA = 0.16;
 
-    // Eventos de la vista
-    document.getElementById('buscadorPos').addEventListener('input', (e) => filtrarProductos(e.target.value.toLowerCase()));
-    document.getElementById('btnVaciarCarrito').addEventListener('click', vaciarCarrito);
+const getElem = (id) => document.getElementById(id);
 
-    // Abrir/Cerrar Modal de Pago
-    document.getElementById('btnCobrar').addEventListener('click', () => {
-        if (carrito.length === 0) return mostrarAlerta('El ticket está vacío. 🛒');
-        document.getElementById('totalAPagarModal').textContent = document.getElementById('txtTotal').textContent;
-        document.getElementById('modalPago').classList.remove('oculto');
-    });
-
-    document.getElementById('btnCerrarModalPago').addEventListener('click', () => {
-        document.getElementById('modalPago').classList.add('oculto');
-    });
-
-    // Eventos para elegir método de pago (Efectivo o Tarjeta)
-    document.querySelectorAll('.btn-pago').forEach(btn => {
-        btn.addEventListener('click', (e) => procesarCobroFinal(parseInt(e.target.dataset.metodo)));
-    });
+document.addEventListener('DOMContentLoaded', async () => {
+    enlazarEventosUI();
+    await cargarProductosInventario();
 });
 
-// ==========================================
-// CATALOGO Y RENDERIZADO
-// ==========================================
-async function cargarCatalogo() {
-    productosGlobales = await obtenerProductosPOS();
-    renderizarProductos(productosGlobales);
+/**
+ * Consume productos directo desde la API global de inventario.
+ */
+async function cargarProductosInventario() {
+    const contenedorGrid = getElem('contenedorProductosPos');
+    renderizarEstadoCargaPOS(contenedorGrid);
+
+    try {
+        const respuesta = await obtenerProductos();
+        
+        // Normalización si el backend responde envolviendo datos o arreglo directo
+        productosGlobales = Array.isArray(respuesta) ? respuesta : (respuesta?.datos || []);
+        
+        // Solo productos activos para la venta
+        productosGlobales = productosGlobales.filter(p => (p.estatus || 'Activo') === 'Activo');
+
+        actualizarGridPOS(productosGlobales);
+    } catch (error) {
+        console.error('Error al sincronizar con inventario API:', error);
+        mostrarError('No se pudo cargar el catálogo de inventario ❌');
+        renderizarEstadoVacioPOS(contenedorGrid, 'Error al conectar con el servidor.');
+    }
 }
 
-function renderizarProductos(lista) {
-    const contenedor = document.getElementById('contenedorProductosPos');
-    contenedor.innerHTML = '';
+/**
+ * Detección de búsqueda manual y lectura de scanner de código de barras.
+ */
+function enlazarEventosUI() {
+    const buscador = getElem('buscadorPos');
+    const btnLimpiar = getElem('btnLimpiarBuscador');
 
-    if (lista.length === 0) {
-        contenedor.innerHTML = '<h3 style="color: white; text-align: center; width: 100%;">No hay productos disponibles.</h3>';
+    buscador?.addEventListener('input', (e) => {
+        const texto = e.target.value.trim().toLowerCase();
+        
+        btnLimpiar?.classList.toggle('oculto', texto.length === 0);
+
+        // Coincidencia exacta por scanner de código de barras
+        const productoScanner = productosGlobales.find(p => (p.codigoBarras || '').trim().toLowerCase() === texto);
+        if (productoScanner) {
+            agregarAlCarrito(productoScanner);
+            buscador.value = '';
+            btnLimpiar?.classList.add('oculto');
+            actualizarGridPOS(productosGlobales);
+            return;
+        }
+
+        // Búsqueda parcial por nombre o código
+        const filtrados = productosGlobales.filter(p => {
+            const nom = (p.nombre || p.nombreProducto || '').toLowerCase();
+            const cod = (p.codigoBarras || '').toLowerCase();
+            return nom.includes(texto) || cod.includes(texto);
+        });
+
+        actualizarGridPOS(filtrados);
+    });
+
+    btnLimpiar?.addEventListener('click', () => {
+        if (buscador) buscador.value = '';
+        btnLimpiar.classList.add('oculto');
+        actualizarGridPOS(productosGlobales);
+        buscador?.focus();
+    });
+
+    getElem('btnVaciarCarrito')?.addEventListener('click', () => {
+        if (carrito.length === 0) return;
+        carrito = [];
+        actualizarTicketUI();
+    });
+
+    getElem('btnCobrar')?.addEventListener('click', abrirModalPago);
+    getElem('btnCerrarModalPago')?.addEventListener('click', cerrarModalPago);
+
+    document.querySelectorAll('.btn-metodo-pago').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const metodo = e.currentTarget.dataset.metodo;
+            procesarPago(metodo);
+        });
+    });
+}
+
+function actualizarGridPOS(lista) {
+    const contenedorGrid = getElem('contenedorProductosPos');
+    renderizarGridProductosPOS(lista, contenedorGrid, (prod) => agregarAlCarrito(prod));
+}
+
+/**
+ * Lógica del Carrito de Compras
+ */
+function agregarAlCarrito(producto) {
+    const id = producto.idProducto || producto.id;
+    const stockDisponible = parseFloat(producto.stock || 0);
+
+    if (stockDisponible <= 0) {
+        mostrarAdvertencia('Producto sin stock disponible ⚠️');
         return;
     }
 
-    lista.forEach(prod => {
-        if (prod.Estatus === 'Inactivo' || parseFloat(prod.Stock) <= 0) return;
+    const itemEnCarrito = carrito.find(item => item.id === id);
 
-        const div = document.createElement('div');
-        div.className = 'card-producto';
-        div.addEventListener('click', () => agregarAlCarrito(prod));
-
-        div.innerHTML = `
-            <h4>${prod.Nombre}</h4>
-            <div class="card-precio">$${parseFloat(prod.Precio).toFixed(2)}</div>
-            <div class="card-stock">📦 Disp: ${prod.Stock}</div>
-        `;
-        contenedor.appendChild(div);
-    });
-}
-
-function filtrarProductos(texto) {
-    const filtrados = productosGlobales.filter(p => 
-        p.Nombre.toLowerCase().includes(texto) || 
-        (p.CodigoBarras && p.CodigoBarras.toLowerCase().includes(texto))
-    );
-    renderizarProductos(filtrados);
-}
-
-// ==========================================
-// CARRITO DE COMPRAS
-// ==========================================
-function agregarAlCarrito(producto) {
-    const existe = carrito.find(p => p.IdProducto === producto.IdProducto);
-
-    if (existe) {
-        if (existe.Cantidad < producto.Stock) {
-            existe.Cantidad++;
+    if (itemEnCarrito) {
+        if (itemEnCarrito.cantidad < stockDisponible) {
+            itemEnCarrito.cantidad++;
         } else {
-            mostrarAlerta('Stock máximo alcanzado 🛑');
+            mostrarAdvertencia(`Stock máximo alcanzado (${stockDisponible} unidades) 🛑`);
         }
     } else {
         carrito.push({
-            IdProducto: producto.IdProducto,
-            Nombre: producto.Nombre,
-            Precio: parseFloat(producto.Precio),
-            Stock: producto.Stock,
-            Cantidad: 1
+            id: id,
+            nombre: producto.nombre || producto.nombreProducto,
+            precio: parseFloat(producto.precio || 0),
+            cantidad: 1,
+            maxStock: stockDisponible
         });
     }
-    renderizarCarrito();
+
+    actualizarTicketUI();
 }
 
-function renderizarCarrito() {
-    const lista = document.getElementById('listaCarrito');
-    lista.innerHTML = '';
-
-    if (carrito.length === 0) {
-        lista.innerHTML = '<div class="mensaje-vacio">El carrito está vacío.</div>';
-        actualizarTotales();
-        return;
-    }
-
-    carrito.forEach(item => {
-        const subtotal = item.Precio * item.Cantidad;
-        const div = document.createElement('div');
-        div.className = 'item-carrito';
-        div.innerHTML = `
-            <div class="item-info">
-                <strong>${item.Nombre}</strong>
-                <span class="item-precio">$${item.Precio.toFixed(2)}</span>
-            </div>
-            <div class="item-controles">
-                <div class="control-cantidad">
-                    <button class="btn-cant btn-restar" data-id="${item.IdProducto}">-</button>
-                    <span>${item.Cantidad}</span>
-                    <button class="btn-cant btn-sumar" data-id="${item.IdProducto}">+</button>
-                </div>
-                <span class="item-subtotal">$${subtotal.toFixed(2)}</span>
-                <button class="btn-cant btn-eliminar" style="color: #ff6b6b;" data-id="${item.IdProducto}">✖</button>
-            </div>
-        `;
-        lista.appendChild(div);
-    });
-
-    // listeners dinámicos
-    document.querySelectorAll('.btn-restar').forEach(b => b.addEventListener('click', (e) => cambiarCantidad(parseInt(e.target.dataset.id), -1)));
-    document.querySelectorAll('.btn-sumar').forEach(b => b.addEventListener('click', (e) => cambiarCantidad(parseInt(e.target.dataset.id), 1)));
-    document.querySelectorAll('.btn-eliminar').forEach(b => b.addEventListener('click', (e) => eliminarItem(parseInt(e.target.dataset.id))));
-
-    actualizarTotales();
-}
-
-function cambiarCantidad(id, cambio) {
-    const item = carrito.find(p => p.IdProducto === id);
+window.posAjustarCantidad = (id, cambio) => {
+    const item = carrito.find(i => i.id === id);
     if (!item) return;
 
-    const nuevaCant = item.Cantidad + cambio;
-    if (nuevaCant <= 0) return eliminarItem(id);
-    if (nuevaCant > item.Stock) return mostrarAlerta('Stock máximo alcanzado 🛑');
+    item.cantidad += cambio;
 
-    item.Cantidad = nuevaCant;
-    renderizarCarrito();
-}
-
-function eliminarItem(id) {
-    carrito = carrito.filter(p => p.IdProducto !== id);
-    renderizarCarrito();
-}
-
-function vaciarCarrito() {
-    if (carrito.length > 0 && confirm('¿Vaciar el ticket?')) {
-        carrito = [];
-        renderizarCarrito();
+    if (item.cantidad <= 0) {
+        carrito = carrito.filter(i => i.id !== id);
+    } else if (item.cantidad > item.maxStock) {
+        item.cantidad = item.maxStock;
+        mostrarAdvertencia(`Stock máximo disponible: ${item.maxStock}`);
     }
-}
 
-function actualizarTotales() {
-    let total = carrito.reduce((acc, item) => acc + (item.Precio * item.Cantidad), 0);
-    const subtotal = total / 1.16;
-    const iva = total - subtotal;
+    actualizarTicketUI();
+};
 
-    document.getElementById('txtSubtotal').textContent = `$${subtotal.toFixed(2)}`;
-    document.getElementById('txtIva').textContent = `$${iva.toFixed(2)}`;
-    document.getElementById('txtTotal').textContent = `$${total.toFixed(2)}`;
-}
+function actualizarTicketUI() {
+    const listaCarritoDOM = getElem('listaCarrito');
+    const btnCobrar = getElem('btnCobrar');
 
-// ==========================================
-// ENVÍO DE LA VENTA AL BACKEND
-// ==========================================
-async function procesarCobroFinal(idMetodoPago) {
-    const empleadoSesion = JSON.parse(localStorage.getItem('usuarioLCAW'));
-    
-    // PAYLOAD LIMPIO: La BD calcula precios e IVA
-    const datosVenta = {
-        idEmpleado: empleadoSesion ? empleadoSesion.idEmpleado : 1,
-        idMetodoPago: idMetodoPago,
-        carrito: carrito.map(item => ({
-            idProducto: item.IdProducto,
-            cantidad: item.Cantidad
-        }))
-    };
+    if (!listaCarritoDOM) return;
 
-    document.getElementById('modalPago').classList.add('oculto');
-
-    const respuesta = await registrarVentaDB(datosVenta);
-
-    if (respuesta.exito) {
-        mostrarAlerta('¡Venta realizada con éxito! 🚀');
-        carrito = [];
-        renderizarCarrito();
-        cargarCatalogo(); // Refresca el stock disponible
+    if (carrito.length === 0) {
+        listaCarritoDOM.innerHTML = `
+            <div class="mensaje-vacio">
+                <span class="icono-vacio">🛒</span>
+                <p>El carrito está vacío.<br>Escanea o selecciona productos para comenzar.</p>
+            </div>`;
+        if (btnCobrar) btnCobrar.disabled = true;
     } else {
-        mostrarAlerta(`Error: ${respuesta.mensaje}`);
+        listaCarritoDOM.innerHTML = carrito.map(item => `
+            <div class="item-carrito">
+                <div class="item-carrito-header">
+                    <span class="item-nombre">${item.nombre}</span>
+                    <span class="item-precio-unitario">$${item.precio.toFixed(2)}</span>
+                </div>
+                <div class="item-carrito-footer">
+                    <div class="control-stepper-mini">
+                        <button type="button" class="btn-step-mini" onclick="window.posAjustarCantidad(${item.id}, -1)">-</button>
+                        <span class="cant-val">${item.cantidad}</span>
+                        <button type="button" class="btn-step-mini" onclick="window.posAjustarCantidad(${item.id}, 1)">+</button>
+                    </div>
+                    <span class="item-subtotal">$${(item.precio * item.cantidad).toFixed(2)}</span>
+                </div>
+            </div>
+        `).join('');
+
+        if (btnCobrar) btnCobrar.disabled = false;
     }
+
+    const { subtotal, iva, total } = calcularTotales();
+    if (getElem('txtSubtotal')) getElem('txtSubtotal').textContent = `$${subtotal.toFixed(2)}`;
+    if (getElem('txtIva')) getElem('txtIva').textContent = `$${iva.toFixed(2)}`;
+    if (getElem('txtTotal')) getElem('txtTotal').textContent = `$${total.toFixed(2)}`;
+}
+
+function calcularTotales() {
+    const totalBruto = carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
+    const subtotal = totalBruto / (1 + IVA_TASA);
+    const iva = totalBruto - subtotal;
+    return { subtotal, iva, total: totalBruto };
+}
+
+function abrirModalPago() {
+    if (carrito.length === 0) return;
+    const { total } = calcularTotales();
+    if (getElem('totalAPagarModal')) {
+        getElem('totalAPagarModal').textContent = `$${total.toFixed(2)}`;
+    }
+    getElem('modalPago')?.classList.remove('oculto');
+}
+
+function cerrarModalPago() {
+    getElem('modalPago')?.classList.add('oculto');
+}
+
+function procesarPago(metodo) {
+    cerrarModalPago();
+    mostrarExito(`¡Venta realizada exitosamente con ${metodo.toUpperCase()}! 💰`);
+    carrito = [];
+    actualizarTicketUI();
+    cargarProductosInventario(); // Recarga stock actualizado
 }

@@ -1,131 +1,87 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+/* ==========================================================================
+   INDEX.CSS - ESTILOS ESPECÍFICOS DE LA PANTALLA DE BIENVENIDA (SPLASH)
+   ========================================================================== */
 
-body {
-    background-color: #0f172a;
-    color: #ffffff;
-    height: 100vh;
+body.page-splash {
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 100vh;
+    height: 100dvh;
+    margin: 0;
     overflow: hidden;
-    position: relative;
 }
 
-/* Orbes sutiles de fondo con los tonos exactos del POS */
-.orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(90px);
-    opacity: 0.3;
-    z-index: 1;
-    animation: float 12s infinite alternate ease-in-out;
-}
-
-.orb-1 {
-    width: 300px;
-    height: 300px;
-    background: #4facfe;
-    top: 10%;
-    left: 15%;
-}
-
-.orb-2 {
-    width: 280px;
-    height: 280px;
-    background: #00b09b;
-    bottom: 10%;
-    right: 15%;
-    animation-delay: -4s;
-}
-
-.orb-3 {
-    width: 200px;
-    height: 200px;
-    background: rgba(255, 255, 255, 0.1);
-    top: 40%;
-    right: 40%;
-    animation-delay: -8s;
-}
-
-@keyframes float {
-    0% { transform: translateY(0) scale(1); }
-    100% { transform: translateY(-20px) scale(1.05); }
-}
-
-/* Tarjeta contenedora estilo .glass-panel / .card-producto */
+/* Tarjeta contenedora centrada */
 .splash-container {
     z-index: 10;
     width: 90%;
-    max-width: 380px;
+    max-width: 400px;
 }
 
 .glass-card {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    padding: 35px 25px;
+    padding: 40px 28px;
     text-align: center;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: 24px;
 }
 
-/* Tipografía y Encabezados */
+/* Tipografía e Iconos */
 .icon {
-    font-size: 3rem;
+    font-size: 3.2rem;
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
 }
 
-h1 {
-    font-size: 2.2rem;
-    color: #4facfe;
-    font-weight: bold;
+.logo-container h1 {
+    font-size: 2.4rem;
+    font-weight: 800;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.1;
 }
 
 .subtitle {
-    color: #aaa;
-    font-size: 14px;
-    margin-top: 5px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-top: 6px;
+    font-weight: 500;
 }
 
-/* Sección de Carga */
+/* Barra de carga animada */
 .loader-box {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-top: 5px;
+    gap: 12px;
 }
 
 .status-text {
-    font-size: 13px;
-    color: #ccc;
+    font-size: 0.85rem;
+    color: var(--text-main);
+    font-weight: 500;
 }
 
 .progress-bar-container {
     width: 100%;
-    height: 6px;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
+    height: 8px;
+    background: var(--bg-glass-input);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-full);
     overflow: hidden;
 }
 
 .progress-bar {
     height: 100%;
     width: 0%;
-    background: linear-gradient(to right, #00b09b, #96c93d);
-    border-radius: 8px;
+    background: var(--gradient-primary);
+    border-radius: var(--radius-full);
     animation: cargar 5s linear forwards;
+    box-shadow: var(--shadow-glow);
 }
 
 @keyframes cargar {
@@ -134,26 +90,18 @@ h1 {
 }
 
 .counter-text {
-    font-size: 12px;
-    color: #aaa;
+    font-size: 0.8rem;
+    color: var(--text-muted);
 }
 
 .counter-text strong {
-    color: #4facfe;
-    font-weight: bold;
+    color: var(--color-accent);
+    font-weight: 700;
 }
 
-/* Enlace/Botón para Omitir */
+/* Botón de omisión integrado con tokens globales */
 .btn-saltar {
-    color: #aaa;
-    text-decoration: none;
-    font-size: 13px;
-    padding: 6px 12px;
-    border-radius: 8px;
-    transition: 0.2s;
-}
-
-.btn-saltar:hover {
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.1);
+    width: 100%;
+    margin-top: 4px;
+    font-size: 0.9rem;
 }

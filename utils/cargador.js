@@ -1,3 +1,6 @@
+/* ==========================================================================
+   CARGADOR.JS - OVERLAY DE CARGA Y EVENTOS DE VENTANA
+   ========================================================================== */
 
 if (!document.getElementById('css-cargador')) {
     const link = document.createElement('link');
@@ -45,3 +48,34 @@ export const ocultarCargador = () => {
         loader.classList.add('oculto');
     }
 };
+
+/**
+ * Escuchadores globales para recarga, cambio de pestaña y pérdida de foco.
+ */
+export function inicializarEventosNavegacion() {
+    // 1. Recargar o navegar a otra página (Retardo en 0 para respuesta inmediata)
+    window.addEventListener('beforeunload', () => {
+        mostrarCargador('Cargando...', 0);
+    });
+
+    // 2. Cambiar de pestaña en el navegador
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            mostrarCargador('En pausa...', 0);
+        } else {
+            ocultarCargador();
+        }
+    });
+
+    // 3. Perder o recuperar el foco de la ventana (ej. cambiar a otra app)
+    window.addEventListener('blur', () => {
+        mostrarCargador('En pausa...', 0);
+    });
+
+    window.addEventListener('focus', () => {
+        ocultarCargador();
+    });
+}
+
+// Auto-ejecución automática al cargar el módulo
+inicializarEventosNavegacion();

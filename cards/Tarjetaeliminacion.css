@@ -1,18 +1,18 @@
-/* ==========================================
-   TARJETA Y MODAL DE CONFIRMACIÓN CRÍTICA
-   ========================================== */
+/* ==========================================================================
+   ALERTAS Y MODALES - DESIGN SYSTEM GLASSMORPHISM LIGHT
+   ========================================================================== */
 
-/* Fondo bloqueado y difuminado progresivo */
+/* === BACKDROP DE BLOQUEO (DESENFOQUE DE FONDO) === */
 .alerta-backdrop {
     position: fixed;
     inset: 0;
-    background: rgba(15, 23, 42, 0.75);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: var(--bg-overlay, rgba(15, 23, 42, 0.65));
+    backdrop-filter: blur(var(--blur-md, 10px));
+    -webkit-backdrop-filter: blur(var(--blur-md, 10px));
     z-index: 9998;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.35s ease-out;
+    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .alerta-backdrop.activo {
@@ -20,70 +20,146 @@
     pointer-events: auto;
 }
 
-/* Posicionamiento centrado y ajuste de dimensiones */
+/* === TARJETA BASE DE NOTIFICACIÓN (TOAST ESQUINA SUPERIOR DERECHA) === */
+.alerta-card {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm, 14px);
+    max-width: 420px;
+    min-width: 280px;
+    padding: var(--spacing-md, 18px) var(--spacing-lg, 24px);
+    border-radius: var(--radius-lg, 16px);
+    font-family: var(--font-primary, 'Inter', system-ui, sans-serif);
+    font-size: var(--font-size-base, 0.98rem);
+    font-weight: 600;
+    color: var(--text-main, #f8fafc);
+    
+    /* Cristal traslúcido liviano */
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35),
+                inset 0 1px 1px rgba(255, 255, 255, 0.25);
+    
+    /* Animación de entrada Toast (Deslizamiento) */
+    transform: translateX(160%);
+    opacity: 0;
+    transition: transform 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                opacity 0.3s ease,
+                visibility 0.3s ease;
+}
+
+.alerta-card.alerta-visible {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.alerta-card.alerta-oculta {
+    transform: translateX(160%);
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* === VARIANTES DE COLOR PARA TOASTS === */
+.alerta-exito {
+    background: rgba(16, 185, 129, 0.15);
+    border-left: 5px solid var(--color-success, #10b981);
+    box-shadow: 0 16px 35px rgba(0, 0, 0, 0.3), 0 0 15px rgba(16, 185, 129, 0.2);
+}
+
+.alerta-advertencia {
+    background: rgba(245, 158, 11, 0.18);
+    border-left: 5px solid var(--color-warning, #f59e0b);
+    color: #ffffff;
+    box-shadow: 0 16px 35px rgba(0, 0, 0, 0.3), 0 0 15px rgba(245, 158, 11, 0.2);
+}
+
+.alerta-error {
+    background: rgba(239, 68, 68, 0.15);
+    border-left: 5px solid var(--color-danger, #ef4444);
+    box-shadow: 0 16px 35px rgba(0, 0, 0, 0.3), 0 0 15px rgba(239, 68, 68, 0.2);
+}
+
+/* === MODAL DE CONFIRMACIÓN DE ELIMINACIÓN (CENTRADO POP-IN) === */
 #alertaCustom.alerta-confirmacion {
     top: 50%;
     right: 50%;
+    left: auto;
     width: 90%;
-    max-width: 440px;
-    padding: 28px 32px;
-    border-radius: 20px;
-    font-size: 16px;
-    line-height: 1.5;
+    max-width: 420px;
+    padding: var(--spacing-xl, 28px);
+    border-radius: var(--radius-xl, 20px);
+    text-align: center;
     
-    /* Estado inicial fuera de foco */
-    transform: translate(50%, -50%) scale(0.82);
+    /* Efecto inicial para Pop-In elástico */
+    transform: translate(50%, -50%) scale(0.85);
     opacity: 0;
-    
-    /* Animación elástica / Spring effect */
     transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
                 opacity 0.3s ease-out,
                 box-shadow 0.3s ease;
 }
 
-/* Animación de entrada (Pop-In) */
 #alertaCustom.alerta-confirmacion.alerta-visible {
     transform: translate(50%, -50%) scale(1);
     opacity: 1;
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8),
-                0 0 35px rgba(255, 71, 87, 0.25),
-                0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
-/* Estilo del contenedor de peligro crítico */
+#alertaCustom.alerta-confirmacion.alerta-oculta {
+    transform: translate(50%, -50%) scale(0.85);
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Estilo para Peligro Crítico / Eliminación */
 .alerta-peligro-critico {
-    background: linear-gradient(145deg, rgba(30, 41, 59, 0.98), rgba(15, 23, 42, 0.98));
-    border: 1px solid rgba(255, 71, 87, 0.4);
-    border-top: 4px solid #ff4757;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)) !important;
+    border: 1px solid rgba(239, 68, 68, 0.35) !important;
+    border-top: 4px solid var(--color-danger, #ef4444) !important;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6),
+                0 0 30px rgba(239, 68, 68, 0.2),
+                inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
 }
 
-/* Texto del mensaje */
-#alertaMensaje {
-    display: block;
-    font-size: 16px;
+/* === CONTENIDO Y BOTONES === */
+.alerta-cuerpo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.alerta-texto {
+    font-size: var(--font-size-base, 1rem);
     font-weight: 600;
-    color: #f1f5f9;
+    line-height: 1.5;
+    color: var(--text-main, #f8fafc);
     letter-spacing: -0.2px;
 }
 
-/* Acciones y Botones optimizados */
 .alerta-acciones {
     display: flex;
     justify-content: flex-end;
-    gap: 12px;
-    margin-top: 10px;
+    gap: var(--spacing-sm, 12px);
+    margin-top: var(--spacing-md, 16px);
+    width: 100%;
 }
 
 .alerta-acciones.oculto {
-    display: none;
+    display: none !important;
 }
 
+/* Botones con Micro-Interacciones */
 .btn-alerta {
+    flex: 1;
     min-height: 44px;
-    padding: 10px 22px;
-    border-radius: 12px;
+    padding: 10px 20px;
+    border-radius: var(--radius-md, 12px);
     font-weight: 700;
-    font-size: 14px;
+    font-size: 0.9rem;
     cursor: pointer;
     border: none;
     transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1),
@@ -95,25 +171,37 @@
     transform: scale(0.96);
 }
 
+/* Botón Cancelar */
 .btn-alerta-cancelar {
     background: rgba(255, 255, 255, 0.08);
-    color: #94a3b8;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-muted, #94a3b8);
+    border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .btn-alerta-cancelar:hover {
     background: rgba(255, 255, 255, 0.16);
-    color: #f8fafc;
+    color: var(--text-main, #ffffff);
 }
 
+/* Botón Eliminar / Confirmar */
 .btn-alerta-confirmar {
-    background: #ff4757;
+    background: linear-gradient(135deg, var(--color-danger, #ef4444), #dc2626);
     color: #ffffff;
-    box-shadow: 0 4px 16px rgba(255, 71, 87, 0.35);
+    box-shadow: 0 4px 16px rgba(239, 68, 68, 0.35);
 }
 
 .btn-alerta-confirmar:hover {
-    background: #ff6b81;
-    box-shadow: 0 6px 20px rgba(255, 71, 87, 0.5);
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5);
     transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+/* Adaptabilidad Móvil */
+@media (max-width: 480px) {
+    .alerta-card:not(.alerta-confirmacion) {
+        top: 16px;
+        right: 16px;
+        left: 16px;
+        max-width: calc(100vw - 32px);
+    }
 }

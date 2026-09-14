@@ -1,47 +1,57 @@
-<div id="modalProducto" class="modal-overlay oculto">
-    <div class="glass-modal modal-wide">
+<!-- Modal de Formulario de Producto -->
+<div 
+    id="modalProducto" 
+    class="modal-overlay oculto" 
+    role="dialog" 
+    aria-modal="true" 
+    aria-labelledby="tituloModal"
+>
+    <div class="modal-card modal-wide">
+        <!-- Encabezado del Modal -->
         <div class="modal-header">
             <h2 id="tituloModal">Nuevo Producto 📦</h2>
-            <button class="btn-cerrar" id="btnCerrarModal" type="button">✖</button>
+            <button type="button" class="btn-cerrar" id="btnCerrarModal" aria-label="Cerrar modal">✕</button>
         </div>
         
-        <form id="formularioProducto">
+        <!-- Formulario -->
+        <form id="formularioProducto" novalidate>
             <input type="hidden" id="productoId"> 
             
             <div class="form-layout-horizontal">
-                <!-- Columna Izquierda: Fotografía interactiva e Identificación -->
+                <!-- Columna Izquierda: Imagen e Identificación -->
                 <div class="form-col">
                     <div class="input-group text-center">
-                        <label>Fotografía del Producto</label>
+                        <label class="input-label">Fotografía del Producto</label>
                         
-                        <!-- Contenedor clickeable como selector de archivo -->
                         <label for="imagenProductoFile" class="preview-container" title="Haz clic para cambiar la imagen">
-                            <img id="previewImagen" alt="Vista Previa" class="img-preview" referrerpolicy="no-referrer">
+                            <img id="previewImagen" alt="Vista previa" class="img-preview" referrerpolicy="no-referrer">
                             <div class="preview-overlay">
                                 <span>📷 Cambiar Imagen</span>
                             </div>
                         </label>
 
-                        <input type="file" id="imagenProductoFile" accept="image/*" style="display: none;">
+                        <input type="file" id="imagenProductoFile" accept="image/*" class="input-file-oculto">
                         
                         <div class="btn-img-group">
-                            <button type="button" id="btnQuitarFoto" class="btn-danger-icon" title="Quitar fotografía">🗑️ Quitar Foto</button>
+                            <button type="button" id="btnQuitarFoto" class="btn-danger-icon" title="Quitar fotografía">
+                                🗑️ Quitar Foto
+                            </button>
                         </div>
                         <p id="nombreArchivoText" class="file-info-text">Sin cambios en la imagen</p>
                     </div>
 
                     <div class="input-group">
-                        <label for="codigoBarras">Código de Barras *</label>
-                        <input type="text" id="codigoBarras" required placeholder="Ej. 750100112345">
+                        <label for="codigoBarras" class="input-label">Código de Barras *</label>
+                        <input type="text" id="codigoBarras" required placeholder="Ej. 750100112345" autocomplete="off">
                     </div>
                     
                     <div class="input-group">
-                        <label for="nombreProducto">Nombre del Producto *</label>
+                        <label for="nombreProducto" class="input-label">Nombre del Producto *</label>
                         <input type="text" id="nombreProducto" required placeholder="Ej. Coca-Cola 600ml">
                     </div>
 
                     <div class="input-group">
-                        <label for="descripcionProducto">Descripción</label>
+                        <label for="descripcionProducto" class="input-label">Descripción</label>
                         <textarea id="descripcionProducto" rows="3" placeholder="Detalles adicionales, peso, presentación..."></textarea>
                     </div>
                 </div>
@@ -50,46 +60,58 @@
                 <div class="form-col">
                     <div class="grid-2-col">
                         <div class="input-group">
-                            <label for="precio">Precio Venta ($) *</label>
-                            <input type="number" id="precio" step="0.01" min="0" required placeholder="0.00">
+                            <label for="precio" class="input-label">Precio Venta ($) *</label>
+                            <div class="number-stepper">
+                                <button type="button" class="btn-step" onclick="document.getElementById('precio').stepDown()" aria-label="Disminuir precio">-</button>
+                                <input type="number" id="precio" step="0.01" min="0" required placeholder="0.00">
+                                <button type="button" class="btn-step" onclick="document.getElementById('precio').stepUp()" aria-label="Aumentar precio">+</button>
+                            </div>
                         </div>
 
                         <div class="input-group">
-                            <label for="stock">Stock Actual *</label>
-                            <input type="number" id="stock" required min="0" placeholder="0">
+                            <label for="stock" class="input-label">Stock Actual *</label>
+                            <div class="number-stepper">
+                                <button type="button" class="btn-step" onclick="document.getElementById('stock').stepDown()" aria-label="Disminuir stock">-</button>
+                                <input type="number" id="stock" required min="0" placeholder="0">
+                                <button type="button" class="btn-step" onclick="document.getElementById('stock').stepUp()" aria-label="Aumentar stock">+</button>
+                            </div>
                         </div>
                     </div>
 
                     <div class="input-group">
-                        <label for="stockMinimo">Stock Mínimo ⚠️</label>
-                        <input type="number" id="stockMinimo" min="0" placeholder="Ej. 5">
+                        <label for="stockMinimo" class="input-label">Stock Mínimo ⚠️</label>
+                        <div class="number-stepper">
+                            <button type="button" class="btn-step" onclick="document.getElementById('stockMinimo').stepDown()" aria-label="Disminuir stock mínimo">-</button>
+                            <input type="number" id="stockMinimo" min="0" placeholder="Ej. 5">
+                            <button type="button" class="btn-step" onclick="document.getElementById('stockMinimo').stepUp()" aria-label="Aumentar stock mínimo">+</button>
+                        </div>
                     </div>
                     
                     <div class="grid-2-col">
                         <div class="input-group">
-                            <label for="idCategoria">Categoría *</label>
+                            <label for="idCategoria" class="input-label">Categoría *</label>
                             <select id="idCategoria" required>
-                                <option value="">Seleccione categoría...</option>
+                                <option value="" disabled selected>Seleccione categoría...</option>
                             </select>
                         </div>
 
                         <div class="input-group">
-                            <label for="idMarca">Marca *</label>
+                            <label for="idMarca" class="input-label">Marca *</label>
                             <select id="idMarca" required>
-                                <option value="">Seleccione marca...</option>
+                                <option value="" disabled selected>Seleccione marca...</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="input-group">
-                        <label for="idUnidad">Unidad de Medida *</label>
+                        <label for="idUnidad" class="input-label">Unidad de Medida *</label>
                         <select id="idUnidad" required>
-                            <option value="">Seleccione unidad...</option>
+                            <option value="" disabled selected>Seleccione unidad...</option>
                         </select>
                     </div>
 
                     <div class="input-group">
-                        <label for="estatusProducto">Estatus *</label>
+                        <label for="estatusProducto" class="input-label">Estatus *</label>
                         <select id="estatusProducto" required>
                             <option value="Activo">Activo</option>
                             <option value="Inactivo">Inactivo</option>
@@ -98,6 +120,7 @@
                 </div>
             </div>
 
+            <!-- Acciones del Modal -->
             <div class="modal-footer">
                 <button type="button" id="btnCerrarModalInferior" class="btn-secundario">Cancelar</button>
                 <button type="submit" class="btn-primario">Guardar Producto</button>

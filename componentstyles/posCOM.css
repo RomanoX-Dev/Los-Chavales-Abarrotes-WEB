@@ -1,0 +1,137 @@
+/* ==========================================================================
+   POSCOM.CSS - GRILLA HORIZONTAL Y TARJETAS ESTILO CATÁLOGO
+   ========================================================================== */
+
+.grid-productos-pos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 16px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.card-producto-pos {
+    position: relative;
+    background: var(--bg-modal, #1e293b);
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+    border-radius: var(--radius-lg, 14px);
+    padding: 16px 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    user-select: none;
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.card-producto-pos:hover:not(.sin-stock) {
+    transform: translateY(-4px);
+    border-color: var(--color-accent, #00f2fe);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 12px rgba(0, 242, 254, 0.25);
+}
+
+.card-producto-pos.sin-stock {
+    opacity: 0.5;
+    cursor: not-allowed;
+    filter: grayscale(0.8);
+}
+
+.card-img-contenedor {
+    width: 120px;
+    height: 120px;
+    margin: 4px auto 12px auto;
+    border-radius: var(--radius-md, 8px);
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-producto-pos:hover:not(.sin-stock) .card-img-contenedor {
+    border-color: var(--color-accent, #00f2fe);
+    box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+}
+
+.img-producto-pos {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: opacity 0.2s ease;
+}
+
+.card-info-pos {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: space-between;
+}
+
+.card-info-pos h4 {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--text-main, #ffffff);
+    margin-bottom: 8px;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    height: 2.6em;
+}
+
+.card-meta-pos {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.precio-pos {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--color-accent, #00f2fe);
+    text-shadow: 0 0 8px rgba(0, 242, 254, 0.3);
+}
+
+.stock-badge-pos {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-muted, #94a3b8);
+}
+
+.stock-badge-pos.alerta {
+    background: rgba(255, 71, 87, 0.2);
+    color: #ff4757;
+    border: 1px solid rgba(255, 71, 87, 0.4);
+}
+
+.badge-codigo {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #94a3b8;
+    font-size: 0.65rem;
+    font-family: monospace;
+    padding: 2px 6px;
+    border-radius: 4px;
+    backdrop-filter: blur(4px);
+    z-index: 2;
+}

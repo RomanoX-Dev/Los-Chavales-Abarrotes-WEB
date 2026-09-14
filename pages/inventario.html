@@ -4,64 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LCAW - Módulo de Inventario</title>
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <!-- Carga de estilos -->
     <link rel="stylesheet" href="../general/global.css">
     <link rel="stylesheet" href="../styles/menu.css">
     <link rel="stylesheet" href="../styles/inventario.css">
-    <link rel="stylesheet" href="../tables/Tablainventario.css">
+    <link rel="stylesheet" href="../componentstyles/inventarioCOM.css">
     <link rel="stylesheet" href="../cards/Tarjetainventario.css">
     <link rel="stylesheet" href="../cards/Tarjetaeliminacion.css">
     <link rel="stylesheet" href="../styles/alertas.css">
 </head>
 <body>
 
-    <!-- Orbes de fondo -->
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
-
     <div class="dashboard-container">
 
-        <!-- BARRA LATERAL -->
-        <aside class="sidebar glass-panel">
-            <div class="logo">
-                <h2>🛒 LCAW</h2>
-                <span>Los Chavales Abarrotes</span>
-            </div>
-            <nav class="sidebar-menu">
-                <button class="menu-btn" onclick="navegarA('menu.html')">🏠 Inicio</button>
-                <button class="menu-btn" onclick="navegarA('pos.html')">💻 Punto de Venta</button>
-                <button class="menu-btn active" onclick="navegarA('inventario.html')">📦 Inventario</button>
-                <button class="menu-btn" onclick="navegarA('clientes.html')">👥 Clientes</button>
-                <button class="menu-btn" onclick="navegarA('ventas.html')">📊 Historial</button>
-                <button class="menu-btn" onclick="navegarA('usuarios.html')">⚙️ Usuarios</button>
-            </nav>
-            <div class="sidebar-footer">
-                <button id="btnCerrarSesion" class="btn-logout">🚪 Cerrar Sesión </button>
-            </div>
-        </aside>
+        <!-- 1. BARRA LATERAL (MADRE) -->
+        <app-sidebar></app-sidebar>
 
         <!-- CONTENIDO PRINCIPAL -->
         <main class="main-content">
             
-            <header class="topbar glass-panel">
-                <div class="bienvenida">
-                    <h1>Módulo de Inventario 📦</h1>
-                </div>
-                <div class="usuario-info">
-                    <span id="rolUsuario" class="badge-rol">Cargando...</span>
-                    <span id="nombreUsuario" class="perfil-nombre">Cargando...</span>
-                    <div class="avatar-placeholder">👤</div>
-                </div>
-            </header>
+            <!-- 2. BARRA SUPERIOR (MADRE) -->
+            <app-header 
+                titulo="Módulo de Inventario 📦" 
+                subtitulo="Gestión de productos, catálogo y existencias">
+            </app-header>
 
-            <!-- BARRA DE HERRAMIENTAS -->
+            <!-- BARRA DE HERRAMIENTAS DE BÚSQUEDA Y ACCIONES -->
             <section class="toolbar glass-panel">
                 <div class="search-box">
                     <span>🔍</span>
                     <input type="text" id="buscadorProductos" placeholder="Buscar por código o nombre...">
                 </div>
-                <button class="btn-primario" id="btnAgregarProducto">+ Agregar Producto</button>
+                <button class="btn-primario" id="btnAgregarProducto" type="button">+ Agregar Producto</button>
             </section>
 
             <!-- TABLA DE INVENTARIO -->
@@ -81,7 +57,7 @@
                     </thead>
                     <tbody id="cuerpoTablaProductos">
                         <tr>
-                            <td colspan="8" style="text-align: center; padding: 25px;">Cargando inventario... ⏳</td>
+                            <td colspan="8" class="texto-cargando-tabla">Cargando inventario... ⏳</td>
                         </tr>
                     </tbody>
                 </table>
@@ -90,9 +66,10 @@
         </main>
     </div>
 
+    <!-- Contenedor dinámico para Modales -->
     <div id="contenedorModalProducto"></div>
 
-    <script type="module" src="../utils/cargador.js"></script>
+    <!-- Scripts de la aplicación -->
     <script type="module" src="../scripts/menu.js"></script>
     <script type="module" src="../scripts/inventario.js"></script>
 </body>

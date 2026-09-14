@@ -311,6 +311,8 @@ async function borrarFisicoDefinitivo(id) {
     }
 }
 
+// Validaciones / quitar proxima actualizacion
+
 function setInputValue(elemId, valor) {
     const elem = getElem(elemId);
     if (elem) elem.value = (valor !== null && valor !== undefined) ? valor : '';

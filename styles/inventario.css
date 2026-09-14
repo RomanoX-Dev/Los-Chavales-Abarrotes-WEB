@@ -1,37 +1,84 @@
+/* ==========================================================================
+   INVENTARIO.CSS - ESTILOS ESPECÍFICOS DEL MÓDULO DE INVENTARIO
+   ========================================================================== */
 
+/* === CONTENEDOR CONTENEDOR DE LA TABLA === */
 .table-container {
-    padding: 4px;
+    padding: 0;
     flex: 1;
     overflow-x: auto;
-    border-radius: var(--radius-lg); /* Heredado de variables.css */
+    overflow-y: auto;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-glass);
+    background: var(--bg-glass);
+    backdrop-filter: var(--blur-lg);
+    -webkit-backdrop-filter: var(--blur-lg);
+    box-shadow: var(--shadow-glass);
     scrollbar-width: thin;
-    scrollbar-color: rgba(0, 242, 254, 0.4) rgba(178, 180, 185, 0.3);
+    scrollbar-color: rgba(0, 242, 254, 0.4) rgba(15, 23, 42, 0.6);
 }
 
-/* Scrollbar personalizado para el contenedor de la tabla */
+/* === PERSONALIZACIÓN DEL SCROLLBAR DE LA TABLA === */
 .table-container::-webkit-scrollbar {
     height: 8px;
     width: 8px;
 }
 
 .table-container::-webkit-scrollbar-track {
-    background: rgba(15, 23, 42, 0.4);
-    border-radius: 10px;
+    background: rgba(15, 23, 42, 0.5);
+    border-radius: var(--radius-full);
 }
 
 .table-container::-webkit-scrollbar-thumb {
-    background: linear-gradient(90deg, rgba(0, 242, 254, 0.4), rgba(0, 150, 255, 0.4));
-    border-radius: 10px;
-    transition: background 0.3s ease;
+    background: linear-gradient(90deg, rgba(0, 242, 254, 0.35), rgba(0, 150, 255, 0.35));
+    border-radius: var(--radius-full);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: var(--transition-main);
 }
 
 .table-container::-webkit-scrollbar-thumb:hover {
-    background: var(--gradient-primary); /* Heredado de variables.css */
+    background: var(--gradient-primary);
+    box-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
 }
 
-/* RESPONSIVE (VISTA DE INVENTARIO) */
-@media (max-width: 600px) {
-    .table-container { 
-        padding: 0; 
+/* === ESTADOS DE MENSAJES DENTRO DE LA TABLA === */
+.texto-cargando-tabla {
+    text-align: center;
+    padding: 35px 20px !important;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    letter-spacing: 0.3px;
+}
+
+/* === BADGES DE ESTATUS STOCK EN TABLA === */
+.badge-stock {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge-stock.normal {
+    background: rgba(46, 213, 115, 0.15);
+    border: 1px solid rgba(46, 213, 115, 0.35);
+    color: var(--color-success);
+}
+
+.badge-stock.bajo {
+    background: rgba(255, 71, 87, 0.15);
+    border: 1px solid rgba(255, 71, 87, 0.35);
+    color: var(--color-danger);
+}
+
+/* === RESPONSIVE (DISPOSITIVOS MÓVILES) === */
+@media (max-width: 768px) {
+    .table-container {
+        border-radius: var(--radius-md);
     }
 }

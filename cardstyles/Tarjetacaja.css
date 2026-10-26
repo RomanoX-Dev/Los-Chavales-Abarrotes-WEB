@@ -1,0 +1,85 @@
+/* ==========================================================================
+   TARJETACAJA.CSS - MODAL DE CAJA (apertura, cierre y resultado)
+   Usa .modal-pago, .modal-overlay, .caja-btn y .caja-acciones de global.css
+   Las filas .caja-dato y los totales también los usa Tarjetadetalle.css
+   ========================================================================== */
+
+.modal-caja {
+    width: min(460px, 92vw);
+}
+
+.caja-panel {
+    display: grid;
+    gap: var(--spacing-sm);
+}
+
+.caja-texto {
+    font-size: var(--font-size-sm);
+    line-height: 1.5;
+    color: var(--text-muted);
+}
+
+.caja-label {
+    display: block;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.caja-input {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+}
+
+textarea.caja-input {
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    resize: vertical;
+}
+
+.caja-resumen {
+    display: grid;
+    gap: 6px;
+}
+
+.caja-dato {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin: 0;
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+}
+
+.caja-dato strong {
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.caja-total {
+    margin-top: 4px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border-glass);
+    font-size: var(--font-size-lg);
+}
+
+.caja-total strong {
+    color: var(--color-success);
+}
+
+.caja-diferencia strong {
+    font-size: var(--font-size-lg);
+}
+
+.caja-diferencia.ok strong {
+    color: var(--color-success);
+}
+
+.caja-diferencia.sobrante strong {
+    color: var(--color-primary);
+}
+
+.caja-diferencia.faltante strong {
+    color: var(--color-danger);
+}

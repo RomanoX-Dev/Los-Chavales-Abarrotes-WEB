@@ -1,19 +1,32 @@
 /* ==========================================================================
-   POSCOM.CSS - GRILLA HORIZONTAL Y TARJETAS ESTILO CATÁLOGO
+   POSCOM.CSS - GRILLA HORIZONTAL Y TARJETAS ESTILO CATÁLOGO (FUSIONADO)
    ========================================================================== */
 
+/* === GRID DE PRODUCTOS === */
 .grid-productos-pos {
+    flex: 2;
+    overflow-y: auto;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 16px;
     width: 100%;
-    box-sizing: border-box;
+    align-content: start;
+    padding-right: 4px;
 }
 
+.grid-productos-pos::-webkit-scrollbar { width: 6px; }
+.grid-productos-pos::-webkit-scrollbar-thumb {
+    background: var(--border-glass);
+    border-radius: var(--radius-full);
+}
+
+/* === TARJETA DE PRODUCTO === */
 .card-producto-pos {
     position: relative;
-    background: var(--bg-modal, #1e293b);
-    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+    background: var(--bg-glass-input);
+    backdrop-filter: var(--blur-sm);
+    -webkit-backdrop-filter: var(--blur-sm);
+    border: 1px solid var(--border-glass);
     border-radius: var(--radius-lg, 14px);
     padding: 16px 14px;
     display: flex;
@@ -22,7 +35,7 @@
     text-align: center;
     justify-content: space-between;
     cursor: pointer;
-    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: var(--transition-main);
     user-select: none;
     overflow: hidden;
     width: 100%;
@@ -31,34 +44,53 @@
 
 .card-producto-pos:hover:not(.sin-stock) {
     transform: translateY(-4px);
-    border-color: var(--color-accent, #00f2fe);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 12px rgba(0, 242, 254, 0.25);
+    border-color: var(--color-accent);
+    box-shadow: var(--shadow-glow);
+    background: var(--bg-glass-input-hover);
 }
 
 .card-producto-pos.sin-stock {
     opacity: 0.5;
     cursor: not-allowed;
     filter: grayscale(0.8);
+    border-color: transparent;
 }
 
+/* === BADGE DEL CÓDIGO (Esquina superior derecha) === */
+.badge-codigo {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--bg-glass);
+    border: 1px solid var(--border-glass);
+    color: var(--text-muted);
+    font-size: 0.65rem;
+    font-family: monospace;
+    padding: 2px 6px;
+    border-radius: 4px;
+    backdrop-filter: blur(4px);
+    z-index: 2;
+}
+
+/* === CONTENEDOR DE IMAGEN === */
 .card-img-contenedor {
     width: 120px;
     height: 120px;
     margin: 4px auto 12px auto;
     border-radius: var(--radius-md, 8px);
-    background: rgba(15, 23, 42, 0.6);
-    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-glass);
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: var(--transition-main);
 }
 
 .card-producto-pos:hover:not(.sin-stock) .card-img-contenedor {
-    border-color: var(--color-accent, #00f2fe);
-    box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+    border-color: var(--color-accent);
+    box-shadow: 0 0 10px rgba(0, 242, 254, 0.2); /* Mantenemos este brillo sutil */
 }
 
 .img-producto-pos {
@@ -68,6 +100,7 @@
     transition: opacity 0.2s ease;
 }
 
+/* === INFORMACIÓN DE LA TARJETA === */
 .card-info-pos {
     width: 100%;
     display: flex;
@@ -79,7 +112,7 @@
 .card-info-pos h4 {
     font-size: 0.92rem;
     font-weight: 700;
-    color: var(--text-main, #ffffff);
+    color: var(--text-main);
     margin-bottom: 8px;
     line-height: 1.3;
     display: -webkit-box;
@@ -96,42 +129,29 @@
     justify-content: space-between;
     align-items: center;
     padding-top: 10px;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid var(--border-glass);
 }
 
 .precio-pos {
     font-size: 1.1rem;
     font-weight: 800;
-    color: var(--color-accent, #00f2fe);
+    color: var(--color-accent);
+    /* Puedes usar tu variable de neón si tienes una, o dejar el text-shadow duro */
     text-shadow: 0 0 8px rgba(0, 242, 254, 0.3);
 }
 
+/* === BADGES DE STOCK === */
 .stock-badge-pos {
     font-size: 0.75rem;
     font-weight: 600;
     padding: 3px 8px;
     border-radius: 10px;
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--text-muted, #94a3b8);
+    background: var(--bg-glass-input);
+    color: var(--text-muted);
 }
 
 .stock-badge-pos.alerta {
-    background: rgba(255, 71, 87, 0.2);
-    color: #ff4757;
-    border: 1px solid rgba(255, 71, 87, 0.4);
-}
-
-.badge-codigo {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: rgba(15, 23, 42, 0.85);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: #94a3b8;
-    font-size: 0.65rem;
-    font-family: monospace;
-    padding: 2px 6px;
-    border-radius: 4px;
-    backdrop-filter: blur(4px);
-    z-index: 2;
+    background: var(--bg-danger-glass);
+    color: var(--color-danger);
+    border: 1px solid var(--border-danger-glass);
 }

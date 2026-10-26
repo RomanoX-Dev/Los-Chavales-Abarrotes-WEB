@@ -259,7 +259,9 @@ function editarProducto(id) {
     const prod = productosGlobales.find(p => String(p.idProducto) === String(id));
     if (!prod) return;
 
-    if (getElem('tituloModal')) getElem('tituloModal').textContent = 'Editar Producto ✏️';
+     if (getElem('tituloModal')) getElem('tituloModal').textContent = 'Editar Producto ✏️'
+
+    
 
     setInputValue('productoId', prod.idProducto);
     setInputValue('codigoBarras', prod.codigoBarras);

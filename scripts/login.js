@@ -1,7 +1,7 @@
 import { usuariosAPI } from '../api/usuariosAPI.js';
 import { mostrarError, mostrarExito, mostrarAdvertencia } from '../utils/alertas.js';
 import { guardarSesion } from '../utils/helpers.js';
-import { esUsuarioValido, esPasswordValida } from '../utils/validaciones.js';
+import { esUsuarioValido, esPasswordValida } from '../validations/loginVLD.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const btnVerPassword = document.getElementById('btnVerPassword');

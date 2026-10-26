@@ -1,0 +1,112 @@
+/* ==========================================================================
+   TABLASCOM.CSS - TABLAS REUTILIZABLES
+   .glass-table (inventario) · .tabla-historial (historial) · .caja-tabla (caja y detalles)
+   ========================================================================== */
+
+.tabla-scroll {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.glass-table,
+.tabla-historial,
+.caja-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--font-size-sm);
+    color: var(--text-main);
+}
+
+th {
+    text-align: left;
+}
+
+.glass-table th,
+.tabla-historial th,
+.caja-tabla th {
+    padding: 10px 12px;
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-glass);
+    white-space: nowrap;
+}
+
+.glass-table td,
+.tabla-historial td,
+.caja-tabla td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border-soft);
+    vertical-align: middle;
+}
+
+.glass-table tbody tr:hover,
+.tabla-historial tbody tr:hover {
+    background: var(--bg-soft);
+}
+
+.caja-tabla tfoot td {
+    font-weight: 700;
+    border-bottom: none;
+    border-top: 1px solid var(--border-glass);
+}
+
+.num {
+    text-align: right;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+td.vacio {
+    padding: var(--spacing-xl);
+    text-align: center;
+    font-style: italic;
+    color: var(--text-muted);
+}
+
+/* Estatus de venta */
+.estatus {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    background: var(--bg-soft-hover);
+    color: var(--text-muted);
+}
+
+.estatus-completada {
+    background: color-mix(in srgb, var(--color-success) 18%, transparent);
+    color: var(--color-success);
+}
+
+.estatus-cancelada {
+    background: color-mix(in srgb, var(--color-danger) 18%, transparent);
+    color: var(--color-danger);
+}
+
+/* Diferencia de caja */
+.dif-ok { color: var(--color-success); font-weight: 700; }
+.dif-sobrante { color: var(--color-primary); font-weight: 700; }
+.dif-faltante { color: var(--color-danger); font-weight: 700; }
+.dif-abierto { color: var(--text-muted); font-style: italic; }
+
+/* Botón "Ver" de cada fila */
+.btn-ver {
+    min-height: 30px;
+    padding: 4px 12px;
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-main);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.btn-ver:hover {
+    background: var(--bg-soft-hover);
+}

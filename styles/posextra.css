@@ -1,0 +1,67 @@
+/* ==========================================================================
+   POSEXTRA.CSS - Estilos mínimos: descuento/envío, chip de caja, modal de caja,
+   pasos extra del modal de pago y tablas de detalle. Se refinan en la fase visual.
+
+   GLOBALIZAR - PENDIENTE PARA LA 2.0.0 de estilos...
+   ========================================================================== */
+   
+/* Seguro: .oculto siempre oculta dentro de los modales */
+#modalPago .oculto,
+#modalCaja .oculto,
+#modalDetalle .oculto { display: none !important; }
+
+/* ---------- Descuento y envío en el ticket ---------- */
+.ajustes-venta { display: grid; gap: 4px; margin-bottom: 12px; }
+.fila-ajuste { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.fila-ajuste input {
+    width: 110px; padding: 6px 8px; text-align: right;
+    border-radius: 8px; border: 1px solid rgba(255, 255, 255, .2);
+    background: rgba(255, 255, 255, .08); color: inherit;
+}
+.ayuda-ajuste { min-height: 1em; font-size: .75rem; opacity: .7; }
+.ayuda-ajuste.error { color: var(--color-danger, #ff4d4d); opacity: 1; }
+
+/* ---------- Barra de búsqueda: estado de caja ---------- */
+.search-bar-container { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.search-bar-container .pos-search { flex: 1 1 220px; }
+.chip-caja { font-size: .85rem; padding: 6px 12px; border-radius: 999px; background: rgba(255, 255, 255, .1); white-space: nowrap; }
+.btn-cerrar-caja {
+    padding: 8px 14px; border-radius: 10px; cursor: pointer; font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, .25); background: rgba(255, 255, 255, .08); color: inherit;
+}
+.btn-cerrar-caja:hover { background: rgba(255, 255, 255, .18); }
+
+/* ---------- Modal de caja ---------- */
+.modal-caja { max-width: 460px; width: 92%; max-height: 90vh; overflow-y: auto; }
+.caja-panel { display: grid; gap: 10px; }
+.caja-texto { font-size: .9rem; opacity: .85; margin: 0; }
+.caja-label { font-size: .85rem; font-weight: 600; }
+.caja-input, .pago-input {
+    width: 100%; box-sizing: border-box; padding: 10px; border-radius: 10px; font: inherit;
+    border: 1px solid rgba(255, 255, 255, .2); background: rgba(255, 255, 255, .08); color: inherit;
+}
+.caja-acciones, .pago-acciones { display: flex; gap: 10px; justify-content: flex-end; margin-top: 6px; }
+.caja-btn, .pago-btn { padding: 10px 16px; border-radius: 10px; cursor: pointer; font-weight: 600; border: 0; }
+.caja-btn-principal, .pago-btn-principal { background: #2e8b57; color: #fff; }
+.caja-btn-secundario, .pago-btn-secundario { background: rgba(255, 255, 255, .12); color: inherit; }
+.caja-btn:disabled, .pago-btn:disabled { opacity: .45; cursor: not-allowed; }
+
+.caja-resumen { display: grid; gap: 6px; }
+.caja-dato { display: flex; justify-content: space-between; gap: 12px; margin: 0; }
+.caja-total { font-size: 1.1rem; border-top: 1px solid rgba(255, 255, 255, .2); padding-top: 6px; }
+.caja-diferencia.ok strong, .dif-ok { color: #3ddc84; }
+.caja-diferencia.sobrante strong, .dif-sobrante { color: #4da3ff; }
+.caja-diferencia.faltante strong, .dif-faltante { color: var(--color-danger, #ff4d4d); }
+.dif-abierto { opacity: .7; }
+
+.caja-tabla { width: 100%; border-collapse: collapse; font-size: .85rem; }
+.caja-tabla th, .caja-tabla td { padding: 6px 8px; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, .12); }
+.caja-tabla .num, .num { text-align: right; }
+.caja-tabla tfoot td { font-weight: 700; }
+.nota-iva { font-size: .75rem; opacity: .65; margin: 4px 0 10px; }
+.subtitulo-detalle { margin: 14px 0 6px; font-size: .95rem; }
+
+/* ---------- Pasos extra del modal de pago ---------- */
+.pago-paso { display: grid; gap: 10px; margin-top: 14px; }
+.pago-cambio { margin: 0; font-size: 1.05rem; }
+.pago-preview { max-width: 100%; max-height: 220px; object-fit: contain; border-radius: 10px; }

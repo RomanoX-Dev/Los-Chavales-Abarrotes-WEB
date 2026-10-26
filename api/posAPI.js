@@ -1,29 +1,56 @@
-const BASE_URL = 'https://lcaw-server.onrender.com/api';
+import { fetchConAuth } from '../utils/helpers.js';
 
-// 1. Obtener productos para el POS
+const ENDPOINT_PRODUCTOS = '/api/productos';
+const ENDPOINT_VENTAS = '/api/ventas';
+const ENDPOINT_EMPLEADOS = '/api/empleados';
+
+// fetchConAuth YA devuelve el JSON convertido y nunca lanza: si falla, trae { exito: false, mensaje }.
 export async function obtenerProductosPOS() {
-    try {
-        const respuesta = await fetch(`${BASE_URL}/productos`);
-        if (!respuesta.ok) throw new Error('Error al cargar productos');
-        return await respuesta.json();
-    } catch (error) {
-        console.error(error);
+    const data = await fetchConAuth(`${ENDPOINT_PRODUCTOS}?soloActivos=true`);
+    if (!data.exito) {
+        console.error('Rechazo del servidor:', data.mensaje);
         return [];
     }
+    return data.datos || [];
 }
 
-// 2. Registrar la Venta en la Base de Datos
-export async function registrarVentaDB(datosVenta) {
-    try {
-        const respuesta = await fetch(`${BASE_URL}/ventas/cobrar`, { 
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(datosVenta)
-        });
-        
-        const data = await respuesta.json();
-        return { exito: respuesta.ok, mensaje: data.mensaje || 'Venta registrada' };
-    } catch (error) {
-        return { exito: false, mensaje: 'Error de conexión al procesar el cobro.' };
-    }
+/**
+ * @param {Object} venta
+ * { idMetodoPago, descuentoPorcentaje, costoEnvio, urlComprobante, listaProductos: [{ idProducto, cantidad }] }
+ * El servidor ignora cualquier precio o total que mandes: los calcula él.
+ */
+export async function registrarVentaDB(venta) {
+    const data = await fetchConAuth(ENDPOINT_VENTAS, {
+        method: 'POST',
+        body: JSON.stringify(venta)
+    });
+    return {
+        exito: Boolean(data.exito),
+        mensaje: data.mensaje || 'Error al procesar la venta.',
+        datos: data.datos // { idVenta, idCorte, subtotal, descuento, iva, costoEnvio, total }
+    };
+}
+
+// filtros: { desde, hasta (ISO), idEmpleado (solo gerencia), limite }
+export async function obtenerHistorialVentas(filtros = {}) {
+    const params = new URLSearchParams();
+    Object.entries(filtros).forEach(([clave, valor]) => {
+        if (valor !== undefined && valor !== null && valor !== '') params.set(clave, valor);
+    });
+
+    const data = await fetchConAuth(`${ENDPOINT_VENTAS}/historial?${params}`);
+    return { exito: Boolean(data.exito), mensaje: data.mensaje, datos: data.datos || [] };
+}
+
+// Devuelve { venta, detalles }
+export async function obtenerVentaPorId(idVenta) {
+    const data = await fetchConAuth(`${ENDPOINT_VENTAS}/${idVenta}`);
+    return { exito: Boolean(data.exito), mensaje: data.mensaje, datos: data.datos };
+}
+
+// Para el selector de vendedor del historial (solo Administrador y Gerente)
+export async function obtenerEmpleadosParaFiltro() {
+    const data = await fetchConAuth(ENDPOINT_EMPLEADOS);
+    if (!data.exito) return [];
+    return (data.datos || []).filter(e => e && e.idEmpleado);
 }

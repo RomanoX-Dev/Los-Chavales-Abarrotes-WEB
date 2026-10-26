@@ -1,0 +1,25 @@
+/* ==========================================================================
+   TARJETADETALLE.CSS - MODAL DE DETALLE (venta o corte) DEL HISTORIAL
+   Requiere también cardstyles/Tarjetacaja.css (filas .caja-dato y totales)
+   ========================================================================== */
+
+.modal-detalle {
+    width: min(640px, 94vw);
+}
+
+.subtitulo-detalle {
+    margin: var(--spacing-md) 0 var(--spacing-xs);
+    font-size: var(--font-size-base);
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.nota-iva {
+    margin: 6px 0 var(--spacing-md);
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+}
+
+.modal-detalle .caja-resumen {
+    margin-top: var(--spacing-md);
+}

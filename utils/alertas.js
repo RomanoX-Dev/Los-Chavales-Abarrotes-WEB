@@ -3,16 +3,18 @@
    ========================================================================== */
 
 let timerAlerta = null;
-let promesaCarga = null;
+const promesasCarga = new Map();
 
 /**
- * Carga asíncrona única del HTML de alertas previniendo condiciones de carrera
+ * Carga de forma asíncrona y única cualquier componente HTML evitando condiciones de carrera
  */
-const asegurarComponenteAlerta = () => {
-    if (document.getElementById('alertaCustom')) return Promise.resolve();
+const asegurarComponente = (idElemento, ruta) => {
+    // Si el elemento ya existe en el DOM, no hace nada
+    if (document.getElementById(idElemento)) return Promise.resolve();
 
-    if (!promesaCarga) {
-        promesaCarga = fetch('../cards/Tarjetaeliminacion.html')
+    // Si no existe una petición en curso para este ID, se inicia una nueva
+    if (!promesasCarga.has(idElemento)) {
+        const promesa = fetch(ruta)
             .then((respuesta) => {
                 if (!respuesta.ok) throw new Error(`Status: ${respuesta.status}`);
                 return respuesta.text();
@@ -21,19 +23,29 @@ const asegurarComponenteAlerta = () => {
                 document.body.insertAdjacentHTML('beforeend', html);
             })
             .catch((error) => {
-                promesaCarga = null; // Permite reintentar si falló la red
-                console.error('Error al cargar la tarjeta de alerta:', error);
+                promesasCarga.delete(idElemento); // Permite reintentar si falló la red
+                console.error(`Error al cargar el componente (${ruta}):`, error);
             });
+
+        promesasCarga.set(idElemento, promesa);
     }
-    return promesaCarga;
+
+    return promesasCarga.get(idElemento);
 };
+
+// Definición de recursos por tarjeta
+const asegurarTarjetaEliminacion = () => 
+    asegurarComponente('alertaCustom', '../cards/Tarjetaeliminacion.html');
+
+const asegurarTarjetaConfirmacion = () => 
+    asegurarComponente('alertaConfirmacion', '../cards/Tarjetaconfimacion.html');
 
 /**
  * Muestra notificaciones estilo Toast
  */
 const mostrarAlertaPersonalizada = async (mensaje, tipo) => {
-    await asegurarComponenteAlerta();
-
+    await asegurarTarjetaEliminacion();
+    
     const contenedor = document.getElementById('alertaCustom');
     const spanMensaje = document.getElementById('alertaMensaje');
     const acciones = document.getElementById('alertaAcciones');
@@ -79,13 +91,14 @@ const mostrarAlertaPersonalizada = async (mensaje, tipo) => {
  * Muestra un modal de confirmación asíncrono basado en Promesas
  */
 export const mostrarConfirmacion = async (mensaje) => {
-    await asegurarComponenteAlerta();
+    await asegurarTarjetaConfirmacion();
 
     return new Promise((resolve) => {
-        const contenedor = document.getElementById('alertaCustom');
-        const spanMensaje = document.getElementById('alertaMensaje');
-        const acciones = document.getElementById('alertaAcciones');
-        const backdrop = document.getElementById('alertaBackdrop');
+        // Busca primero en el ID específico de la tarjeta de confirmación
+        const contenedor = document.getElementById('alertaConfirmacion') || document.getElementById('alertaCustom');
+        const spanMensaje = document.getElementById('alertaConfirmacionMensaje') || document.getElementById('alertaMensaje');
+        const acciones = document.getElementById('alertaConfirmacionAcciones') || document.getElementById('alertaAcciones');
+        const backdrop = document.getElementById('alertaConfirmacionBackdrop') || document.getElementById('alertaBackdrop');
 
         if (!contenedor || !spanMensaje) {
             resolve(confirm(mensaje));
@@ -95,7 +108,7 @@ export const mostrarConfirmacion = async (mensaje) => {
         clearTimeout(timerAlerta);
 
         // Clases base para modal centrado
-        contenedor.className = 'alerta-card alerta-confirmacion alerta-peligro-critico';
+        contenedor.className = 'alerta-card alerta-confirmacion';
         spanMensaje.textContent = `🚨 ${mensaje}`;
 
         if (acciones) acciones.classList.remove('oculto');

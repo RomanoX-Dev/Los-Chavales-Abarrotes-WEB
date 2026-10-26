@@ -1,0 +1,49 @@
+<!-- Modal de caja: apertura, cierre y resultado del corte.-->
+ 
+<div id="modalCaja" class="modal-overlay oculto" role="dialog" aria-modal="true" aria-labelledby="tituloCaja">
+    <div class="modal-pago modal-caja">
+        <div class="modal-header">
+            <h3 id="tituloCaja">Caja</h3>
+        </div>
+
+        <div class="pago-body">
+            <!-- APERTURA -->
+            <form id="formAbrirCaja" class="caja-panel oculto" novalidate>
+                <p class="caja-texto">Para registrar ventas necesitas abrir tu caja. Indica el efectivo con el que inicias el turno.</p>
+                <label class="caja-label" for="inputFondoInicial">Fondo inicial ($)</label>
+                <input id="inputFondoInicial" class="caja-input" type="number" min="0" step="0.01"
+                       inputmode="decimal" placeholder="0.00" required>
+                <div class="caja-acciones">
+                    <button type="button" id="btnCancelarApertura" class="caja-btn caja-btn-secundario">Volver al menú</button>
+                    <button type="submit" class="caja-btn caja-btn-principal">Abrir caja</button>
+                </div>
+            </form>
+
+            <!-- CIERRE -->
+            <form id="formCerrarCaja" class="caja-panel oculto" novalidate>
+                <p class="caja-texto">Cuenta el efectivo que hay en tu caja y captúralo. El sistema calculará la diferencia.</p>
+                <div id="resumenCorte" class="caja-resumen"></div>
+
+                <label class="caja-label" for="inputMontoReal">Efectivo contado ($)</label>
+                <input id="inputMontoReal" class="caja-input" type="number" min="0" step="0.01"
+                       inputmode="decimal" placeholder="0.00" required>
+
+                <label class="caja-label" for="inputObservaciones">Observaciones (opcional)</label>
+                <textarea id="inputObservaciones" class="caja-input" rows="2" maxlength="255"></textarea>
+
+                <div class="caja-acciones">
+                    <button type="button" id="btnCancelarCierre" class="caja-btn caja-btn-secundario">Cancelar</button>
+                    <button type="submit" id="btnEnviarCierre" class="caja-btn caja-btn-principal">Cerrar caja</button>
+                </div>
+            </form>
+
+            <!-- RESULTADO DEL CORTE -->
+            <div id="panelResultadoCorte" class="caja-panel oculto">
+                <div id="resultadoCorte" class="caja-resumen"></div>
+                <div class="caja-acciones">
+                    <button type="button" id="btnResultadoListo" class="caja-btn caja-btn-principal">Listo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

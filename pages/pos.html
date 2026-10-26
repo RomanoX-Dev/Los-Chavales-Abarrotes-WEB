@@ -5,37 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LCAW - Punto de Venta</title>
     <link rel="icon" type="image/x-icon" href="../favicon.ico">
-    <!-- Estilos Madre y Componentes -->
-    <link rel="stylesheet" href="../styles/menu.css">
+
     <link rel="stylesheet" href="../general/global.css">
+    <link rel="stylesheet" href="../styles/alertas.css">
+    <link rel="stylesheet" href="../styles/cargador.css">
+    <link rel="stylesheet" href="../styles/menu.css">
     <link rel="stylesheet" href="../componentstyles/menuCOM.css">
     <link rel="stylesheet" href="../componentstyles/posCOM.css">
-    <link rel="stylesheet" href="../styles/cargador.css">
     <link rel="stylesheet" href="../styles/pos.css">
-</head>
+    <link rel="stylesheet" href="../cardstyles/Tarjetaproducto.css">
+    <link rel="stylesheet" href="../cardstyles/Tarjetaconfirmacion.css">
+    <link rel="stylesheet" href="../cardstyles/Tarjetacaja.css">
+    <link rel="stylesheet" href="../cardstyles/Tarjetametodopago.css">
+    <link rel="stylesheet" href="../cardstyles/Tarjetaeliminacion.css">
+    <link rel="stylesheet" href="../styles/posextra.css">
 <body>
-
     <div class="dashboard-container">
-        
-        <!-- Web Component del Sidebar Madre -->
         <app-sidebar></app-sidebar>
-
-        <!-- Área de Contenido Principal -->
         <div class="main-wrapper">
-            <!-- Web Component del Encabezado Madre -->
             <app-header titulo="Punto de Venta 💻" subtitulo="Cargando sesión..."></app-header>
-
             <main class="main-content pos-layout">
-                
+
                 <!-- Panel Izquierdo: Ticket de Venta -->
                 <section class="panel-carrito glass-panel">
                     <div class="carrito-header">
                         <h2>Ticket de Venta 🧾</h2>
-                        <button type="button" class="btn-icon-danger" id="btnVaciarCarrito" title="Vaciar Carrito">
-                            🗑️
-                        </button>
+                        <button type="button" class="btn-icon-danger" id="btnVaciarCarrito" title="Vaciar Carrito">🗑️</button>
                     </div>
-                    
+
                     <div class="carrito-items" id="listaCarrito">
                         <div class="mensaje-vacio">
                             <span class="icono-vacio">🛒</span>
@@ -44,75 +41,54 @@
                     </div>
 
                     <div class="carrito-footer">
-                        <div class="totales-summary">
-                            <div class="fila-total">
-                                <span>Subtotal</span>
-                                <strong id="txtSubtotal">$0.00</strong>
-                            </div>
-                            <div class="fila-total">
-                                <span>IVA (16%)</span>
-                                <strong id="txtIva">$0.00</strong>
-                            </div>
-                            <div class="fila-total gran-total">
-                                <span>TOTAL</span>
-                                <strong id="txtTotal">$0.00</strong>
-                            </div>
+                        <!-- Descuento y envío -->
+                        <div class="ajustes-venta">
+                            <label class="fila-ajuste" for="inputDescuento">
+                                <span>Descuento (%)</span>
+                                <input id="inputDescuento" type="number" min="0" step="1" inputmode="decimal" placeholder="0">
+                            </label>
+                            <small id="ayudaDescuento" class="ayuda-ajuste"></small>
+
+                            <label class="fila-ajuste" for="inputEnvio">
+                                <span>Envío ($)</span>
+                                <input id="inputEnvio" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0.00">
+                            </label>
+                            <small id="ayudaEnvio" class="ayuda-ajuste"></small>
                         </div>
-                        <button type="button" class="btn-cobrar" id="btnCobrar" disabled>
-                            💰 COBRAR TICKET
-                        </button>
+
+                        <div class="totales-summary">
+                            <div class="fila-total"><span>Subtotal (sin IVA)</span><strong id="txtSubtotal">$0.00</strong></div>
+                            <div class="fila-total"><span>Descuento</span><strong id="txtDescuento">-$0.00</strong></div>
+                            <div class="fila-total"><span>IVA (16%) incluido</span><strong id="txtIva">$0.00</strong></div>
+                            <div class="fila-total"><span>Envío</span><strong id="txtEnvio">$0.00</strong></div>
+                            <div class="fila-total gran-total"><span>TOTAL</span><strong id="txtTotal">$0.00</strong></div>
+                        </div>
+                        <button type="button" class="btn-cobrar" id="btnCobrar" disabled>💰 COBRAR TICKET</button>
                     </div>
                 </section>
 
-                <!-- Panel Derecho: Catálogo de Productos y Búsqueda -->
+                <!-- Panel Derecho: Catálogo -->
                 <section class="panel-productos">
                     <div class="search-bar-container glass-panel">
                         <div class="pos-search">
                             <span class="search-icon">🔍</span>
-                            <input type="text" id="buscadorPos" placeholder="Escanear código de barras o buscar por nombre..." autofocus autocomplete="off">
-                            <button type="button" class="btn-clear-search oculto" id="btnLimpiarBuscador">✕</button>
+                            <input type="text" id="buscadorPos" placeholder="Escanear o buscar..." autofocus autocomplete="off">
                         </div>
+                        <span id="chipCaja" class="chip-caja">🔒 Verificando caja...</span>
+                        <button type="button" id="btnCerrarCaja" class="btn-cerrar-caja">🔒 Cerrar caja</button>
                     </div>
-
-                    <div class="grid-productos" id="contenedorProductosPos">
-                        <div class="pos-state-loader">
-                            <div class="spinner"></div>
-                            <p>Cargando catálogo de productos...</p>
-                        </div>
+                    <div class="grid-productos-pos" id="contenedorProductosPos">
+                        <!-- El grid se renderiza aquí -->
                     </div>
                 </section>
-
             </main>
         </div>
     </div>
 
-    <!-- Modal de Proceso de Pago -->
-    <div id="modalPago" class="modal-overlay oculto" role="dialog" aria-modal="true">
-        <div class="modal-card modal-pago">
-            <div class="modal-header">
-                <h3>Método de Pago 💳</h3>
-                <button type="button" class="btn-cerrar" id="btnCerrarModalPago">✕</button>
-            </div>
-            
-            <div class="pago-body">
-                <span class="pago-label">Total a Cobrar</span>
-                <h2 id="totalAPagarModal">$0.00</h2>
-                
-                <div class="opciones-pago">
-                    <button type="button" class="btn-metodo-pago" data-metodo="efectivo">
-                        <span class="metodo-icon">💵</span>
-                        <span>Efectivo</span>
-                    </button>
-                    <button type="button" class="btn-metodo-pago" data-metodo="tarjeta">
-                        <span class="metodo-icon">💳</span>
-                        <span>Tarjeta</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Contenedores dinámicos de modales -->
+    <div id="contenedorModalPago"></div>
+    <div id="contenedorCaja"></div>
 
-    <!-- Scripts ES Modules -->
     <script type="module" src="../scripts/menu.js"></script>
     <script type="module" src="../scripts/pos.js"></script>
 </body>

@@ -1,14 +1,93 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LCAW - Historial</title>
     <link rel="icon" type="image/x-icon" href="../favicon.ico">
-    
-    <title>Proxima actualizacion...</title>
+
+    <link rel="stylesheet" href="../general/global.css">
+    <link rel="stylesheet" href="../styles/alertas.css">
+    <link rel="stylesheet" href="../styles/cargador.css">
+    <link rel="stylesheet" href="../styles/menu.css">
+    <link rel="stylesheet" href="../componentstyles/menuCOM.css">
+    <link rel="stylesheet" href="../cardstyles/Tarjetametodopago.css">
+    <link rel="stylesheet" href="../cardstyles/Tarjetaeliminacion.css">
+    <link rel="stylesheet" href="../styles/posextra.css">
+    <link rel="stylesheet" href="../styles/historial.css">
 </head>
 <body>
-    <p> EN PROCESO... </PROCESO></p>
-    
+    <div class="dashboard-container">
+        <app-sidebar></app-sidebar>
+        <div class="main-wrapper">
+            <app-header titulo="Historial 📊" subtitulo="Cargando sesión..."></app-header>
+
+            <main class="main-content historial-layout">
+                <section class="glass-panel historial-panel">
+
+                    <div class="historial-tabs">
+                        <button type="button" class="tab-btn activo" data-tab="ventas">🧾 Ventas</button>
+                        <button type="button" class="tab-btn" data-tab="cortes">🔒 Cortes de caja</button>
+                    </div>
+
+                    <!-- ===== VENTAS ===== -->
+                    <div id="tabVentas">
+                        <form id="formFiltrosVentas" class="filtros">
+                            <label>Desde <input type="date" id="filtroDesde"></label>
+                            <label>Hasta <input type="date" id="filtroHasta"></label>
+                            <label id="grupoEmpleado" class="oculto">Vendedor
+                                <select id="filtroEmpleado"><option value="">Todos</option></select>
+                            </label>
+                            <button type="submit" class="btn-filtrar">🔍 Buscar</button>
+                        </form>
+
+                        <p id="resumenVentas" class="resumen-ventas"></p>
+
+                        <div class="tabla-scroll">
+                            <table class="tabla-historial">
+                                <thead>
+                                    <tr>
+                                        <th>Venta</th><th>Fecha</th><th>Vendedor</th><th>Método</th>
+                                        <th class="num">Total</th><th>Estado</th><th>Corte</th><th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyVentas"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- ===== CORTES ===== -->
+                    <div id="tabCortes" class="oculto">
+                        <div class="tabla-scroll">
+                            <table class="tabla-historial">
+                                <thead>
+                                    <tr>
+                                        <th>Corte</th><th>Empleado</th><th>Apertura</th><th>Cierre</th>
+                                        <th class="num">Fondo</th><th class="num">Esperado</th>
+                                        <th class="num">Contado</th><th class="num">Diferencia</th><th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyCortes"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal de detalle (venta o corte) -->
+    <div id="modalDetalle" class="modal-overlay oculto" role="dialog" aria-modal="true" aria-labelledby="tituloDetalle">
+        <div class="modal-pago modal-detalle">
+            <div class="modal-header">
+                <h3 id="tituloDetalle">Detalle</h3>
+                <button type="button" class="btn-cerrar" id="btnCerrarDetalle" title="Cerrar">✕</button>
+            </div>
+            <div class="pago-body" id="detalleContenido"></div>
+        </div>
+    </div>
+
+    <script type="module" src="../scripts/menu.js"></script>
+    <script type="module" src="../scripts/historial.js"></script>
 </body>
 </html>

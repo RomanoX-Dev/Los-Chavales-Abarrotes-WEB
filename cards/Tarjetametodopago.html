@@ -1,0 +1,39 @@
+<div id="modalPago" class="modal-overlay oculto" role="dialog" aria-modal="true" aria-labelledby="modalPagoTitle">
+    <div class="modal-pago">
+        <div class="modal-header">
+            <h3 id="modalPagoTitle">Método de Pago 💳</h3>
+            <button type="button" class="btn-cerrar" id="btnCerrarModalPago" title="Cerrar modal">✕</button>
+        </div>
+
+        <div class="pago-body">
+            <span class="pago-label">Total a Cobrar</span>
+            <h2 id="totalAPagarModal">$0.00</h2>
+
+            <!-- Paso 1: elegir método (se llena con JS) -->
+            <div class="opciones-pago" id="contenedorMetodosPago"></div>
+
+            <!-- Paso 2A: efectivo -->
+            <div id="pasoEfectivo" class="pago-paso oculto">
+                <label class="pago-label" for="inputMontoRecibido">Monto recibido ($)</label>
+                <input id="inputMontoRecibido" class="pago-input" type="number" min="0" step="0.01"
+                       inputmode="decimal" placeholder="0.00">
+                <p class="pago-cambio">Cambio: <strong id="txtCambio">$0.00</strong></p>
+                <div class="pago-acciones">
+                    <button type="button" id="btnVolverEfectivo" class="pago-btn pago-btn-secundario">Volver</button>
+                    <button type="button" id="btnConfirmarEfectivo" class="pago-btn pago-btn-principal" disabled>Cobrar</button>
+                </div>
+            </div>
+
+            <!-- Paso 2B: comprobante -->
+            <div id="pasoComprobante" class="pago-paso oculto">
+                <label class="pago-label" for="inputComprobante">Foto del comprobante</label>
+                <input id="inputComprobante" class="pago-input" type="file" accept="image/*">
+                <img id="previewComprobante" class="pago-preview oculto" alt="Vista previa del comprobante">
+                <div class="pago-acciones">
+                    <button type="button" id="btnVolverComprobante" class="pago-btn pago-btn-secundario">Volver</button>
+                    <button type="button" id="btnConfirmarComprobante" class="pago-btn pago-btn-principal" disabled>Cobrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
